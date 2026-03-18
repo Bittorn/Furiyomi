@@ -27,7 +27,7 @@
 </script>
 
 <svelte:head>
-    <title>Settings | Furiyomi</title>
+    <title>Settings - Furiyomi</title>
 </svelte:head>
 
 <svelte:window on:load={init}></svelte:window>

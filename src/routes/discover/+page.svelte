@@ -1,5 +1,5 @@
 <svelte:head>
-    <title>Discover | Furiyomi</title>
+    <title>Discover - Furiyomi</title>
 </svelte:head>
 
 <h1>Discover</h1>
