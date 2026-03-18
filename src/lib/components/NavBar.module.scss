@@ -1,26 +1,21 @@
-@use 'sass:color';
-
-$navbar-color: hsla(0, 0%, 0%, 0.3);
-$primary-color: hsl(213, 55%, 55%);
-$primary-hover-color: color.adjust($color: $primary-color, $lightness: 20%);
-$shadow-color: hsla(0, 0%, 10%, 10%);
+@use "../../app" as globals;
 
 .navbar {
 	height: 60px;
-	width: 80vw;
+	width: 40vw;
 	margin: 0 auto;
-	margin-top: 45px;
+	margin-top: 16px;
 	padding-left: 1em;
 	padding-right: 1em;
 	box-sizing: border-box;
-	box-shadow: 0 2px 10px $shadow-color;
+	box-shadow: 0 2px 10px globals.$shadow-color;
 	border-radius: 16px;
   	font-family: "Zain", sans-serif;
 	font-weight: 400;
 	font-style: normal;
 	position: sticky;
 	top: 0;
-	background-color: $navbar-color;
+	background-color: globals.$header-bg-color;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -56,15 +51,15 @@ $shadow-color: hsla(0, 0%, 10%, 10%);
 
 .cta {
 	padding: 9px 25px;
-	background-color: $primary-color;
+	background-color: globals.$button-color;
 	border: none;
 	border-radius: 50px;
 	cursor: pointer;
-	transition: background-color 0.3s ease 0s;
+	transition: background-color 0.2s ease 0s;
 }
 
 .cta:hover {
-	background-color: $primary-hover-color;
+	background-color: globals.$button-hover-color;
 }
 
 /* Mobile .navbar */
@@ -80,10 +75,10 @@ $shadow-color: hsla(0, 0%, 10%, 10%);
 	z-index: 9;
 	left: 0;
 	top: 0;
-	background-color: $navbar-color;
+	background-color: globals.$header-bg-color;
 	backdrop-filter: blur(8px);
 	overflow-x: hidden;
-	transition: width 0.4s ease 0s;
+	transition: width 0.3s ease 0s;
 }
 
 .overlay_active {
@@ -127,7 +122,8 @@ $shadow-color: hsla(0, 0%, 10%, 10%);
 @media only screen and (max-width: 1110px) {
 	.navbar {
 		width: 100%;
-		margin: 0;
+		background-color: transparent;
+		backdrop-filter: 0;
 	}
 	.nav__links,
 	.cta {

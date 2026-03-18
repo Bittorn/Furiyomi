@@ -2,10 +2,17 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&family=Zain:ital,wght@0,400;0,700;1,400&display=swap');
 
+// #region Global variables
 $bg-color: hsl(0, 0%, 13%);
+$header-bg-color: hsla(0, 0%, 0%, 0.3);
 $shadow-color: hsla(0, 0%, 10%, 10%);
 $font-color: whitesmoke;
-$unselected-color: color.adjust($color: $font-color, $lightness: -40%);
+$link-color: $font-color;
+$link-unfocused-color: hsl(0, 0%, 56%);
+$primary-color: #8A2BE2;
+$button-color: $primary-color;
+$button-hover-color: color.adjust($color: $primary-color, $lightness: 6%);
+// #endregion
 
 .zain-regular {
   font-family: "Zain", sans-serif;
@@ -41,11 +48,6 @@ $unselected-color: color.adjust($color: $font-color, $lightness: -40%);
 
 html {
 	background: $bg-color;
-	// background-image: url('$lib/assets/background.webp');
-	// background-repeat: no-repeat;
-	// background-position: center;
-	// background-attachment: fixed;
-	// background-size: cover;
 }
 
 body {
@@ -67,12 +69,12 @@ h1 {
 }
 
 a {
-	color: $unselected-color;
+	color: $link-unfocused-color;
 	text-decoration: none;
 
 	&:hover,
 	&.current {
-		color: $font-color;
+		color: $link-color;
 		transition-duration: 0.2s;
 	}
 }
