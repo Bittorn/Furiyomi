@@ -2,6 +2,8 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&family=Zain:ital,wght@0,400;0,700;1,400&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=LINE+Seed+JP:wght@400;700&display=swap');
+
 // #region Global variables
 $bg-color: hsl(0, 0%, 13%);
 $header-bg-color: hsla(0, 0%, 0%, 0.3);
@@ -46,6 +48,18 @@ $button-hover-color: color.adjust($color: $primary-color, $lightness: 6%);
   font-style: normal;
 }
 
+.line-seed-jp-regular {
+  font-family: "LINE Seed JP", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.line-seed-jp-bold {
+  font-family: "LINE Seed JP", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
 html {
 	background: $bg-color;
 }
@@ -64,8 +78,15 @@ h1 {
 	font-family: "Zain", sans-serif;
 	font-weight: 700;
 	font-style: normal;
-	font-size: 4rem;
-	padding-top: 2rem;
+	font-size: 3rem;
+	padding-top: 1rem;
+}
+
+h2 {
+	font-family: "Zain", sans-serif;
+	font-size: 2rem;
+	font-weight: 400;
+	font-style: normal;
 }
 
 a {
