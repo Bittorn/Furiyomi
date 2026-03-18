@@ -24,7 +24,7 @@
 		<p class="{styles.menu} {styles.cta}" onclick={openMenu} onkeydown={openMenu}>Menu</p>
 	</nav>
 </header>
-<div class="{styles.overlay}" bind:this={overlay}>
+<div class={styles.overlay} bind:this={overlay}>
 	<!-- svelte-ignore a11y_missing_attribute -->
 	<a class={styles.close} onclick={closeMenu} onkeydown={closeMenu} role="button" tabindex="0"
 		>&times;</a

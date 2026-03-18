@@ -1,0 +1,33 @@
+@use '../../app.scss' as globals;
+
+$search-color: #333;
+
+.searchbar {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+    margin: 3rem;
+
+	.searchicon {
+		background-image: url('https://cdn.pixabay.com/photo/2017/01/13/01/22/magnifying-glass-1976105_1280.png');
+		filter: invert(96%) sepia(20%) saturate(43%) hue-rotate(228deg) brightness(105%) contrast(80%);
+		background-size: cover;
+		width: 24px;
+		height: 24px;
+	}
+
+	input {
+		color: globals.$font-color;
+		background-color: $search-color;
+		width: 8rem;
+		margin-left: 8px;
+		padding: 6px;
+		border-radius: 6px;
+		border-style: solid;
+		border-color: globals.$link-unfocused-color;
+
+		&:focus {
+			outline: 0;
+		}
+	}
+}
