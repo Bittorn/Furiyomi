@@ -18,7 +18,7 @@
 		<ul class={styles.nav__links}>
 			<NavLink href="/">Home</NavLink>
 			<NavLink href="/about">About</NavLink>
-			<NavLink href="/projects">Projects</NavLink>
+			<NavLink href="/reader">Reader</NavLink>
 		</ul>
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 		<p class="{styles.menu} {styles.cta}" onclick={openMenu} onkeydown={openMenu}>Menu</p>
@@ -32,6 +32,6 @@
 	<div class={styles.overlay__content}>
 		<NavLink href="/" onclick={closeMenu}>Home</NavLink>
 		<NavLink href="/about" onclick={closeMenu}>About</NavLink>
-		<NavLink href="/projects" onclick={closeMenu}>Projects</NavLink>
+		<NavLink href="/reader" onclick={closeMenu}>Reader</NavLink>
 	</div>
 </div>
