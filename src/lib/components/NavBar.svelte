@@ -18,6 +18,7 @@
 		<ul class={styles.nav__links}>
 			<NavLink href="/">Home</NavLink>
 			<NavLink href="/discover">Discover</NavLink>
+			<NavLink href="/ocr">OCR</NavLink>
 			<NavLink href="/settings">Settings</NavLink>
 		</ul>
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
@@ -32,6 +33,7 @@
 	<div class={styles.overlay__content}>
 		<NavLink href="/" onclick={closeMenu}>Home</NavLink>
 		<NavLink href="/discover" onclick={closeMenu}>Discover</NavLink>
+		<NavLink href="/ocr" onclick={closeMenu}>OCR</NavLink>
 		<NavLink href="/settings" onclick={closeMenu}>Settings</NavLink>
 	</div>
 </div>
