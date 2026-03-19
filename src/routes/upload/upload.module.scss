@@ -1,6 +1,6 @@
-@use '../../app.scss' as globals;
+@use '$lib/app.scss' as globals;
 
-input[type=submit] {
+button {
     color: globals.$font-color;
     font-size: large;
     padding: 12px 28px;

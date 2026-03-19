@@ -1,16 +1,18 @@
 <script lang="ts">
 	import favicon from '$lib/assets/favicon.svg';
-	import NavBar from '$lib/components/NavBar.svelte';
-	import '../app.scss';
+	import Sidebar from '$lib/components/Sidebar.svelte';
+	import '$lib/app.scss';
 
 	let { children } = $props();
 </script>
 
 <svelte:head>
+	<link rel="manifest" href="/manifest.json" />
 	<link rel="icon" href={favicon} />
+	<meta name="google" content="notranslate" />
 	<title>Furiyomi</title>
 </svelte:head>
 
-<NavBar />
+<Sidebar />
 
 {@render children()}

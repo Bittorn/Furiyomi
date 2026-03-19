@@ -1,0 +1,39 @@
+<script lang="ts">
+	import logo from '$lib/assets/favicon.svg';
+	import styles from './about.module.scss';
+</script>
+
+<svelte:head>
+	<title>About | Furiyomi</title>
+</svelte:head>
+
+<!-- svelte-ignore a11y_missing_content -->
+<h1 class={styles.title}></h1>
+
+<img src={logo} alt="Furiyomi logo" class={styles.logo} />
+
+<h2>A manga platform designed for Japanese learners</h2>
+
+<div class={styles.yapping}>
+	<p>
+		Furiyomi is a manga platform for the discovery, tracking, and reading of manga that you can
+		actually understand. All manga on the platform has full furigana support, which you can
+		fine-tune to your individual skill level. In addition, you can easily toggle betweeen Japanese
+		and English versions of the text on-screen, so you can know that yes, <a
+			href="https://mangadex.org/chapter/7f1b24f9-aaf0-4436-a479-c521d6b1d42b/1"
+			rel="external"
+			target="_blank">they really did just say that.</a
+		>
+	</p>
+</div>
+
+<h2>🚧 This site is currently under construction 🚧</h2>
+
+<div class={styles.yapping}>
+	<p>
+		Currently, you can read uploaded manga with support for looking up furigana via a popup
+		dictionary like Yomitan/Yomichan, or copy/paste to Google Translate/DeepL/etc.
+		<b>Furigana is not yet displayed.</b> This is because I am an actual brainlet and cannot understand
+		CSS for the life of me. Could I use AI? Yes, but I don't want to :P
+	</p>
+</div>
