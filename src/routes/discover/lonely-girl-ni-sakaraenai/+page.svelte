@@ -13,7 +13,7 @@
 </h1>
 <h2>I Can't Say No to the Lonely Girl</h2>
 
-<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+<!-- eslint-disable svelte/no-navigation-without-resolve -->
 <a href="/discover" class={styles.back}>Back</a><br /><br /><br />
 
 <img src={cover} alt="Manga cover" class={styles.solocover} />
