@@ -7,6 +7,8 @@
 	<title>Discover - Furiyomi</title>
 </svelte:head>
 
+<h1>Discover</h1>
+
 <div class={styles.searchbar}>
 	<div class={styles.searchicon}></div>
 	<input type="text" id="searchBar" placeholder="Search manga..." />

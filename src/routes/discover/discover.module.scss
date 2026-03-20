@@ -7,6 +7,7 @@ $search-color: #333;
 	align-items: center;
 	justify-content: center;
 	margin: 3rem;
+	margin-top: -2rem;
 
 	.searchicon {
 		background-image: url('https://cdn.pixabay.com/photo/2017/01/13/01/22/magnifying-glass-1976105_1280.png');
@@ -33,9 +34,25 @@ $search-color: #333;
 }
 
 .cover {
-	width: 18rem;
+	width: 16rem;
 	display: block;
 	margin: auto;
+}
+
+.solocover {
+	width: 20rem;
+	display: block;
+	margin: auto;
+	transition: width 0.4s ease 0s;;
+
+	&:hover {
+		width: 26rem;
+	}
+}
+
+.links {
+	margin: 2rem 0 1rem;
+	display: flexbox;
 }
 
 .back {
@@ -140,6 +157,6 @@ h2 {
 	}
 
 	.description {
-		max-width: 100%;
+		max-width: 80%;
 	}
 }
