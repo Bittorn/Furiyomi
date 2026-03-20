@@ -14,7 +14,6 @@
 <img src={logo} alt="Furiyomi logo" class={styles.logo} />
 
 <h2>A manga platform designed for Japanese learners</h2>
-<h3>🚧 This site is currently under construction 🚧</h3>
 
 <div class={styles.yapping}>
 	<p>
@@ -25,5 +24,16 @@
 			href="https://mangadex.org/chapter/7f1b24f9-aaf0-4436-a479-c521d6b1d42b/1"
 			target="_blank">they really did just say that.</a
 		>
+	</p>
+</div>
+
+<h2>🚧 This site is currently under construction 🚧</h2>
+
+<div class={styles.yapping}>
+	<p>
+		Currently, you can read uploaded manga with support for looking up furigana via a popup
+		dictionary like Yomitan/Yomichan, or copy/paste to Google Translate/DeepL/etc.
+		<b>Furigana is not yet displayed.</b> This is because I am an actual brainlet and cannot understand
+		CSS for the life of me. Could I use AI? Yes, but I don't want to :P
 	</p>
 </div>
