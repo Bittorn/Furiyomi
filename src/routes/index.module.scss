@@ -17,3 +17,9 @@
 	justify-content: center;
 	max-width: 40%;
 }
+
+@media only screen and (max-width: 1100px) {
+	.yapping {
+		max-width: 100%;
+	}
+}

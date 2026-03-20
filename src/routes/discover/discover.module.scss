@@ -6,7 +6,8 @@ $search-color: #333;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-    margin: 3rem;
+	margin: 3rem;
+	margin-top: -2rem;
 
 	.searchicon {
 		background-image: url('https://cdn.pixabay.com/photo/2017/01/13/01/22/magnifying-glass-1976105_1280.png');
@@ -29,5 +30,133 @@ $search-color: #333;
 		&:focus {
 			outline: 0;
 		}
+	}
+}
+
+.cover {
+	width: 16rem;
+	display: block;
+	margin: auto;
+}
+
+.solocover {
+	width: 20rem;
+	display: block;
+	margin: auto;
+	transition: width 0.4s ease 0s;;
+
+	&:hover {
+		width: 26rem;
+	}
+}
+
+.links {
+	margin: 2rem 0 1rem;
+	display: flexbox;
+}
+
+.back {
+	color: globals.$font-color;
+	font-size: large;
+	padding: 12px 28px;
+	background-color: globals.$button-color;
+	border: none;
+	border-radius: 50px;
+	cursor: pointer;
+	transition: background-color 0.2s ease 0s;
+
+	&:hover {
+		background-color: globals.$button-hover-color;
+	}
+}
+
+h3 {
+	font-family: 'Zain', sans-serif;
+	font-weight: 400;
+	margin-top: -1rem;
+	margin-bottom: 1rem;
+}
+
+h2 {
+	margin-top: -2rem;
+}
+
+.manga {
+	display: grid;
+	grid-template-columns: auto auto auto;
+	gap: 2rem;
+	padding: 8px;
+
+	h2 {
+		font-family: 'LINE Seed JP', sans-serif;
+		font-weight: 400;
+		font-style: normal;
+	}
+
+	a {
+		color: globals.$font-color;
+		font-size: large;
+		padding: 12px 28px;
+		background-color: globals.$button-color;
+		border: none;
+		border-radius: 50px;
+		cursor: pointer;
+		transition: background-color 0.2s ease 0s;
+
+		&:hover {
+			background-color: globals.$button-hover-color;
+		}
+	}
+
+	br {
+		margin-bottom: 1rem;
+	}
+}
+
+.volumes {
+	display: grid;
+	grid-template-columns: auto auto auto;
+	gap: 2rem;
+	padding: 8px 24rem;
+
+	a {
+		color: globals.$font-color;
+		font-size: large;
+		padding: 12px 28px;
+		background-color: transparent;
+		border: solid 1px;
+		border-radius: 50px;
+		cursor: pointer;
+		border-color: globals.$button-hover-color;
+		transition: background-color 0.2s ease 0s;
+
+		&:hover {
+			background-color: globals.$button-hover-color;
+		}
+	}
+
+	br {
+		margin-bottom: 1rem;
+	}
+}
+
+.description {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 40%;
+}
+
+@media only screen and (max-width: 1500px) {
+	.manga {
+		grid-template-columns: auto auto;
+	}
+
+	.volumes {
+		padding: 8px;
+	}
+
+	.description {
+		max-width: 80%;
 	}
 }

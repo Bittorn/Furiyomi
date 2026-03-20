@@ -76,7 +76,7 @@
 	left: 0;
 	top: 0;
 	background-color: globals.$header-bg-color;
-	backdrop-filter: blur(8px);
+	backdrop-filter: blur(32px);
 	overflow-x: hidden;
 	transition: width 0.3s ease 0s;
 }
