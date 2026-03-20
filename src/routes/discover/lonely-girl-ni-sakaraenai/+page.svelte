@@ -1,7 +1,7 @@
 <!-- eslint-disable svelte/no-navigation-without-resolve -->
 <script lang="ts">
 	import styles from './page.module.scss';
-	import cover from './1/vol1/0.jpeg';
+	import cover from '$lib/assets/covers/lonely-girl-ni-sakaraenai.jpeg';
 </script>
 
 <svelte:head>
@@ -16,7 +16,7 @@
 
 <!-- eslint-disable svelte/no-navigation-without-resolve -->
 <p>
-	<a href="vol1.html">Read volume 1</a><br />
+	<a href="$lib/mokuro/lonely-girl-ni-sakaraenai/1/vol1.html">Read volume 1</a><br />
 	<a href="vol2.html">Read volume 2</a><br />
 	<a href="vol3.html">Read volume 3</a><br />
 	<a href="vol4.html">Read volume 4</a><br />
