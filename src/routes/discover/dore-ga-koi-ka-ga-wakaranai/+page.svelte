@@ -8,10 +8,12 @@
 	<title>どれが恋かがわからない - Furiyomi</title>
 </svelte:head>
 
-<h1>
-	どれが<ruby>恋<rt>こい</rt></ruby>かがわからない
-</h1>
-<h2>I Don’t Know Which is Love</h2>
+<div class={styles.title}>
+	<h1>
+		どれが<ruby>恋<rt>こい</rt></ruby>かがわからない
+	</h1>
+	<h2>I Don’t Know Which is Love</h2>
+</div>
 
 <!-- eslint-disable svelte/no-navigation-without-resolve -->
 <a href="/discover" class={styles.back}>Back</a><br /><br /><br />

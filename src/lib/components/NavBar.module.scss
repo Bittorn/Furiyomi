@@ -121,7 +121,7 @@
 
 @media only screen and (max-width: 1110px) {
 	.navbar {
-		width: 100%;
+		box-shadow: none;
 		background-color: transparent;
 		backdrop-filter: 0;
 	}

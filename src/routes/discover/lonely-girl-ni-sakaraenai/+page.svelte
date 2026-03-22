@@ -8,10 +8,12 @@
 	<title>ロンリーガールに逆らえない - Furiyomi</title>
 </svelte:head>
 
-<h1>
-	ロンリーガールに<ruby>逆<rt>さか</rt></ruby>らえない
-</h1>
-<h2>I Can't Say No to the Lonely Girl</h2>
+<div class={styles.title}>
+	<h1>
+		ロンリーガールに<ruby>逆<rt>さか</rt></ruby>らえない
+	</h1>
+	<h2>I Can't Say No to the Lonely Girl</h2>
+</div>
 
 <!-- eslint-disable svelte/no-navigation-without-resolve -->
 <a href="/discover" class={styles.back}>Back</a><br /><br /><br />

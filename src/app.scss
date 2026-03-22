@@ -5,59 +5,81 @@
 @import url('https://fonts.googleapis.com/css2?family=LINE+Seed+JP:wght@400;700&display=swap');
 
 // #region Global variables
-$bg-color: hsl(0, 0%, 13%);
-$header-bg-color: hsla(0, 0%, 6%, 0.6);
-$shadow-color: hsla(0, 0%, 10%, 10%);
+$bg-color: hsl(250, 25%, 10%);
+$header-bg-color: hsla(238, 13%, 26%, 0.4);
+$shadow-color: hsla(238, 13%, 26%, 15%);
 $font-color: whitesmoke;
 $link-color: $font-color;
-$link-unfocused-color: hsl(0, 0%, 56%);
-$primary-color: #8A2BE2;
+$link-unfocused-color: hsl(238, 10%, 50%);
+$primary-color: hsl(350, 83%, 69%);
 $button-color: $primary-color;
-$button-hover-color: color.adjust($color: $primary-color, $lightness: 6%);
+$button-hover-color: hsl(350, 83%, 79%);
+
+// $bg-color: hsl(0, 0%, 13%);
+// $header-bg-color: hsla(0, 0%, 6%, 0.6);
+// $shadow-color: hsla(0, 0%, 10%, 10%);
+// $font-color: whitesmoke;
+// $link-color: $font-color;
+// $link-unfocused-color: hsl(0, 0%, 56%);
+// $primary-color: #8a2be2;
+// $button-color: $primary-color;
+// $button-hover-color: color.adjust(
+// 	$color: $primary-color,
+// 	$lightness: 6%
+// );
+
+// #endregion
+
+// #region Candy theme colors
+$cotton-candy: hsla(350, 83%, 79%, 1);
+$old-rose: hsla(351, 32%, 65%, 1);
+$seashell: hsla(28, 74%, 98%, 1);
+$charcoal: hsla(238, 13%, 36%, 1);
+$midnight-violet: hsla(250, 25%, 10%, 1);
 // #endregion
 
 .zain-regular {
-  font-family: "Zain", sans-serif;
-  font-weight: 400;
-  font-style: normal;
+	font-family: 'Zain', sans-serif;
+	font-weight: 400;
+	font-style: normal;
 }
 
 .zain-bold {
-  font-family: "Zain", sans-serif;
-  font-weight: 700;
-  font-style: normal;
+	font-family: 'Zain', sans-serif;
+	font-weight: 700;
+	font-style: normal;
 }
 
 .zain-regular-italic {
-  font-family: "Zain", sans-serif;
-  font-weight: 400;
-  font-style: italic;
+	font-family: 'Zain', sans-serif;
+	font-weight: 400;
+	font-style: italic;
 }
 
 .atkinson-hyperlegible-next-400 {
-  font-family: "Atkinson Hyperlegible Next", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
+	font-family: 'Atkinson Hyperlegible Next', sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
 }
 
 .atkinson-hyperlegible-next-600 {
-  font-family: "Atkinson Hyperlegible Next", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 600;
-  font-style: normal;
+	font-family: 'Atkinson Hyperlegible Next', sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 600;
+	font-style: normal;
 }
 
 .line-seed-jp-regular {
-  font-family: "LINE Seed JP", sans-serif;
-  font-weight: 400;
-  font-style: normal;
+	font-family: 'LINE Seed JP', sans-serif;
+	font-weight: 400;
+	font-style: normal;
 }
 
 .line-seed-jp-bold {
-  font-family: "LINE Seed JP", sans-serif;
-  font-weight: 700;
-  font-style: normal;
+	font-family: 'LINE Seed JP', sans-serif;
+	font-weight: 700;
+	font-style: normal;
 }
 
 html {
@@ -67,7 +89,7 @@ html {
 body {
 	color: $font-color;
 	text-align: center;
-	font-family: "Atkinson Hyperlegible Next", sans-serif;
+	font-family: 'Atkinson Hyperlegible Next', sans-serif;
 	font-optical-sizing: auto;
 	font-weight: 400;
 	font-style: normal;
@@ -75,7 +97,7 @@ body {
 }
 
 h1 {
-	font-family: "Zain", sans-serif;
+	font-family: 'Zain', sans-serif;
 	font-weight: 700;
 	font-style: normal;
 	font-size: 3rem;
@@ -83,7 +105,7 @@ h1 {
 }
 
 h2 {
-	font-family: "Zain", sans-serif;
+	font-family: 'Zain', sans-serif;
 	font-size: 2rem;
 	font-weight: 400;
 	font-style: normal;

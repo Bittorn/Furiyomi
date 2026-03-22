@@ -19,7 +19,7 @@
 			<NavLink href="/">Home</NavLink>
 			<NavLink href="/discover">Discover</NavLink>
 			<NavLink href="/ocr">OCR</NavLink>
-			<NavLink href="/settings">Settings</NavLink>
+			<!-- <NavLink href="/settings">Settings</NavLink> -->
 		</ul>
 		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 		<p class="{styles.menu} {styles.cta}" onclick={openMenu} onkeydown={openMenu}>Menu</p>
@@ -34,6 +34,6 @@
 		<NavLink href="/" onclick={closeMenu}>Home</NavLink>
 		<NavLink href="/discover" onclick={closeMenu}>Discover</NavLink>
 		<NavLink href="/ocr" onclick={closeMenu}>OCR</NavLink>
-		<NavLink href="/settings" onclick={closeMenu}>Settings</NavLink>
+		<!-- <NavLink href="/settings" onclick={closeMenu}>Settings</NavLink> -->
 	</div>
 </div>

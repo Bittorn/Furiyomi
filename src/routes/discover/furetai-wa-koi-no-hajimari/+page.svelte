@@ -8,11 +8,13 @@
 	<title>「触れたい」は恋の始まり - Furiyomi</title>
 </svelte:head>
 
-<h1>
-	「<ruby>触<rt>ふ</rt></ruby>れたい」は<ruby>恋<rt>こい</rt></ruby>の<ruby>始<rt>はじ</rt></ruby
-	>まり
-</h1>
-<h2>"I Want to Touch" is How Love Starts</h2>
+<div class={styles.title}>
+	<h1>
+		「<ruby>触<rt>ふ</rt></ruby>れたい」は<ruby>恋<rt>こい</rt></ruby>の<ruby>始<rt>はじ</rt></ruby
+		>まり
+	</h1>
+	<h2>"I Want to Touch" is How Love Starts</h2>
+</div>
 
 <!-- eslint-disable svelte/no-navigation-without-resolve -->
 <a href="/discover" class={styles.back}>Back</a><br /><br /><br />

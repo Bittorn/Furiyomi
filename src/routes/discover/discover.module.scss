@@ -43,7 +43,7 @@ $search-color: #333;
 	width: 20rem;
 	display: block;
 	margin: auto;
-	transition: width 0.4s ease 0s;;
+	transition: width 0.4s ease 0s;
 
 	&:hover {
 		width: 26rem;
@@ -70,15 +70,10 @@ $search-color: #333;
 	}
 }
 
-h3 {
-	font-family: 'Zain', sans-serif;
-	font-weight: 400;
-	margin-top: -1rem;
-	margin-bottom: 1rem;
-}
-
-h2 {
-	margin-top: -2rem;
+.title {
+	h2 {
+		margin-top: -2rem;
+	}
 }
 
 .manga {
@@ -91,6 +86,13 @@ h2 {
 		font-family: 'LINE Seed JP', sans-serif;
 		font-weight: 400;
 		font-style: normal;
+	}
+
+	h3 {
+		font-family: 'Zain', sans-serif;
+		font-weight: 400;
+		margin-top: -1rem;
+		margin-bottom: 1rem;
 	}
 
 	a {
@@ -153,7 +155,8 @@ h2 {
 	}
 
 	.volumes {
-		padding: 8px;
+		gap: 1rem;
+		padding: 8px 8rem;
 	}
 
 	.description {
@@ -161,8 +164,12 @@ h2 {
 	}
 }
 
-@media only screen and (max-width: 1300px) {
+@media only screen and (max-width: 1200px) {
 	.manga {
-		grid-template-columns: auto auto;
+		grid-template-columns: auto;
+	}
+
+	.volumes {
+		grid-template-columns: auto;
 	}
 }
