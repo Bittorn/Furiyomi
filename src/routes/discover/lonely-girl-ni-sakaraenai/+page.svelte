@@ -21,8 +21,10 @@
 <img src={cover} alt="Manga cover" class={styles.solocover} />
 
 <div class={styles.links}>
-	<a href="https://anilist.co/manga/112621/Lonely-Girl-ni-Sakaraenai/" class={styles.back}
-		>View on AniList</a
+	<a
+		href="https://anilist.co/manga/112621/Lonely-Girl-ni-Sakaraenai/"
+		target="_blank"
+		class={styles.back}>View on AniList</a
 	>
 </div>
 

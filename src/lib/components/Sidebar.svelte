@@ -32,7 +32,7 @@
 			>
 			<span>OCR</span>
 		</SidebarLink>
-		<SidebarLink href="/user" class={styles.user}>
+		<SidebarLink href="/account">
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
 				><path
 					fill="currentColor"

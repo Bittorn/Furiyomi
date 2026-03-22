@@ -7,9 +7,8 @@
 	<title>Furiyomi - Manga You Can Understand</title>
 </svelte:head>
 
-<h1 class={styles.title}>
-	<ruby>振<rt>ふ</rt></ruby>り<ruby>読<rt>よ</rt></ruby>み
-</h1>
+<!-- svelte-ignore a11y_missing_content -->
+<h1 class={styles.title}></h1>
 
 <img src={logo} alt="Furiyomi logo" class={styles.logo} />
 

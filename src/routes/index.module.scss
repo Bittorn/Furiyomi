@@ -1,14 +1,101 @@
+@use '../app.scss' as globals;
+
 .logo {
 	width: 12rem;
 	display: block;
 	margin: auto;
+	filter: drop-shadow(0 0 0.75rem globals.$shadow-color);
 }
 
 .title {
-	font-family: "LINE Seed JP", sans-serif;
+	font-family: 'LINE Seed JP', sans-serif;
 	font-weight: 700;
 	font-size: 3.5rem;
 	font-style: normal;
+	background: linear-gradient(135deg, white, globals.$primary-color);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+
+	&::after {
+		content: '振り読み';
+		animation: cycleText 12s linear infinite;
+	}
+
+	@keyframes cycleText {
+		0% {
+			content: '振り読み';
+		}
+		40% {
+			content: '振り読み';
+		}
+		41% {
+			content: '振り読';
+		}
+		42% {
+			content: '振り';
+		}
+		43% {
+			content: '振';
+		}
+		44% {
+			content: 'F';
+		}
+		45% {
+			content: 'Fu';
+		}
+		46% {
+			content: 'Fur';
+		}
+		47% {
+			content: 'Furi';
+		}
+		48% {
+			content: 'Furiy';
+		}
+		49% {
+			content: 'Furiyo';
+		}
+		50% {
+			content: 'Furiyom';
+		}
+		51% {
+			content: 'Furiyomi';
+		}
+		90% {
+			content: 'Furiyomi';
+		}
+		91% {
+			content: 'Furiyom';
+		}
+		92% {
+			content: 'Furiyo';
+		}
+		93% {
+			content: 'Furiy';
+		}
+		94% {
+			content: 'Furi';
+		}
+		95% {
+			content: 'Fur';
+		}
+		96% {
+			content: 'Fu';
+		}
+		97% {
+			content: 'F';
+		}
+		98% {
+			content: '振';
+		}
+		99% {
+			content: '振り';
+		}
+		100% {
+			content: '振り読';
+		}
+	}
 }
 
 .yapping {
