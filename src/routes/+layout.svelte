@@ -1,6 +1,6 @@
 <script lang="ts">
 	import favicon from '$lib/assets/favicon.svg';
-	import NavBar from '$lib/components/NavBar.svelte';
+	import Sidebar from '$lib/components/Sidebar.svelte';
 	import '../app.scss';
 
 	let { children } = $props();
@@ -11,6 +11,6 @@
 	<title>Furiyomi</title>
 </svelte:head>
 
-<NavBar />
+<Sidebar />
 
 {@render children()}

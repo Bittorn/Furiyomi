@@ -1,26 +1,23 @@
-# sv
+# Furiyomi - Manga You Can Understand
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+*Furiyomi* is a manga platform for the discovery, tracking, and reading of manga that you can
+actually understand. All manga on the platform has full furigana support, which you can
+fine-tune to your individual skill level. In addition, you can easily toggle betweeen Japanese
+and English versions of the text on-screen, so you can know that yes, <a
+			href="https://mangadex.org/chapter/7f1b24f9-aaf0-4436-a479-c521d6b1d42b/1"
+			target="_blank">they really did just say that.</a
+		>
 
-## Creating a project
+## 🚧 This app is currently in Pre-Alpha 🚧
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```sh
-# create a new project
-npx sv create my-app
-```
-
-To recreate this project with the same configuration:
-
-```sh
-# recreate this project
-npx sv@0.12.7 create --template minimal --types ts --add prettier eslint --install npm furiyomi
-```
+Currently, you can read uploaded manga with support for looking up furigana via a popup
+dictionary like Yomitan/Yomichan, or copy/paste to Google Translate/DeepL/etc.
+**Furigana is not yet displayed.** This is because I am an actual brainlet and cannot understand
+CSS for the life of me. Could I use AI? Yes, but I won't!
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Once dependencies have been installed with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
 ```sh
 npm run dev
@@ -29,14 +26,18 @@ npm run dev
 npm run dev -- --open
 ```
 
-## Building
+## Deploying with Docker
 
-To create a production version of your app:
+To build the Docker image, run the following command from the directory containing the Dockerfile:
 
 ```sh
-npm run build
+docker build -t furiyomi .
 ```
 
-You can preview the production build with `npm run preview`.
+Once the build is complete, you can run the app with:
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+```sh
+docker run -p 3796:3796 furiyomi
+```
+
+The app can now be accessed by navigating to http://localhost:3796 in your web browser.

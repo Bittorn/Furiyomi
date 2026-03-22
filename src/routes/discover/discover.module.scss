@@ -10,11 +10,16 @@ $search-color: #333;
 	margin-top: -2rem;
 
 	.searchicon {
-		background-image: url('https://cdn.pixabay.com/photo/2017/01/13/01/22/magnifying-glass-1976105_1280.png');
-		filter: invert(96%) sepia(20%) saturate(43%) hue-rotate(228deg) brightness(105%) contrast(80%);
+		background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik0xMSAyYzQuOTY4IDAgOSA0LjAzMiA5IDlzLTQuMDMyIDktOSA5cy05LTQuMDMyLTktOXM0LjAzMi05IDktOW0wIDE2YzMuODY3IDAgNy0zLjEzMyA3LTdzLTMuMTMzLTctNy03cy03IDMuMTMzLTcgN3MzLjEzMyA3IDcgN204LjQ4NS4wNzFsMi44MjkgMi44MjhsLTEuNDE1IDEuNDE1bC0yLjgyOC0yLjgyOXoiLz48L3N2Zz4=');
+		filter: invert(96%) sepia(20%) saturate(43%) hue-rotate(228deg) brightness(65%) contrast(80%);
 		background-size: cover;
 		width: 24px;
 		height: 24px;
+		transition: filter 0.1s ease;
+
+		&:hover {
+			filter: invert(96%) sepia(20%) saturate(43%) hue-rotate(228deg) brightness(95%) contrast(80%);
+		}
 	}
 
 	input {
@@ -78,7 +83,7 @@ $search-color: #333;
 
 .manga {
 	display: grid;
-	grid-template-columns: auto auto auto auto;
+	grid-template-columns: auto auto auto;
 	gap: 1rem;
 	padding: 8px;
 
@@ -151,7 +156,7 @@ $search-color: #333;
 
 @media only screen and (max-width: 1500px) {
 	.manga {
-		grid-template-columns: auto auto auto;
+		grid-template-columns: auto auto;
 	}
 
 	.volumes {
@@ -164,7 +169,7 @@ $search-color: #333;
 	}
 }
 
-@media only screen and (max-width: 1200px) {
+@media only screen and (max-width: 1100px) {
 	.manga {
 		grid-template-columns: auto;
 	}

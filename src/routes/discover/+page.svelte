@@ -25,7 +25,6 @@
 		<img src={whichIsLoveCover} alt="Manga cover" class={styles.cover} /><br />
 		<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
 		<a href="discover/dore-ga-koi-ka-ga-wakaranai">View</a>
-		<br /><br />
 	</div>
 
 	<div>
@@ -38,7 +37,6 @@
 		<img src={wantToTouchCover} alt="Manga cover" class={styles.cover} /><br />
 		<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
 		<a href="discover/furetai-wa-koi-no-hajimari">View</a>
-		<br /><br />
 	</div>
 
 	<div>
@@ -49,6 +47,5 @@
 		<img src={lonelyGirlCover} alt="Manga cover" class={styles.cover} /><br />
 		<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
 		<a href="discover/lonely-girl-ni-sakaraenai">View</a>
-		<br /><br />
 	</div>
 </div>

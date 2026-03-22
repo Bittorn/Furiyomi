@@ -17,7 +17,7 @@
 
 		// the actual semi-decent code
 		if (page.url.pathname.includes(href)) {
-			return 'current'
+			return 'current';
 		} else {
 			return '';
 		}
