@@ -1,0 +1,16 @@
+@use '../../app.scss' as globals;
+
+button {
+    color: globals.$font-color;
+    font-size: large;
+    padding: 12px 28px;
+	background-color: globals.$button-color;
+	border: none;
+	border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.2s ease 0s;
+
+    &:hover {
+        background-color: globals.$button-hover-color;
+    }
+}

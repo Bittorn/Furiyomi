@@ -4,7 +4,7 @@
 </script>
 
 <svelte:head>
-	<title>Furiyomi - Manga You Can Understand</title>
+	<title>Home | Furiyomi</title>
 </svelte:head>
 
 <!-- svelte-ignore a11y_missing_content -->

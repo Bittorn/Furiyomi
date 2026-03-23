@@ -83,7 +83,7 @@ $search-color: #333;
 
 .manga {
 	display: grid;
-	grid-template-columns: auto auto auto;
+	grid-template-columns: auto auto auto auto;
 	gap: 1rem;
 	padding: 8px;
 
@@ -152,6 +152,12 @@ $search-color: #333;
 	align-items: center;
 	justify-content: center;
 	max-width: 40%;
+}
+
+@media only screen and (max-width: 2000px) {
+	.manga {
+		grid-template-columns: auto auto auto;
+	}
 }
 
 @media only screen and (max-width: 1500px) {

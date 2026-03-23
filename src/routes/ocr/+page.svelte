@@ -9,7 +9,7 @@
 
 	function doOCR() {
 		(async () => {
-			const worker = await createWorker('jpn'); // might not be the right code but idk
+			const worker = await createWorker('eng');
 
 			output = '';
 
