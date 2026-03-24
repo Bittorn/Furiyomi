@@ -24,4 +24,31 @@
 		<img src={cover} alt="Manga cover" class={styles.cover} /><br />
 		<a href={resolve('/titles/[mangaTitle]', { mangaTitle: 'lonely-girl-ni-sakaraenai' })}>View</a>
 	</div>
+
+	<div>
+		<h2>
+			ロンリーガールに<ruby>逆<rt>さか</rt></ruby>らえない
+		</h2>
+		<h3>I Can't Say No to the Lonely Girl</h3>
+		<img src={cover} alt="Manga cover" class={styles.cover} /><br />
+		<a href={resolve('/titles/[mangaTitle]', { mangaTitle: 'lonely-girl-ni-sakaraenai' })}>View</a>
+	</div>
+
+	<div>
+		<h2>
+			ロンリーガールに<ruby>逆<rt>さか</rt></ruby>らえない
+		</h2>
+		<h3>I Can't Say No to the Lonely Girl</h3>
+		<img src={cover} alt="Manga cover" class={styles.cover} /><br />
+		<a href={resolve('/titles/[mangaTitle]', { mangaTitle: 'lonely-girl-ni-sakaraenai' })}>View</a>
+	</div>
+
+	<div>
+		<h2>
+			ロンリーガールに<ruby>逆<rt>さか</rt></ruby>らえない
+		</h2>
+		<h3>I Can't Say No to the Lonely Girl</h3>
+		<img src={cover} alt="Manga cover" class={styles.cover} /><br />
+		<a href={resolve('/titles/[mangaTitle]', { mangaTitle: 'lonely-girl-ni-sakaraenai' })}>View</a>
+	</div>
 </div>

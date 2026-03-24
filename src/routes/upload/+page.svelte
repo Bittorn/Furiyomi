@@ -11,8 +11,8 @@
 
 <form method="post" use:enhance enctype="multipart/form-data">
 	<div>
-		<label for="file">Select folder: </label>
-		<input type="file" id="file" name="fileToUpload" required />
+		<label for="file">Select file: </label>
+		<input type="file" id="file" name="fileToUpload" webkitdirectory required />
 	</div>
 	<br />
 	<button type="submit">Upload</button>
