@@ -59,13 +59,13 @@ export const actions = {
 			// TODO: do all this asynchronously
 
 			const fileToUpload = file as File;
-			const filePath = `data/${fileToUpload.name}`;
+			const filePath = `data/manga/${fileToUpload.name}`;
 			console.log(filePath);
 
 			// Check if it's garbage
 			if (shouldIgnoreFile(fileToUpload)) return;
 
-			// Create directory if doesn't exist
+			// Create directory if it doesn't exist
 			const fileDir = path.dirname(filePath);
 
 			if (!existsSync(fileDir)) {
