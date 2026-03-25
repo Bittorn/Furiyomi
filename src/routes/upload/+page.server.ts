@@ -1,6 +1,7 @@
 import { fail } from '@sveltejs/kit';
-import { writeFileSync } from 'fs';
+import { writeFileSync, existsSync, mkdirSync } from 'fs';
 import micromatch from 'micromatch';
+import path from 'path';
 
 const DEFAULT_FILES_TO_IGNORE = [
 	'.DS_Store', // OSX indexing file
@@ -43,7 +44,9 @@ export const actions = {
 	default: async ({ request }) => {
 		const formData = await request.formData();
 
-		const files = formData.getAll('file');
+		const files = formData.getAll('fileToUpload');
+
+		console.log(`Received upload request: ${files.length} items`);
 
 		if (files.length <= 0) {
 			return fail(400, {
@@ -53,14 +56,25 @@ export const actions = {
 		}
 
 		for (const file of files) {
+			// TODO: do all this asynchronously
+
 			const fileToUpload = file as File;
+			const filePath = `data/${fileToUpload.name}`;
+			console.log(filePath);
 
 			// Check if it's garbage
-			if (shouldIgnoreFile(fileToUpload)) return
+			if (shouldIgnoreFile(fileToUpload)) return;
+
+			// Create directory if doesn't exist
+			const fileDir = path.dirname(filePath);
+
+			if (!existsSync(fileDir)) {
+				mkdirSync(fileDir, { recursive: true });
+				console.log(`Directory ${fileDir} (and parents) created`);
+			}
 
 			// Write the file to the data folder
-			// TODO: do this asynchronously
-			writeFileSync(`data/${fileToUpload.name}`, Buffer.from(await fileToUpload.arrayBuffer()));
+			writeFileSync(filePath, Buffer.from(await fileToUpload.arrayBuffer()));
 		}
 
 		return {

@@ -12,7 +12,7 @@
 <form method="post" use:enhance enctype="multipart/form-data">
 	<div>
 		<label for="file">Select file: </label>
-		<input type="file" id="file" name="fileToUpload" webkitdirectory required />
+		<input type="file" id="file" name="fileToUpload" webkitdirectory multiple required />
 	</div>
 	<br />
 	<button type="submit">Upload</button>
