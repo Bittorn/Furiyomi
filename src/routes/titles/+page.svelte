@@ -28,7 +28,9 @@
 				mangaID={manga.id}
 				mangaTitleRomaji={manga.title.romaji}
 				mangaTitleNative={manga.title.native}
-				mangaCoverPath={noCover}
+				mangaCoverPath={manga.cover
+					? `/data/manga/${manga.id}/${manga.volumes[0].title}/${manga.cover}`
+					: noCover}
 			/>
 		{/each}
 	</div>

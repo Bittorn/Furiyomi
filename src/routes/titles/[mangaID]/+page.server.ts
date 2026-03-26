@@ -13,6 +13,7 @@ export const load: PageServerLoad = async ({ params }) => {
 			title_romaji: foundManga.title.romaji,
 			title_native: foundManga.title.native,
 			title_english: foundManga.title.english,
+			cover: foundManga.cover,
 			link: foundManga.link,
 			description: foundManga.description,
 			volumes: foundManga.volumes

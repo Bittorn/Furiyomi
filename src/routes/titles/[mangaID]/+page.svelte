@@ -1,13 +1,13 @@
 <script lang="ts">
 	import styles from './manga.module.scss';
-	import cover from '$lib/assets/covers/no-cover.png';
+	import noCover from '$lib/assets/covers/no-cover.png';
 	import MangaVolumeLink from '$lib/components/MangaVolumeLink.svelte';
 
 	let { data } = $props();
 
 	// svelte-ignore state_referenced_locally
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	let { id, title_romaji, title_native, title_english, link, description, volumes } = data;
+	let { id, title_romaji, title_native, title_english, cover, link, description, volumes } = data;
 </script>
 
 <svelte:head>
@@ -26,7 +26,11 @@
 	<!-- svelte-ignore a11y_missing_attribute -->
 	<a onclick={() => history.back()} class={styles.back}>Back</a><br /><br /><br />
 
-	<img src={cover} alt="Manga cover" class={styles.solocover} />
+	<img
+		src={cover ? `/data/manga/${id}/${volumes[0].title}/${cover}` : noCover}
+		alt="Manga cover"
+		class={styles.solocover}
+	/>
 
 	<div class={styles.links}>
 		<a href={link} rel="external" target="_blank" class={styles.back}>View on AniList</a>
