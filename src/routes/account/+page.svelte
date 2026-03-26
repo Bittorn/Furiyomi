@@ -12,14 +12,12 @@
 
 <h1>Login</h1>
 
+<p>This page basically does nothing for now, but it will soon!</p>
+
 <h2>Currently logged in as: {data.user ? data.user : 'Guest'}</h2>
 
 <div class={styles.login}>
-	<form
-		method="post"
-		use:enhance
-		enctype="multipart/form-data"
-	>
+	<form method="post" use:enhance enctype="multipart/form-data">
 		<div>
 			<label for="username">Username:</label>
 			<input type="text" id="username" name="username" required />
