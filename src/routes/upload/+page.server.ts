@@ -1,3 +1,4 @@
+// import { updateDB } from '$lib/db/helpers.js';
 import { fail } from '@sveltejs/kit';
 import { writeFileSync, existsSync, mkdirSync } from 'fs';
 import micromatch from 'micromatch';
@@ -59,7 +60,7 @@ export const actions = {
 			// TODO: do all this asynchronously
 
 			const fileToUpload = file as File;
-			const filePath = `data/manga/${fileToUpload.name}`;
+			const filePath = `static/data/manga/${fileToUpload.name}`;
 			console.log(filePath);
 
 			// Check if it's garbage
@@ -76,6 +77,8 @@ export const actions = {
 			// Write the file to the data folder
 			writeFileSync(filePath, Buffer.from(await fileToUpload.arrayBuffer()));
 		}
+
+		
 
 		return {
 			success: true

@@ -7,12 +7,12 @@ export function queryAnilist(search: string) {
         query ($search: String!) {
             Page {
                 media(search: $search, type: MANGA) {
-                id
-                title {
-                    romaji
-                    english
-                    native
-                }
+                    id
+                    title {
+                        romaji
+                        english
+                        native
+                    }
                     startDate {
                         day
                         month

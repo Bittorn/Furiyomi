@@ -9,11 +9,13 @@ export const load: PageServerLoad = async ({ params }) => {
 
 	if (foundManga) {
 		return {
+			id: foundManga.id,
 			title_romaji: foundManga.title.romaji,
-			title_kana: foundManga.title.native,
-			title_en: foundManga.title.english,
-			anilist_link: foundManga.link,
-			description: foundManga.description
+			title_native: foundManga.title.native,
+			title_english: foundManga.title.english,
+			link: foundManga.link,
+			description: foundManga.description,
+			volumes: foundManga.volumes
 		};
 	}
 

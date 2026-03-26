@@ -26,37 +26,7 @@
 		{#each mangaList as manga (manga.id)}
 			<MangaEntry
 				mangaID={manga.id}
-				mangaTitleEnglish={manga.title.english}
-				mangaTitleNative={manga.title.native}
-				mangaCoverPath={noCover}
-			/>
-			<MangaEntry
-				mangaID={manga.id}
-				mangaTitleEnglish={manga.title.english}
-				mangaTitleNative={manga.title.native}
-				mangaCoverPath={noCover}
-			/>
-			<MangaEntry
-				mangaID={manga.id}
-				mangaTitleEnglish={manga.title.english}
-				mangaTitleNative={manga.title.native}
-				mangaCoverPath={noCover}
-			/>
-			<MangaEntry
-				mangaID={manga.id}
-				mangaTitleEnglish={manga.title.english}
-				mangaTitleNative={manga.title.native}
-				mangaCoverPath={noCover}
-			/>
-			<MangaEntry
-				mangaID={manga.id}
-				mangaTitleEnglish={manga.title.english}
-				mangaTitleNative={manga.title.native}
-				mangaCoverPath={noCover}
-			/>
-			<MangaEntry
-				mangaID={manga.id}
-				mangaTitleEnglish={manga.title.english}
+				mangaTitleRomaji={manga.title.romaji}
 				mangaTitleNative={manga.title.native}
 				mangaCoverPath={noCover}
 			/>

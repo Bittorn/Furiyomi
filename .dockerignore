@@ -1,6 +1,6 @@
 # .dockerignore
 node_modules
-data
+static/data
 build
 .svelte-kit
 .git

@@ -1,12 +1,13 @@
 <script lang="ts">
 	import styles from './manga.module.scss';
 	import cover from '$lib/assets/covers/no-cover.png';
-	import { resolve } from '$app/paths';
+	import MangaVolumeLink from '$lib/components/MangaVolumeLink.svelte';
 
 	let { data } = $props();
 
 	// svelte-ignore state_referenced_locally
-	let { title_romaji, title_kana, title_en, anilist_link, description } = data;
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	let { id, title_romaji, title_native, title_english, link, description, volumes } = data;
 </script>
 
 <svelte:head>
@@ -14,8 +15,8 @@
 </svelte:head>
 
 <div class={styles.title}>
-	<h1>{title_kana}</h1>
-	<h2>{title_en}</h2>
+	<h1>{title_romaji}</h1>
+	<h2>{title_native}</h2>
 </div>
 
 <div>
@@ -28,12 +29,7 @@
 	<img src={cover} alt="Manga cover" class={styles.solocover} />
 
 	<div class={styles.links}>
-		<a
-			href={anilist_link}
-			rel="external"
-			target="_blank"
-			class={styles.back}>View on AniList</a
-		>
+		<a href={link} rel="external" target="_blank" class={styles.back}>View on AniList</a>
 	</div>
 </div>
 
@@ -46,10 +42,7 @@
 <br />
 
 <div class={styles.volumes}>
-	<a href={resolve("/")}>Read volume 1</a>
-	<a href={resolve("/")}>Read volume 2</a>
-	<a href={resolve("/")}>Read volume 3</a>
-	<a href={resolve("/")}>Read volume 4</a>
-	<a href={resolve("/")}>Read volume 5</a>
-	<a href={resolve("/")}>Read volume 6</a>
+	{#each volumes as volume (volume.title)}
+		<MangaVolumeLink title={id} volume={volume.title} />
+	{/each}
 </div>
