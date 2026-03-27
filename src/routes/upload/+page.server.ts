@@ -1,45 +1,10 @@
 // import { updateDB } from '$lib/db/helpers.js';
-import { fail } from '@sveltejs/kit';
 import { writeFileSync, existsSync, mkdirSync } from 'fs';
-import micromatch from 'micromatch';
 import path from 'path';
-
-const DEFAULT_FILES_TO_IGNORE = [
-	'.DS_Store', // OSX indexing file
-	'.ds_store',
-	'Thumbs.db', // Windows indexing file
-	'.*~',
-	'~$*',
-	'.~lock.*',
-	'~*.tmp',
-	'*.~*',
-	'._*',
-	'.*.sw?',
-	'.*.*sw?',
-	'.TemporaryItems',
-	'.Trashes',
-	'.DocumentRevisions-V100',
-	'.Trash-*',
-	'.fseventd',
-	'.apdisk',
-	'.directory',
-	'*.part',
-	'*.filepart',
-	'*.crdownload',
-	'*.kate-swp',
-	'*.gnucash.tmp-*',
-	'.synkron.*',
-	'.sync.ffs_db',
-	'.symform',
-	'.symform-store',
-	'.fuse_hidden*',
-	'*.unison',
-	'.nfs*'
-];
-
-function shouldIgnoreFile(file: File) {
-	return micromatch.isMatch(file.name, DEFAULT_FILES_TO_IGNORE);
-}
+import { fail } from '@sveltejs/kit';
+import { generateID, shouldIgnoreFile } from '$lib/upload/helpers.js';
+import { processUpload } from '$lib/import/metadata.js';
+import { dbMangaPath } from '$lib/db/helpers.js';
 
 export const actions = {
 	default: async ({ request }) => {
@@ -56,11 +21,23 @@ export const actions = {
 			});
 		}
 
+		let mangaID, mangaRomaji;
+
+		// #region Upload files
+
 		for (const file of files) {
 			// TODO: do all this asynchronously
 
 			const fileToUpload = file as File;
-			const filePath = `static/data/manga/${fileToUpload.name}`;
+
+			// eslint-disable-next-line prefer-const
+			let fileNameArray = fileToUpload.name.split('/');
+			mangaRomaji = fileNameArray[0]
+			fileNameArray[0] = generateID(fileNameArray[0]);
+			mangaID = fileNameArray[0]
+			const fileName = fileNameArray.join('/');
+
+			const filePath = `${dbMangaPath}/${fileName}`;
 			console.log(filePath);
 
 			// Check if it's garbage
@@ -78,7 +55,11 @@ export const actions = {
 			writeFileSync(filePath, Buffer.from(await fileToUpload.arrayBuffer()));
 		}
 
-		
+		// #endregion
+
+		console.log('File upload complete');
+
+		processUpload(mangaID!, mangaRomaji!)
 
 		return {
 			success: true

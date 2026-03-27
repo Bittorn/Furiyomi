@@ -1,32 +1,29 @@
+const query = `
+	query ($search: String!) {
+		Page {
+			media(search: $search, type: MANGA) {
+				id
+				siteUrl
+				title {
+					romaji
+					english
+					native
+				}
+				startDate {
+					year
+				}
+				genres
+				tags {
+					name
+					isMediaSpoiler
+				}
+			}
+		}
+	}
+`;
+
 export function queryAnilist(search: string) {
 	// From https://docs.anilist.co/guide/graphql/
-
-	// Here we define our query as a multi-line string
-	// Storing it in a separate .graphql/.gql file is also possible
-	const query = `
-        query ($search: String!) {
-            Page {
-                media(search: $search, type: MANGA) {
-                    id
-                    title {
-                        romaji
-                        english
-                        native
-                    }
-                    startDate {
-                        day
-                        month
-                        year
-                    }
-                    genres
-                    tags {
-                        name
-                        isMediaSpoiler
-                    }
-                }
-            }
-        }
-    `;
 
 	// Define our query variables and values that will be used in the query request
 	const variables = {
