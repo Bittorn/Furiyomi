@@ -63,7 +63,7 @@ export function checkDB() {
 	console.log(`Writing database...`);
 
 	try {
-		writeFileSync(dbJsonPath, JSON.stringify(db));
+		writeFileSync(dbJsonPath, JSON.stringify(db, null, 2));
 	} catch {
 		console.error(`Unable to write database`, 500);
 		throw error(500, 'Unable to write database');
@@ -73,6 +73,7 @@ export function checkDB() {
 }
 
 export function fetchDB(): Database {
+	if (!existsSync(dbJsonPath)) checkDB()
 	try {
 		const dbFile = readFileSync(dbJsonPath, { encoding: 'utf8', flag: 'r' });
 		const dbJson: Database = JSON.parse(dbFile);

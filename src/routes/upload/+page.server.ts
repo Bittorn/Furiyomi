@@ -1,4 +1,3 @@
-// import { updateDB } from '$lib/db/helpers.js';
 import { writeFileSync, existsSync, mkdirSync } from 'fs';
 import path from 'path';
 import { fail } from '@sveltejs/kit';
