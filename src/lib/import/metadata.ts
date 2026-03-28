@@ -18,7 +18,7 @@ export function processUpload(id: string, romaji: string) {
 	fileNames.forEach((fileName) => {
 		if (micromatch.isMatch(fileName, '*.html')) {
 			volumes.push({
-				title: fileName
+				title: fileName.replace(".html", "")
 			});
 		}
 	});

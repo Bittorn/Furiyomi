@@ -112,7 +112,7 @@ function writeDB(db: Database) {
 	console.log(`Writing database...`);
 
 	try {
-		writeFileSync(dbJsonPath, JSON.stringify(db));
+		writeFileSync(dbJsonPath, JSON.stringify(db, null, 2));
 	} catch {
 		console.error(`Unable to write database`, 500);
 		throw error(500, 'Unable to write database');
