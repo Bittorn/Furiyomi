@@ -3,6 +3,7 @@ import { error } from '@sveltejs/kit';
 import { randomUUID } from 'crypto';
 import { existsSync, readdirSync } from 'fs';
 import micromatch from 'micromatch';
+import { queryAnilist, type Tags } from './anilist';
 
 export function processUpload(id: string, romaji: string) {
 	console.log(`Downloading metadata for: ${id}`);
@@ -18,7 +19,7 @@ export function processUpload(id: string, romaji: string) {
 	fileNames.forEach((fileName) => {
 		if (micromatch.isMatch(fileName, '*.html')) {
 			volumes.push({
-				title: fileName.replace(".html", "")
+				title: fileName.replace('.html', '')
 			});
 		}
 	});
@@ -28,7 +29,7 @@ export function processUpload(id: string, romaji: string) {
 	const manga: Manga = {
 		id,
 		uuid: randomUUID(),
-		anilist_id: '',
+		anilist_id: 0,
 		title: {
 			romaji,
 			english: '',
@@ -43,7 +44,42 @@ export function processUpload(id: string, romaji: string) {
 		volumes
 	};
 
+	downloadMetadata(manga);
+
 	updateManga(manga);
 }
 
-export function downloadMetadata() {}
+export async function downloadMetadata(manga: Manga) {
+	const data = await queryAnilist(manga.title.romaji);
+	if (!data) {
+		console.error(`Unable to download metadata`, 500);
+		return;
+	}
+
+	const mangaData = data.data.Page.media[0];
+
+	manga.anilist_id = mangaData.id;
+	manga.title = mangaData.title;
+	manga.year = mangaData.startDate.year;
+	manga.link = mangaData.siteUrl;
+	manga.genres = mangaData.genres;
+	manga.tags = processTags(mangaData.tags);
+	manga.description = formatDescription(mangaData.description);
+
+	updateManga(manga);
+}
+
+function formatDescription(description: string): string {
+	// just get rid of all HTML tags
+	// and anilist-specific stuff
+	description = description.replace(/(<([^>]+)>)/ig, '').split("(Source")[0];
+	return description;
+}
+
+function processTags(tags: Tags[]): string[] {
+	const toReturn: string[] = [];
+	for (const tag of tags) {
+		if (!tag.isMediaSpoiler) toReturn.push(tag.name);
+	}
+	return toReturn;
+}

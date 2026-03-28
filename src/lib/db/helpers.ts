@@ -13,7 +13,7 @@ export interface Database {
 export interface Manga {
 	id: string;
 	uuid: string;
-	anilist_id: string;
+	anilist_id: number;
 	title: Title;
 	year: number;
 	genres: string[];
