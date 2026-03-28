@@ -24,3 +24,4 @@ vite.config.ts.timestamp-*
 
 # Custom
 static/data
+/static/data_bak
