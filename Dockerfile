@@ -1,23 +1,49 @@
-# Use a Node.js Alpine image for the builder stage
+# Stage 1: Install dependencies
+FROM node:22-alpine AS deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Stage 2: Build the SvelteKit application
 FROM node:22-alpine AS builder
 WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-RUN npm prune --production
 
-# Use another Node.js Alpine image for the final stage
-FROM node:22-alpine
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Build the application with the Node.js adapter
+RUN npm run build
+
+# Prune dev dependencies after build
+RUN npm prune --omit=dev
+
+# Stage 3: Production runtime
+FROM node:22-alpine AS runner
 WORKDIR /app
-COPY --from=builder /app/build build/
-COPY --from=builder /app/node_modules node_modules/
-COPY package.json .
-EXPOSE 3796
+
 ENV NODE_ENV=production
+
+# Create non-root user
+RUN addgroup --system --gid 1001 sveltekit
+RUN adduser --system --uid 1001 sveltekit
+
+# Copy the built application
+COPY --from=builder --chown=sveltekit:sveltekit /app/build ./build
+
+# Copy production dependencies
+COPY --from=builder --chown=sveltekit:sveltekit /app/node_modules ./node_modules
+
+# Copy package.json for module resolution
+COPY --chown=sveltekit:sveltekit package.json .
+
+USER sveltekit
+
+EXPOSE 3796
 ENV PORT=3796
 ENV HOST=0.0.0.0
-CMD [ "node", "build" ]
+
+# Start the SvelteKit server
+CMD ["node", "build/index.js"]
 
 # Healthcheck
 HEALTHCHECK --interval=15s --timeout=3s --start-period=5s --retries=3 \
