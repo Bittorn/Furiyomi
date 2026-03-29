@@ -1,4 +1,5 @@
-import type { Title } from "$lib/db/helpers";
+import type { Title } from '$lib/db/helpers';
+import { betterPrint, betterPrintError } from '$lib/logs/logger';
 
 export interface AniList {
 	data: Data;
@@ -31,7 +32,6 @@ export interface Tags {
 	isMediaSpoiler: boolean;
 }
 
-
 const query = `
 	query ($search: String!) {
 		Page {
@@ -58,7 +58,7 @@ const query = `
 `;
 
 export async function queryAnilist(search: string): Promise<void | AniList> {
-	console.log(`Querying AniList for: ${search}`);
+	betterPrint(`Querying AniList for: ${search}`, 'server:queryAnilist');
 
 	// From https://docs.anilist.co/guide/graphql/
 
@@ -92,10 +92,13 @@ function handleResponse(response: { json: () => Promise<AniList>; ok: unknown })
 }
 
 function handleData(data: AniList) {
-	console.log(`Response received!`);
+	betterPrint(`Response received!`, 'server:handleData');
 	return data;
 }
 
 function handleError(err: unknown) {
-	console.error('Error when querying AniList:', JSON.stringify(err, null, 2));
+	betterPrintError(
+		`Error when querying AniList: ${JSON.stringify(err, null, 2)}`,
+		'server:handleError'
+	);
 }

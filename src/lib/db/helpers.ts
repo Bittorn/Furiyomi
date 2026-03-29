@@ -1,8 +1,9 @@
+import { betterPrint, betterPrintError, betterPrintWarning } from '$lib/logs/logger';
 import { error } from '@sveltejs/kit';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 
 export const dbJsonPath = `static/data/db.json`;
-export const dbMangaPath = `static/data/manga`
+export const dbMangaPath = `static/data/manga`;
 
 // #region Interfaces
 export interface Database {
@@ -42,44 +43,44 @@ export interface Users {
 
 export function checkDB() {
 	let db: Database;
-	console.log(`Checking database...`);
+	betterPrint(`Checking database...`, 'server:checkDB');
 	if (existsSync(dbJsonPath)) {
-		console.log(`Database JSON found at ${dbJsonPath}`);
-		console.log(`Attempting to parse...`);
+		betterPrint(`Database JSON found at ${dbJsonPath}`, 'server:checkDB');
+		betterPrint(`Attempting to parse...`, 'server:checkDB');
 		db = fetchDB();
 		if (db) {
-			console.log(`Database parsed`);
+			betterPrint(`Database parsed`, 'server:checkDB');
 		} else {
-			console.error('Unable to parse database', 500);
+			betterPrintError('Unable to parse database', 'server:checkDB', 500);
 		}
 	} else {
-		console.log(`Database not found, recreating...`);
+		betterPrintWarning(`Database not found, recreating...`, 'server:checkDB');
 		db = {
 			manga: [],
 			users: []
 		};
 	}
 
-	console.log(`Writing database...`);
+	betterPrint(`Writing database...`, 'server:checkDB');
 
 	try {
 		writeFileSync(dbJsonPath, JSON.stringify(db, null, 2));
 	} catch {
-		console.error(`Unable to write database`, 500);
+		betterPrintError(`Unable to write database`, 'server:checkDB', 500);
 		throw error(500, 'Unable to write database');
 	}
 
-	console.log(`Database checked successfully!`);
+	betterPrint(`Database checked successfully!`, 'server:checkDB');
 }
 
 export function fetchDB(): Database {
-	if (!existsSync(dbJsonPath)) checkDB()
+	if (!existsSync(dbJsonPath)) checkDB();
 	try {
 		const dbFile = readFileSync(dbJsonPath, { encoding: 'utf8', flag: 'r' });
 		const dbJson: Database = JSON.parse(dbFile);
 		return dbJson;
 	} catch {
-		console.error('Unable to parse database', 500);
+		betterPrintError('Unable to parse database', 'server:fetchDB', 500);
 		throw error(500, 'Unable to parse database');
 	}
 }
@@ -89,11 +90,11 @@ export function updateManga(manga: Manga) {
 
 	let updateExisting = false;
 
-	console.log(`Updating manga...`);
+	betterPrint(`Updating manga...`, 'server:updateManga');
 
 	for (const entry of db.manga) {
 		if (entry.uuid == manga.uuid || entry.id == manga.id) {
-			console.log(`Found existing entry: ${entry.id}`);
+			betterPrint(`Found existing entry: ${entry.id}`, 'server:updateManga');
 			updateExisting = true;
 			// if UUID is different, whilst having same ID
 			manga.uuid = entry.uuid;
@@ -102,7 +103,7 @@ export function updateManga(manga: Manga) {
 	}
 
 	if (!updateExisting) {
-		console.log(`No entry found, creating...`);
+		betterPrint(`No entry found, creating...`, 'server:updateManga');
 		db.manga.push(manga);
 	}
 
@@ -110,12 +111,12 @@ export function updateManga(manga: Manga) {
 }
 
 function writeDB(db: Database) {
-	console.log(`Writing database...`);
+	betterPrint(`Writing database...`, 'server:writeDB');
 
 	try {
 		writeFileSync(dbJsonPath, JSON.stringify(db, null, 2));
 	} catch {
-		console.error(`Unable to write database`, 500);
+		betterPrintError(`Unable to write database`, 'server:writeDB', 500);
 		throw error(500, 'Unable to write database');
 	}
 

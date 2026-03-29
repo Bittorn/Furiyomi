@@ -4,12 +4,13 @@ import { randomUUID } from 'crypto';
 import { existsSync, readdirSync } from 'fs';
 import micromatch from 'micromatch';
 import { queryAnilist, type Tags } from './anilist';
+import { betterPrint, betterPrintError } from '$lib/logs/logger';
 
 export function processUpload(id: string, romaji: string) {
-	console.log(`Downloading metadata for: ${id}`);
+	betterPrint(`Downloading metadata for: ${id}`, 'server:processUpload');
 	const dirPath = `${dbMangaPath}/${id}`;
 	if (!existsSync(dirPath)) {
-		console.error(`Path does not exist`, 500);
+		betterPrintError(`Path does not exist`, 'server:processUpload', 500);
 		throw error(500, 'Path does not exist');
 	}
 
@@ -52,7 +53,7 @@ export function processUpload(id: string, romaji: string) {
 export async function downloadMetadata(manga: Manga) {
 	const data = await queryAnilist(manga.title.romaji);
 	if (!data) {
-		console.error(`Unable to download metadata`, 500);
+		betterPrintError(`Unable to download metadata`, 'server:downloadMetadata', 500);
 		return;
 	}
 
@@ -72,7 +73,7 @@ export async function downloadMetadata(manga: Manga) {
 function formatDescription(description: string): string {
 	// just get rid of all HTML tags
 	// and anilist-specific stuff
-	description = description.replace(/(<([^>]+)>)/ig, '').split("(Source")[0];
+	description = description.replace(/(<([^>]+)>)/gi, '').split('(Source')[0];
 	return description;
 }
 
