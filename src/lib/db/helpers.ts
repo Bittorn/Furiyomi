@@ -120,5 +120,5 @@ function writeDB(db: Database) {
 		throw error(500, 'Unable to write database');
 	}
 
-	console.log(`Database written successfully!`);
+	betterPrint(`Database written successfully!`, 'server:writeDB');
 }
