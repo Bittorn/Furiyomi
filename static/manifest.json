@@ -59,7 +59,7 @@
         },
         {
             "src": "icons/icon_1024.png",
-            "sizes": "10241024",
+            "sizes": "1024x1024",
             "type": "image/png",
             "purpose": "maskable any"
         }

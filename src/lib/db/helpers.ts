@@ -85,18 +85,18 @@ export function fetchDB(): Database {
 }
 
 export function updateManga(manga: Manga) {
-	// huh? but we do reassign it? shut up?
-	// eslint-disable-next-line prefer-const
-	let db = fetchDB();
+	const db = fetchDB();
 
 	let updateExisting = false;
 
 	console.log(`Updating manga...`);
 
 	for (const entry of db.manga) {
-		if (entry.uuid == manga.uuid) {
+		if (entry.uuid == manga.uuid || entry.id == manga.id) {
 			console.log(`Found existing entry: ${entry.id}`);
 			updateExisting = true;
+			// if UUID is different, whilst having same ID
+			manga.uuid = entry.uuid;
 			db.manga[db.manga.indexOf(entry)] = manga;
 		}
 	}
