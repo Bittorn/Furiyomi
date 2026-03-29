@@ -1,11 +1,11 @@
 # Stage 1: Install dependencies
-FROM node:22-alpine AS deps
+FROM node:26-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --frozen-lockfile
 
 # Stage 2: Build the SvelteKit application
-FROM node:22-alpine AS builder
+FROM node:26-alpine AS builder
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
@@ -18,7 +18,7 @@ RUN npm run build
 RUN npm prune --omit=dev
 
 # Stage 3: Production runtime
-FROM node:22-alpine AS runner
+FROM node:26-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
@@ -47,4 +47,4 @@ CMD ["node", "--enable-source-maps", "build/index.js"]
 
 # Healthcheck
 HEALTHCHECK --interval=15s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/api/health || exit 1
