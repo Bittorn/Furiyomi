@@ -1,4 +1,5 @@
 import { fetchDB } from '$lib/db/helpers.js';
+import { betterPrint } from '$lib/logs/logger.js';
 import { fail } from '@sveltejs/kit';
 
 export function load({ cookies }) {
@@ -14,26 +15,13 @@ export const actions = {
 		const db = fetchDB();
 
 		const username = formData.get('username') as string;
-		// const password = formData.get('password') as string;
-
-		// console.log(password);
-
-		// // The password should be hashed already, but do it again for safety
-		// const passwordHash = pbkdf2Sync(password, username, 100000, 64, 'sha512').toString('base64');
-
-		// console.log(passwordHash);
+		betterPrint(`User attempting login: ${username}`, 'server:userLogin');
 
 		try {
 			for (const user of db.users) {
 				if (user.username == username) {
-					console.log(`User found: ${user.username}`);
+					betterPrint(`User found: ${user.username}`, 'server:userLogin');
 					cookies.set('user', user.username, { path: '/' });
-
-					// if (user.password == passwordHash || !user.password) {
-					// 	console.log(`Password valid!`);
-					// } else {
-					// 	console.log(`Password invalid`);
-					// }
 				}
 			}
 		} catch {

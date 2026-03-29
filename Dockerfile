@@ -2,7 +2,7 @@
 FROM node:24-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci --frozen-lockfile
+RUN npm ci
 
 # Stage 2: Build the SvelteKit application
 FROM node:24-alpine AS builder
@@ -39,6 +39,7 @@ COPY --chown=sveltekit:sveltekit package.json .
 USER sveltekit
 
 EXPOSE 3000
+ENV BODY_SIZE_LIMIT=Infinity
 ENV PORT=3000
 ENV HOST=0.0.0.0
 

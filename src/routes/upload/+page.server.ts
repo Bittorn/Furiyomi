@@ -4,6 +4,7 @@ import { fail } from '@sveltejs/kit';
 import { generateID, shouldIgnoreFile } from '$lib/upload/helpers.js';
 import { processUpload } from '$lib/import/metadata.js';
 import { dbMangaPath } from '$lib/db/helpers.js';
+import { betterPrint } from '$lib/logs/logger.js';
 
 export const actions = {
 	default: async ({ request }) => {
@@ -11,7 +12,7 @@ export const actions = {
 
 		const files = formData.getAll('fileToUpload');
 
-		console.log(`Received upload request: ${files.length} items`);
+		betterPrint(`Received upload request: ${files.length} items`, 'server:fileUpload');
 
 		if (files.length <= 0) {
 			return fail(400, {
@@ -37,7 +38,6 @@ export const actions = {
 			const fileName = fileNameArray.join('/');
 
 			const filePath = `${dbMangaPath}/${fileName}`;
-			console.log(filePath);
 
 			// Check if it's garbage
 			if (shouldIgnoreFile(fileToUpload)) return;
@@ -47,7 +47,7 @@ export const actions = {
 
 			if (!existsSync(fileDir)) {
 				mkdirSync(fileDir, { recursive: true });
-				console.log(`Directory ${fileDir} (and parents) created`);
+				betterPrint(`Directory ${fileDir} (and parents) created`, 'server:fileUpload');
 			}
 
 			// Write the file to the data folder
@@ -56,7 +56,7 @@ export const actions = {
 
 		// #endregion
 
-		console.log('File upload complete');
+		betterPrint('File upload complete', 'server:fileUpload');
 
 		processUpload(mangaID!, mangaRomaji!)
 

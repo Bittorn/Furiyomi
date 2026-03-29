@@ -1,8 +1,18 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
+	import { goto } from '$app/navigation';
+	import { betterPrint } from '$lib/logs/logger';
 	import styles from './upload.module.scss';
 
 	let fileInput: HTMLInputElement;
+	let loadingDiv: HTMLDivElement;
+
+	let loadingText = $state('Uploading...');
+
+	async function timeoutLoading() {
+		await new Promise(resolve => setTimeout(resolve, 3000))
+		loadingDiv.classList.add(styles.hidden);
+	}
 </script>
 
 <svelte:head>
@@ -11,13 +21,41 @@
 
 <h1>Upload</h1>
 
-<form method="post" use:enhance enctype="multipart/form-data">
+<form
+	method="post"
+	use:enhance={() => {
+		betterPrint('Uploading files...', 'fileUpload');
+		loadingDiv.classList.remove(styles.hidden);
+
+		return async ({ result }) => {
+			// `result` is an `ActionResult` object
+
+			if (result.type === 'redirect') {
+				// eslint-disable-next-line svelte/no-navigation-without-resolve
+				goto(result.location);
+			} else if (result.type === 'success') {
+				loadingDiv.classList.add(styles.success);
+				loadingText = 'Upload complete!';
+				betterPrint(loadingText, 'fileUpload');
+				timeoutLoading();
+				await applyAction(result);
+			} else {
+				loadingDiv.classList.add(styles.error);
+				loadingText = 'Upload failed';
+				betterPrint(loadingText, 'fileUpload');
+				timeoutLoading();
+				await applyAction(result);
+			}
+		};
+	}}
+	enctype="multipart/form-data"
+>
 	<div class={styles.upload}>
 		<label
 			for="file"
 			class={styles.dropcontainer}
-			on:dragover={(e) => e.preventDefault()}
-			on:drop={(e) => {
+			ondragover={(e) => e.preventDefault()}
+			ondrop={(e) => {
 				e.preventDefault();
 				fileInput.files = e.dataTransfer!.files;
 			}}
@@ -39,6 +77,10 @@
 	<button class={styles.uploadbutton} type="submit">Upload</button>
 </form>
 
+<div bind:this={loadingDiv} class={`${styles.status} ${styles.hidden}`}>
+	<h1>{loadingText}</h1>
+</div>
+
 <div class={styles.information}>
 	<h1>⚠️ Before Uploading ⚠️</h1>
 	<ul>
@@ -50,11 +92,6 @@
 		<li>
 			Ensure the name of the directory matches the manga you are uploading, as this will be used for
 			metadata fetching.
-		</li>
-		<li>
-			Currently, upload progress is not shown. If the page reloads or the input field resets, <b
-				>the upload most likely succeeded.</b
-			>
 		</li>
 	</ul>
 </div>
