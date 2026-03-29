@@ -23,7 +23,7 @@
 
 {#if mangaList.length != 0}
 	<div class={styles.mangalist}>
-		{#each mangaList as manga (manga.id)}
+		{#each mangaList as manga (manga.uuid)}
 			<MangaEntry
 				mangaID={manga.id}
 				mangaTitleRomaji={manga.title.romaji}

@@ -2,7 +2,7 @@
 FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm ci --frozen-lockfile
 
 # Stage 2: Build the SvelteKit application
 FROM node:22-alpine AS builder
@@ -38,13 +38,13 @@ COPY --chown=sveltekit:sveltekit package.json .
 
 USER sveltekit
 
-EXPOSE 3796
-ENV PORT=3796
+EXPOSE 3000
+ENV PORT=3000
 ENV HOST=0.0.0.0
 
 # Start the SvelteKit server
-CMD ["node", "build/index.js"]
+CMD ["node", "--enable-source-maps", "build/index.js"]
 
 # Healthcheck
 HEALTHCHECK --interval=15s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:3796/api/health || exit 1
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1

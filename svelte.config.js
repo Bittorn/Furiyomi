@@ -10,7 +10,7 @@ const config = {
 			out: 'build',
 			// Listen on all interfaces inside Docker
 			host: '0.0.0.0',
-			port: 3796
+			port: 3000
 		})
 	}
 };
