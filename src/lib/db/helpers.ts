@@ -14,6 +14,7 @@ export interface Database {
 export interface Manga {
 	id: string;
 	uuid: string;
+	upload_date: string;
 	anilist_id: number;
 	title: Title;
 	year: number;

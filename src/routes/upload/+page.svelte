@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head>
-	<title>Upload - Furiyomi</title>
+	<title>Upload | Furiyomi</title>
 </svelte:head>
 
 <h1>Upload</h1>
