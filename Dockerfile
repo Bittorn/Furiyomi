@@ -1,11 +1,11 @@
 # Stage 1: Install dependencies
-FROM node:26-alpine AS deps
+FROM node:24-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --frozen-lockfile
 
 # Stage 2: Build the SvelteKit application
-FROM node:26-alpine AS builder
+FROM node:24-alpine AS builder
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
@@ -18,7 +18,7 @@ RUN npm run build
 RUN npm prune --omit=dev
 
 # Stage 3: Production runtime
-FROM node:26-alpine AS runner
+FROM node:24-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
