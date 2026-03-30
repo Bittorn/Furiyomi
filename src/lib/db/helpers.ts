@@ -1,19 +1,11 @@
 import { betterPrint, betterPrintError, betterPrintWarning } from '$lib/logs/logger';
-import { error } from '@sveltejs/kit';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
-
-export const dbJsonPath = `static/data/db.json`;
-export const dbMangaPath = `static/data/manga`;
+import type { ObjectId } from 'mongodb';
+import { mangaBucket, mangaCollection, usersCollection } from './mongo';
 
 // #region Interfaces
-export interface Database {
-	manga: Manga[];
-	users: Users[];
-}
-
 export interface Manga {
-	id: string;
-	uuid: string;
+	_id?: ObjectId;
+	ref: string;
 	upload_date: string;
 	anilist_id: number;
 	title: Title;
@@ -34,92 +26,103 @@ export interface Title {
 
 export interface Volumes {
 	title: string;
+	cover: string;
 }
 
 export interface Users {
+	_id?: ObjectId;
 	username: string;
 	password: string;
 }
 // #endregion
 
-export function checkDB() {
-	let db: Database;
-	betterPrint(`Checking database...`, 'server:checkDB');
-	if (existsSync(dbJsonPath)) {
-		betterPrint(`Database JSON found at ${dbJsonPath}`, 'server:checkDB');
-		betterPrint(`Attempting to parse...`, 'server:checkDB');
-		db = fetchDB();
-		if (db) {
-			betterPrint(`Database parsed`, 'server:checkDB');
-		} else {
-			betterPrintError('Unable to parse database', 'server:checkDB', 500);
-		}
+// #region MongoDB
+export async function writeManga(manga: Manga) {
+	const sig = 'db/helpers:writeManga';
+
+	const result = await mangaCollection.updateOne(
+		{ ref: manga.ref },
+		{ $set: manga },
+		{ upsert: true }
+	);
+
+	if (result.upsertedCount) {
+		betterPrint(`Manga ${manga.ref} updated`, sig);
 	} else {
-		betterPrintWarning(`Database not found, recreating...`, 'server:checkDB');
-		db = {
-			manga: [],
-			users: []
-		};
-	}
-
-	betterPrint(`Writing database...`, 'server:checkDB');
-
-	try {
-		writeFileSync(dbJsonPath, JSON.stringify(db, null, 2));
-	} catch {
-		betterPrintError(`Unable to write database`, 'server:checkDB', 500);
-		throw error(500, 'Unable to write database');
-	}
-
-	betterPrint(`Database checked successfully!`, 'server:checkDB');
-}
-
-export function fetchDB(): Database {
-	if (!existsSync(dbJsonPath)) checkDB();
-	try {
-		const dbFile = readFileSync(dbJsonPath, { encoding: 'utf8', flag: 'r' });
-		const dbJson: Database = JSON.parse(dbFile);
-		return dbJson;
-	} catch {
-		betterPrintError('Unable to parse database', 'server:fetchDB', 500);
-		throw error(500, 'Unable to parse database');
+		betterPrint(`Manga ${manga.ref} created`, sig);
 	}
 }
 
-export function updateManga(manga: Manga) {
-	const db = fetchDB();
+export async function writeUser(user: Users) {
+	const sig = 'db/helpers:writeUser';
 
-	let updateExisting = false;
+	const result = await mangaCollection.updateOne(
+		{ ref: user.username },
+		{ $set: user },
+		{ upsert: true }
+	);
 
-	betterPrint(`Updating manga...`, 'server:updateManga');
-
-	for (const entry of db.manga) {
-		if (entry.uuid == manga.uuid || entry.id == manga.id) {
-			betterPrint(`Found existing entry: ${entry.id}`, 'server:updateManga');
-			updateExisting = true;
-			// if UUID is different, whilst having same ID
-			manga.uuid = entry.uuid;
-			db.manga[db.manga.indexOf(entry)] = manga;
-		}
+	if (result.upsertedCount) {
+		betterPrint(`Manga ${user.username} updated`, sig);
+	} else {
+		betterPrint(`Manga ${user.username} created`, sig);
 	}
-
-	if (!updateExisting) {
-		betterPrint(`No entry found, creating...`, 'server:updateManga');
-		db.manga.push(manga);
-	}
-
-	writeDB(db);
 }
 
-function writeDB(db: Database) {
-	betterPrint(`Writing database...`, 'server:writeDB');
-
-	try {
-		writeFileSync(dbJsonPath, JSON.stringify(db, null, 2));
-	} catch {
-		betterPrintError(`Unable to write database`, 'server:writeDB', 500);
-		throw error(500, 'Unable to write database');
-	}
-
-	betterPrint(`Database written successfully!`, 'server:writeDB');
+export async function deleteFile(file_id: ObjectId) {
+	const sig = 'db/helpers:deleteFile'
+	
+	await mangaBucket.delete(file_id)
+	betterPrint(`Deleted file: ${file_id}`, sig);
 }
+
+export async function deleteManga(manga: Manga) {
+	const sig = 'db/helpers:deleteManga';
+
+	const result = await mangaCollection.deleteOne(manga);
+	if (!result.acknowledged) {
+		betterPrintError(`Delete request not acknowledged: ${manga.ref}`, sig);
+	} else if (!result.deletedCount) {
+		betterPrintWarning(`No manga found to be deleted: ${manga.ref}`, sig);
+	} else {
+		betterPrint(`Deleted manga: ${manga.ref}`, sig);
+	}
+}
+
+export async function deleteUser(user: Users) {
+	const sig = 'db/helpers:deleteUser';
+
+	const result = await usersCollection.deleteOne(user);
+	if (!result.acknowledged) {
+		betterPrintError(`Delete request not acknowledged: ${user.username}`, sig);
+	} else if (!result.deletedCount) {
+		betterPrintWarning(`No user found to be deleted: ${user.username}`, sig);
+	} else {
+		betterPrint(`Deleted user: ${user.username}`, sig);
+	}
+}
+
+export async function dropMangaCollection() {
+	// why would you ever use this?!?
+	const sig = 'db/helpers:dropMangaCollection';
+
+	await mangaCollection.drop();
+	betterPrint('Dropped manga collection', sig);
+}
+
+export async function dropUsersCollection() {
+	// again, why would you ever use this?!?
+	const sig = 'db/helpers:dropUsersCollection';
+
+	await usersCollection.drop();
+	betterPrint('Dropped users collection', sig);
+}
+
+export async function dropMangaBucket() {
+	const sig = 'db/helpers:dropMangaBucket';
+
+	await mangaBucket.drop();
+	betterPrint('Dropped manga bucket', sig);
+	betterPrintWarning('Manga collection will not be out-of-date, consider dropping', sig);
+}
+// #endregion

@@ -1,18 +1,17 @@
-import { writeFileSync, existsSync, mkdirSync } from 'fs';
-import path from 'path';
 import { fail } from '@sveltejs/kit';
 import { generateID, shouldIgnoreFile } from '$lib/upload/helpers.js';
 import { processUpload } from '$lib/import/metadata.js';
-import { dbMangaPath } from '$lib/db/helpers.js';
 import { betterPrint } from '$lib/logs/logger.js';
+import { mangaBucket } from '$lib/db/mongo.js';
 
 export const actions = {
 	default: async ({ request }) => {
+		const sig = '/upload/server';
 		const formData = await request.formData();
 
 		const files = formData.getAll('fileToUpload');
 
-		betterPrint(`Received upload request: ${files.length} items`, 'server:fileUpload');
+		betterPrint(`Received upload request: ${files.length} items`, sig);
 
 		if (files.length <= 0) {
 			return fail(400, {
@@ -21,44 +20,31 @@ export const actions = {
 			});
 		}
 
-		let mangaID, mangaRomaji;
-
-		// #region Upload files
+		let mangaRef, mangaRomaji;
 
 		for (const file of files) {
-			// TODO: do all this asynchronously
+			const pFile = file as File
 
-			const fileToUpload = file as File;
-
-			// eslint-disable-next-line prefer-const
-			let fileNameArray = fileToUpload.name.split('/');
-			mangaRomaji = fileNameArray[0]
+			const fileNameArray = pFile.name.split('/');
+			mangaRomaji = fileNameArray[0];
 			fileNameArray[0] = generateID(fileNameArray[0]);
-			mangaID = fileNameArray[0]
+			mangaRef = fileNameArray[0];
 			const fileName = fileNameArray.join('/');
 
-			const filePath = `${dbMangaPath}/${fileName}`;
-
 			// Check if it's garbage
-			if (shouldIgnoreFile(fileToUpload)) return;
+			if (shouldIgnoreFile(pFile)) return;
 
-			// Create directory if it doesn't exist
-			const fileDir = path.dirname(filePath);
+			// writeFileSync(fileName, Buffer.from(await fileToUpload.arrayBuffer()));
 
-			if (!existsSync(fileDir)) {
-				mkdirSync(fileDir, { recursive: true });
-				betterPrint(`Directory ${fileDir} (and parents) created`, 'server:fileUpload');
-			}
-
-			// Write the file to the data folder
-			writeFileSync(filePath, Buffer.from(await fileToUpload.arrayBuffer()));
+			mangaBucket.openUploadStream(fileName, {
+				chunkSizeBytes: 1048576,
+				metadata: { manga_romaji: mangaRomaji, manga_ref: mangaRef}
+			}).write(Buffer.from(await pFile.arrayBuffer()));
 		}
 
-		// #endregion
+		betterPrint('File upload complete!', sig);
 
-		betterPrint('File upload complete', 'server:fileUpload');
-
-		processUpload(mangaID!, mangaRomaji!)
+		processUpload(mangaRef!, mangaRomaji!);
 
 		return {
 			success: true

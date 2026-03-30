@@ -1,18 +1,13 @@
-import { dbMangaPath, updateManga, type Manga, type Volumes } from '$lib/db/helpers';
+import { type Manga, type Volumes } from '$lib/db/helpers';
 import { error } from '@sveltejs/kit';
 import { randomUUID } from 'crypto';
-import { existsSync, readdirSync } from 'fs';
 import micromatch from 'micromatch';
 import { queryAnilist, type Tags } from './anilist';
 import { betterPrint, betterPrintError } from '$lib/logs/logger';
 
-export function processUpload(id: string, romaji: string) {
-	betterPrint(`Downloading metadata for: ${id}`, 'server:processUpload');
-	const dirPath = `${dbMangaPath}/${id}`;
-	if (!existsSync(dirPath)) {
-		betterPrintError(`Path does not exist`, 'server:processUpload', 500);
-		throw error(500, 'Path does not exist');
-	}
+export function processUpload(ref: string, romaji: string) {
+	const sig = 'import/metadata:processUpload';
+	betterPrint(`Downloading metadata for: ${ref}`, sig);
 
 	const volumes: Volumes[] = [];
 
@@ -26,10 +21,11 @@ export function processUpload(id: string, romaji: string) {
 	});
 
 	const cover = readdirSync(`${dirPath}/${volumes[0].title}`)[0];
+	const upload_date = new Date().getTime()
 
 	const manga: Manga = {
-		id,
-		uuid: randomUUID(),
+		ref,
+		upload_date,
 		anilist_id: 0,
 		title: {
 			romaji,

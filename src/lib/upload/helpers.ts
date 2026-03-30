@@ -30,7 +30,8 @@ const DEFAULT_FILES_TO_IGNORE = [
 	'.symform-store',
 	'.fuse_hidden*',
 	'*.unison',
-	'.nfs*'
+	'.nfs*',
+	'*_ocr*'
 ];
 
 export function shouldIgnoreFile(file: File) {

@@ -7,7 +7,6 @@
 </script>
 
 <svelte:head>
-	<link rel="manifest" href="/manifest.json" />
 	<link rel="icon" href={favicon} />
 	<meta name="google" content="notranslate" />
 	<title>Furiyomi</title>
