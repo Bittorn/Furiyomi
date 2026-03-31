@@ -6,7 +6,7 @@ import { mangaBucket, mangaCollection, usersCollection } from './mongo';
 export interface Manga {
 	_id?: ObjectId;
 	ref: string;
-	upload_date: string;
+	upload_date: number;
 	anilist_id: number;
 	title: Title;
 	year: number;
@@ -15,7 +15,7 @@ export interface Manga {
 	cover: string;
 	link: string;
 	description: string;
-	volumes: Volumes[];
+	volumes: Volume[];
 }
 
 export interface Title {
@@ -24,12 +24,12 @@ export interface Title {
 	native: string;
 }
 
-export interface Volumes {
+export interface Volume {
 	title: string;
-	cover: string;
+	cover?: string;
 }
 
-export interface Users {
+export interface User {
 	_id?: ObjectId;
 	username: string;
 	password: string;
@@ -47,13 +47,14 @@ export async function writeManga(manga: Manga) {
 	);
 
 	if (result.upsertedCount) {
-		betterPrint(`Manga ${manga.ref} updated`, sig);
-	} else {
+		// why is this backwards?
 		betterPrint(`Manga ${manga.ref} created`, sig);
+	} else {
+		betterPrint(`Manga ${manga.ref} updated`, sig);
 	}
 }
 
-export async function writeUser(user: Users) {
+export async function writeUser(user: User) {
 	const sig = 'db/helpers:writeUser';
 
 	const result = await mangaCollection.updateOne(
@@ -63,9 +64,10 @@ export async function writeUser(user: Users) {
 	);
 
 	if (result.upsertedCount) {
-		betterPrint(`Manga ${user.username} updated`, sig);
+		// because it works !! (don't ask, i don't know)
+		betterPrint(`User ${user.username} created`, sig);
 	} else {
-		betterPrint(`Manga ${user.username} created`, sig);
+		betterPrint(`User ${user.username} updated`, sig);
 	}
 }
 
@@ -89,7 +91,7 @@ export async function deleteManga(manga: Manga) {
 	}
 }
 
-export async function deleteUser(user: Users) {
+export async function deleteUser(user: User) {
 	const sig = 'db/helpers:deleteUser';
 
 	const result = await usersCollection.deleteOne(user);
@@ -103,7 +105,6 @@ export async function deleteUser(user: Users) {
 }
 
 export async function dropMangaCollection() {
-	// why would you ever use this?!?
 	const sig = 'db/helpers:dropMangaCollection';
 
 	await mangaCollection.drop();
@@ -111,7 +112,6 @@ export async function dropMangaCollection() {
 }
 
 export async function dropUsersCollection() {
-	// again, why would you ever use this?!?
 	const sig = 'db/helpers:dropUsersCollection';
 
 	await usersCollection.drop();
@@ -123,6 +123,6 @@ export async function dropMangaBucket() {
 
 	await mangaBucket.drop();
 	betterPrint('Dropped manga bucket', sig);
-	betterPrintWarning('Manga collection will not be out-of-date, consider dropping', sig);
+	betterPrintWarning('Manga collection will be out-of-date, consider dropping', sig);
 }
 // #endregion

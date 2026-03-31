@@ -1,23 +1,26 @@
 <script lang="ts">
 	import styles from './MangaEntry.module.scss';
 	import { resolve } from '$app/paths';
+	import noCover from '$lib/assets/covers/no-cover.png';
+	import type { Manga } from '$lib/db/helpers';
 
-    interface MangaEntryInterface {
-		mangaID: string;
-        mangaTitleRomaji: string;
-        mangaTitleNative: string;
-        mangaCoverPath: string;
+	interface MangaEntryInterface {
+		manga: Manga;
 		[key: string]: unknown; // for all other properties
 	}
 
-	let { mangaID, mangaTitleRomaji, mangaTitleNative, mangaCoverPath, ...rest }: MangaEntryInterface = $props();
+	let { manga, ...rest }: MangaEntryInterface = $props();
 </script>
 
 <div class={styles.manga} {...rest}>
-	<h2>{mangaTitleRomaji}</h2>
-	<h3>{mangaTitleNative}</h3>
-	<img src={mangaCoverPath} alt="Manga cover" class={styles.cover} /><br />
-	<a href={resolve('/titles/[mangaID]', { mangaID })}
-		>View</a
-	>
+	<h2>{manga.title.romaji}</h2>
+	<h3>{manga.title.native}</h3>
+	<img
+		src={manga.cover
+			? `/data/manga/${manga.ref}/${manga.volumes[0].title}/${manga.cover}`
+			: noCover}
+		alt={manga.cover ? `${manga.title.romaji} Cover` : 'Manga Cover'}
+		class={styles.cover}
+	/><br />
+	<a href={resolve('/titles/[mangaRef]', { mangaRef: manga.ref })}>View</a>
 </div>

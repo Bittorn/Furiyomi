@@ -5,6 +5,9 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 const config = {
 	preprocess: vitePreprocess(),
 	kit: {
+		experimental: {
+			remoteFunctions: true
+		},
 		adapter: adapter({
 			// Output directory for the built server
 			out: 'build',
@@ -12,6 +15,11 @@ const config = {
 			host: '0.0.0.0',
 			port: 3000
 		})
+	},
+	compilerOptions: {
+		experimental: {
+			async: true
+		}
 	}
 };
 

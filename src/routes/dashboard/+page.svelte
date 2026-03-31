@@ -1,6 +1,10 @@
 <script lang="ts">
-	import { dropMangaBucket, dropMangaCollection, dropUsersCollection } from '$lib/db/helpers';
 	import styles from './dashboard.module.scss';
+	import {
+		dropMangaBucketRemote,
+		dropMangaCollectionRemote,
+		dropUsersCollectionRemote
+	} from './dashboard.remote';
 </script>
 
 <svelte:head>
@@ -9,12 +13,35 @@
 
 <h1>Dashboard</h1>
 
-<h3>This page is for testing purposes</h3>
+<p><i>(This page is for testing purposes)</i></p>
 
 <div class={styles.dashboard}>
 	<h2>Database Actions</h2>
-	<!-- TODO: fix this -->
-	<button onclick={() => dropMangaCollection()}>Drop Manga Collection</button>
-	<button onclick={() => dropUsersCollection()}>Drop Users Collection</button>
-	<button onclick={() => dropMangaBucket()}>Drop Manga Bucket</button>
+	<button
+		onclick={async () => {
+			try {
+				await dropMangaCollectionRemote();
+			} catch (error) {
+				alert(`Something went wrong: ${error}`);
+			}
+		}}>Drop Manga Collection</button
+	>
+	<button
+		onclick={async () => {
+			try {
+				await dropUsersCollectionRemote();
+			} catch (error) {
+				alert(`Something went wrong: ${error}`);
+			}
+		}}>Drop Users Collection</button
+	>
+	<button
+		onclick={async () => {
+			try {
+				await dropMangaBucketRemote();
+			} catch (error) {
+				alert(`Something went wrong: ${error}`);
+			}
+		}}>Drop Manga Bucket</button
+	>
 </div>

@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { Manga, Volumes } from "$lib/db/helpers";
+	import type { Manga, Volume } from "$lib/db/helpers";
 
 	interface MangaEntryInterface {
 		manga: Manga;
-		volume: Volumes;
+		volume: Volume;
 		[key: string]: unknown; // for all other properties
 	}
 
@@ -19,4 +19,4 @@
 </script>
 
 <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-<a href="/data/manga/{manga.id}/{volume.title}.html" {...rest}>Read {volumeTitle}</a>
+<a href="/data/manga/{manga.ref}/{volume.title}.html" {...rest}>Read {volumeTitle}</a>

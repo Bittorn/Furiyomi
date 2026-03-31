@@ -1,9 +1,6 @@
 import { env } from '$env/dynamic/private';
 import { GridFSBucket, MongoClient } from 'mongodb';
-
-// const client = new MongoClient(env.MONGO_URL, {
-// 	compressors: ['zstd']
-// });
+import type { Manga, User } from './helpers';
 
 const client = new MongoClient(env.MONGO_URL);
 
@@ -14,7 +11,7 @@ export async function startMongo(): Promise<MongoClient> {
 
 export const db = client.db('furiyomi');
 
-export const mangaCollection = db.collection('manga');
-export const usersCollection = db.collection('users');
+export const mangaCollection = db.collection<Manga>('manga');
+export const usersCollection = db.collection<User>('users');
 
 export const mangaBucket = new GridFSBucket(db);

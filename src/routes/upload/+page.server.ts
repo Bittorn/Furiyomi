@@ -1,8 +1,9 @@
 import { fail } from '@sveltejs/kit';
-import { generateID, shouldIgnoreFile } from '$lib/upload/helpers.js';
-import { processUpload } from '$lib/import/metadata.js';
 import { betterPrint } from '$lib/logs/logger.js';
 import { mangaBucket } from '$lib/db/mongo.js';
+import { writeManga, type Manga } from '$lib/db/helpers.js';
+import { downloadMetadata } from '$lib/import/metadata.js';
+import { generateID, isVolume } from '$lib/upload/helpers.js';
 
 export const actions = {
 	default: async ({ request }) => {
@@ -20,31 +21,67 @@ export const actions = {
 			});
 		}
 
-		let mangaRef, mangaRomaji;
+		const manga: Manga = {
+			ref: '',
+			upload_date: new Date().getTime(),
+			anilist_id: 0,
+			title: {
+				romaji: '',
+				english: '',
+				native: ''
+			},
+			year: 0,
+			genres: [],
+			tags: [],
+			cover: '',
+			link: '',
+			description: '',
+			volumes: []
+		};
 
 		for (const file of files) {
-			const pFile = file as File
+			const pFile = file as File;
 
 			const fileNameArray = pFile.name.split('/');
-			mangaRomaji = fileNameArray[0];
+
+			if (manga.title.romaji == '') {
+				manga.title.romaji = fileNameArray[0];
+			}
+
 			fileNameArray[0] = generateID(fileNameArray[0]);
-			mangaRef = fileNameArray[0];
+
+			if (manga.ref == '') {
+				manga.ref = fileNameArray[0];
+			}
+
 			const fileName = fileNameArray.join('/');
 
 			// Check if it's garbage
-			if (shouldIgnoreFile(pFile)) return;
+			// if (shouldIgnoreFile(fileName)) return;
 
-			// writeFileSync(fileName, Buffer.from(await fileToUpload.arrayBuffer()));
+			if (isVolume(fileName)) {
+				const array = fileName.split('/');
+				manga.volumes.push({
+					title: array[array.length - 1].replace('.html', '')
+				});
+			}
 
-			mangaBucket.openUploadStream(fileName, {
-				chunkSizeBytes: 1048576,
-				metadata: { manga_romaji: mangaRomaji, manga_ref: mangaRef}
-			}).write(Buffer.from(await pFile.arrayBuffer()));
+			mangaBucket
+				.openUploadStream(fileName, {
+					chunkSizeBytes: 1048576,
+					metadata: manga
+				})
+				.write(Buffer.from(await pFile.arrayBuffer()));
 		}
 
-		betterPrint('File upload complete!', sig);
+		betterPrint('File upload complete', sig);
+		betterPrint('Updating manga collection...', sig);
 
-		processUpload(mangaRef!, mangaRomaji!);
+		await writeManga(manga);
+
+		betterPrint('File processing complete!', sig);
+
+		downloadMetadata(manga);
 
 		return {
 			success: true

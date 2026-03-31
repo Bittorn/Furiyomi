@@ -1,10 +1,25 @@
-import { fetchDB } from '$lib/db/helpers';
+import type { Manga } from '$lib/db/helpers';
+import { mangaCollection } from '$lib/db/mongo';
+import { betterPrintWarning } from '$lib/logs/logger';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
-	const db = fetchDB();
+	const sig = '/titles/server';
+	
+	const mangaCount = await mangaCollection.countDocuments();
+
+	if (!mangaCount) {
+		betterPrintWarning('Manga collection is empty', sig);
+	}
+
+	const mangaList: Manga[] = await mangaCollection.find().toArray()
+
+	for (const manga of mangaList) {
+		manga._id = undefined
+	}
 
 	return {
-        mangaList: db.manga
+		mangaCount,
+		mangaList
 	};
 };
