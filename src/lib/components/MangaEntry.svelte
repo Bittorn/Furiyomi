@@ -2,7 +2,7 @@
 	import styles from './MangaEntry.module.scss';
 	import { resolve } from '$app/paths';
 	import noCover from '$lib/assets/covers/no-cover.png';
-	import type { Manga } from '$lib/db/helpers';
+	import type { Manga } from '$lib/db/mongo';
 
 	interface MangaEntryInterface {
 		manga: Manga;

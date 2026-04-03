@@ -1,4 +1,4 @@
-import type { Manga } from '$lib/db/helpers';
+import type { Manga } from '$lib/db/mongo';
 import { mangaCollection } from '$lib/db/mongo';
 import { betterPrintWarning } from '$lib/logs/logger';
 import type { PageServerLoad } from './$types';

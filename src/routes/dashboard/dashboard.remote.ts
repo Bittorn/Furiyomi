@@ -1,5 +1,5 @@
 import { command } from "$app/server";
-import { dropMangaBucket, dropMangaCollection, dropUsersCollection } from "$lib/db/helpers";
+import { dropMangaBucket, dropMangaCollection, dropUsersCollection } from "$lib/db/mongo";
 
 export const dropMangaCollectionRemote = command(async () => {dropMangaCollection()})
 export const dropUsersCollectionRemote = command(async () => {dropUsersCollection()})

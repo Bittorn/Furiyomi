@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { betterPrintWarning } from '$lib/logs/logger';
 import { mangaCollection } from '$lib/db/mongo';
-import type { Manga } from '$lib/db/helpers';
+import type { Manga } from '$lib/db/mongo';
 import { fetchMokuro, type Mokuro } from '$lib/db/mokuro';
 import type { PageServerLoad } from './$types';
 

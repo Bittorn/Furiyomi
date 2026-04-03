@@ -1,7 +1,7 @@
 import { fail } from '@sveltejs/kit';
 import { betterPrint } from '$lib/logs/logger.js';
 import { mangaBucket } from '$lib/db/mongo.js';
-import { writeManga, type Manga } from '$lib/db/helpers.js';
+import { writeManga, type Manga } from '$lib/db/mongo.js';
 import { downloadMetadata } from '$lib/import/metadata.js';
 import { generateID, isVolume } from '$lib/upload/helpers.js';
 import { unlink, writeFile } from 'node:fs/promises';

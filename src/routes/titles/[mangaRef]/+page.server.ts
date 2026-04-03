@@ -2,7 +2,7 @@ import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { betterPrintWarning } from '$lib/logs/logger';
 import { mangaCollection } from '$lib/db/mongo';
-import type { Manga } from '$lib/db/helpers';
+import type { Manga } from '$lib/db/mongo';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const sig = '/titles/[mangaRef]/server';

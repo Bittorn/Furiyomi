@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import type { Manga, Volume } from '$lib/db/helpers';
+	import type { Manga, Volume } from '$lib/db/mongo';
 
 	interface MangaEntryInterface {
 		manga: Manga;
