@@ -33,7 +33,7 @@ export function shouldIgnoreFile(name: string): boolean {
 export function isVolume(name: string): boolean {
 	const sig = 'upload/helpers:isVolume';
 
-	if (name.endsWith('.html')) {
+	if (name.endsWith('.mokuro')) {
 		betterPrint(`File ${name} matched pattern ${name}`, sig);
 		return true;
 	} else {

@@ -1,0 +1,29 @@
+@use '$lib/app.scss' as globals;
+
+#pagesContainer {
+    display: inline-flex;
+    flex-direction: row;
+    overflow: visible;
+}
+
+#leftScreen, #rightScreen, #leftPage, #rightPage {
+    z-index: 1;
+    background-color: black;
+}
+
+#leftPage, #rightPage {
+    /*display: inline-block;*/
+    display: none;
+    position: absolute;
+    top: -5%;
+    width: 10%;
+    height: 110%;
+}
+
+#leftPage {
+    left: -7%;
+}
+
+#rightPage {
+    right: -7%;
+}

@@ -11,7 +11,7 @@
 </script>
 
 <svelte:head>
-	<title>{manga.title.romaji} - Furiyomi</title>
+	<title>{manga.title.romaji} | Furiyomi</title>
 </svelte:head>
 
 <div class={styles.title}>

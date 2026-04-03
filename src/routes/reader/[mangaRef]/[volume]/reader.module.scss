@@ -1,0 +1,7 @@
+@use '$lib/app.scss' as globals;
+
+#body {
+	overflow: hidden;
+	margin: 0;
+	background-color: globals.$bg-color;
+}

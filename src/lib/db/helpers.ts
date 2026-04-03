@@ -2,7 +2,7 @@ import { betterPrint, betterPrintError, betterPrintWarning } from '$lib/logs/log
 import type { ObjectId } from 'mongodb';
 import { mangaBucket, mangaCollection, usersCollection } from './mongo';
 
-// #region Interfaces
+// #region Interface - Database
 export interface Manga {
 	_id?: ObjectId;
 	ref: string;
@@ -72,9 +72,9 @@ export async function writeUser(user: User) {
 }
 
 export async function deleteFile(file_id: ObjectId) {
-	const sig = 'db/helpers:deleteFile'
-	
-	await mangaBucket.delete(file_id)
+	const sig = 'db/helpers:deleteFile';
+
+	await mangaBucket.delete(file_id);
 	betterPrint(`Deleted file: ${file_id}`, sig);
 }
 

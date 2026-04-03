@@ -4,6 +4,8 @@ import { mangaBucket } from '$lib/db/mongo.js';
 import { writeManga, type Manga } from '$lib/db/helpers.js';
 import { downloadMetadata } from '$lib/import/metadata.js';
 import { generateID, isVolume } from '$lib/upload/helpers.js';
+import { unlink, writeFile } from 'node:fs/promises';
+import { createReadStream } from 'node:fs';
 
 export const actions = {
 	default: async ({ request }) => {
@@ -62,16 +64,26 @@ export const actions = {
 			if (isVolume(fileName)) {
 				const array = fileName.split('/');
 				manga.volumes.push({
-					title: array[array.length - 1].replace('.html', '')
+					title: array[array.length - 1].replace('.mokuro', '')
 				});
 			}
 
-			mangaBucket
-				.openUploadStream(fileName, {
-					chunkSizeBytes: 1048576,
-					metadata: manga
-				})
-				.write(Buffer.from(await pFile.arrayBuffer()));
+			// This works, so it's fine, but it's stupid, so it's not fine
+
+			await writeFile('./temp', Buffer.from(await pFile.arrayBuffer()));
+
+			await new Promise((resolve) =>
+				createReadStream('./temp')
+					.pipe(
+						mangaBucket.openUploadStream(fileName, {
+							chunkSizeBytes: 1048576,
+							metadata: manga
+						})
+					)
+					.on('close', resolve)
+			);
+
+			await unlink('./temp')
 		}
 
 		betterPrint('File upload complete', sig);
