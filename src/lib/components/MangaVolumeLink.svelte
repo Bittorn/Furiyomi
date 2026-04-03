@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { Manga, Volume } from "$lib/db/helpers";
+	import { resolve } from '$app/paths';
+	import type { Manga, Volume } from '$lib/db/helpers';
 
 	interface MangaEntryInterface {
 		manga: Manga;
@@ -18,5 +19,7 @@
 	}
 </script>
 
-<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-<a href="/data/manga/{manga.ref}/{volume.title}.html" {...rest}>Read {volumeTitle}</a>
+<a
+	href={resolve('/reader/[mangaRef]/[volume]', { mangaRef: manga.ref, volume: volume.title })}
+	{...rest}>Read {volumeTitle}</a
+>

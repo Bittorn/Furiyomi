@@ -1,9 +1,20 @@
 <script lang="ts">
 	import SidebarLink from './SidebarLink.svelte';
 	import styles from './Sidebar.module.scss';
+	import { page } from '$app/state';
+	import { betterPrint } from '$lib/logs/logger';
+
+	const onload = (p0: HTMLElement) => {
+		const sig = 'components/Sidebar:shouldShow'
+
+		if (page.url.pathname.includes('/reader')) {
+			betterPrint('Pathname contains /reader, hiding self', sig)
+			p0.style.display = 'none';
+		}
+	}
 </script>
 
-<nav class={styles.nav__cont}>
+<nav class={styles.nav__cont} use:onload>
 	<ul class={styles.nav}>
 		<SidebarLink href="/">
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"

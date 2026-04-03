@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { betterPrint, betterPrintWarning } from '$lib/logs/logger';
+import { betterPrintWarning } from '$lib/logs/logger';
 import { mangaCollection } from '$lib/db/mongo';
 import type { Manga } from '$lib/db/helpers';
 import { fetchMokuro, type Mokuro } from '$lib/db/mokuro';
@@ -21,8 +21,6 @@ export const load: PageServerLoad = async ({ params }) => {
 	manga._id = undefined;
 
 	const mokuro: Mokuro = await fetchMokuro(params.mangaRef, params.volume)
-
-	betterPrint(`Mokuro received: ${mokuro.pages}`, sig)
 
 	if (mokuro.pages.length == 0) {
 		betterPrintWarning('Mokuro has no pages', sig)

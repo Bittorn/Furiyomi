@@ -41,7 +41,7 @@ export async function fetchMokuro(ref: string, volume: string): Promise<Mokuro> 
 
 		mangaBucket
 			.openDownloadStreamByName(`${ref}/${volume}.mokuro`)
-			.pipe(createWriteStream('./temp'));
+			.pipe(createWriteStream('./mokuro-temp'));
 
 		// Literally the worst way to do this.
 
@@ -53,15 +53,24 @@ export async function fetchMokuro(ref: string, volume: string): Promise<Mokuro> 
 
 		// So stupid and bad.
 
-		const mokuroFile: Mokuro = JSON.parse(
-			JSON.stringify(await readFile('./temp', { encoding: 'utf-8' }))
-		);
+		const mokuroFile: Mokuro = JSON.parse(await readFile('./mokuro-temp', { encoding: 'utf-8' }));
 
 		betterPrint(`Parsed Mokuro file: ${ref}/${volume}.mokuro`, sig);
 
-		await unlink('./temp');
+		await unlink('./mokuro-temp');
 
 		betterPrint(`Removed temporary file`, sig);
+
+		// #region Debug
+
+		// eslint-disable-next-line no-constant-condition
+		if (false) {
+			betterPrint(`Title: ${mokuroFile.title}`, sig)
+			betterPrint(`Volume title: ${mokuroFile.volume}`, sig)
+			betterPrint(`No. pages: ${mokuroFile.pages.length}`, sig)
+		}
+
+		// #endregion
 
 		return mokuroFile;
 	} catch {
