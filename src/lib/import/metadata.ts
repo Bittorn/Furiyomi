@@ -1,4 +1,4 @@
-import { writeManga, type Manga } from '$lib/db/helpers';
+import { writeManga, type Manga } from '$lib/db/mongo';
 import { queryAnilist, type AniList, type Tags } from './anilist';
 import { betterPrint, betterPrintError } from '$lib/logs/logger';
 

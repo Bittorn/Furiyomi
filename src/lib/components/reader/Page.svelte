@@ -4,9 +4,11 @@
 
 	interface PageInterface {
 		page: Page;
+		pageIndex: number;
+		image: string;
 	}
 
-	let { page }: PageInterface = $props();
+	let { page, pageIndex, image }: PageInterface = $props();
 
 	const minFontSize = 12;
 	const maxFontSize = 32;
@@ -31,10 +33,10 @@
 	// TODO: image parsing
 </script>
 
-<div class={styles.page}>
+<div class='{styles.page} page' id='page-{pageIndex}'>
 	<div
 		class={styles.pageContainer}
-		style="width: {page.img_width}; height: {page.img_height}; background-image: url('{page.img_path}')"
+		style="width: {page.img_width}; height: {page.img_height}; background-image: url('{image}')"
 	>
 		{#each page.blocks as block (block.lines)}
 			<div

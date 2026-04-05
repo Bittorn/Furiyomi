@@ -1,4 +1,4 @@
-import type { Title } from '$lib/db/helpers';
+import type { Title } from '$lib/db/mongo';
 import { betterPrint, betterPrintError } from '$lib/logs/logger';
 
 export interface AniList {

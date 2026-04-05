@@ -2,11 +2,9 @@ import { env } from '$env/dynamic/private';
 import { GridFSBucket, MongoClient } from 'mongodb';
 import { betterPrint, betterPrintError, betterPrintWarning } from '$lib/logs/logger';
 import type { ObjectId } from 'mongodb';
-import { createWriteStream } from 'node:fs';
-import { readFile, unlink } from 'node:fs/promises';
-import { setTimeout } from 'node:timers/promises';
+import { fs } from 'memfs';
 
-// #region Interface - Database
+// #region Interfaces
 export interface Manga {
 	_id?: ObjectId;
 	ref: string;
@@ -40,9 +38,9 @@ export interface User {
 }
 // #endregion
 
+// #region Setup
 const client = new MongoClient(env.MONGO_URL);
 
-// connect to the database
 export async function startMongo(): Promise<MongoClient> {
 	return client.connect();
 }
@@ -53,7 +51,9 @@ export const mangaCollection = db.collection<Manga>('manga');
 export const usersCollection = db.collection<User>('users');
 
 export const mangaBucket = new GridFSBucket(db);
+// #endregion
 
+// #region Write
 export async function writeManga(manga: Manga) {
 	const sig = 'db/mongo:writeManga';
 
@@ -87,7 +87,9 @@ export async function writeUser(user: User) {
 		betterPrint(`User ${user.username} updated`, sig);
 	}
 }
+// #endregion
 
+// #region Drop/Delete
 export async function deleteFile(file_id: ObjectId) {
 	const sig = 'db/mongo:deleteFile';
 
@@ -142,42 +144,95 @@ export async function dropMangaBucket() {
 	betterPrint('Dropped manga bucket', sig);
 	betterPrintWarning('Manga collection will be out-of-date, consider dropping', sig);
 }
+// #endregion
 
-export async function getImage(imagePath: string): Promise<string> {
+// #region Upload
+export async function uploadFile(fileName: string, buffer: Buffer<ArrayBuffer>, manga: Manga) {
+	// This works, so it's fine, but it's stupid, so it's not fine
+	const sig = 'db/mongo:uploadFile';
+
+	betterPrint(`Uploading file: ${fileName}`, sig);
+
+	const id = Math.ceil(Math.random() * 65535);
+	const destPath = `/file-temp-${id}`;
+
+	fs.writeFileSync(destPath, buffer);
+
+	await new Promise((resolve) =>
+		fs
+			.createReadStream(destPath)
+			.pipe(
+				mangaBucket.openUploadStream(fileName, {
+					chunkSizeBytes: 1048576,
+					metadata: manga
+				})
+			)
+			.on('close', resolve)
+	);
+
+	betterPrint(`File uploaded to: ${destPath}`, sig);
+
+	fs.unlinkSync(destPath);
+}
+// #endregion
+
+// #region Get
+export async function getImageData(imagePath: string): Promise<string> {
+	// This works, so it's fine, but it's stupid, so it's not fine
 	const sig = 'db/mongo:getImage';
 
 	betterPrint(`Getting image: ${imagePath}`, sig);
 
 	const id = Math.ceil(Math.random() * 65535);
+	const destPath = `/image-temp-${id}`;
 
-	mangaBucket.openDownloadStreamByName(imagePath).pipe(createWriteStream(`./image-temp-${id}`));
+	let image = '';
+	try {
+		await new Promise((resolve, reject) => {
+			const writeStream = fs.createWriteStream(destPath);
+			const downloadStream = mangaBucket.openDownloadStreamByName(imagePath);
 
-	// Literally the worst way to do this.
+			downloadStream.pipe(writeStream);
 
-	betterPrint(`Waiting for timeout (stupid)`, sig);
+			writeStream.on('finish', () => {
+				betterPrint(`Write stream finished successfully!`, sig);
+				resolve(destPath);
+			});
 
-	await setTimeout(4);
+			downloadStream.on('error', reject);
+			writeStream.on('error', reject);
+		});
+	} catch (error) {
+		betterPrintError(`${error}`, sig);
+	}
 
-	betterPrint(`Timeout complete, attempting to parse...`, sig);
+	try {
+		image = Buffer.from(fs.readFileSync(destPath)).toString('base64'); // Check how async version works
 
-	// So stupid and bad.
+		fs.unlinkSync(destPath); // Check how async version works
 
-	const image: string = Buffer.from(await readFile('./file-temp')).toString('base64');
+		betterPrint(`Removed temporary file`, sig);
+	} catch (error) {
+		betterPrintError(`${error}`, sig);
+	}
 
-	await unlink(`./image-temp-${id}`);
-
-	betterPrint(`Removed temporary file`, sig);
-
-	return image;
+	if (image != '') return `data:image;base64,${image}`;
+	else return '';
 }
 
-export async function getImageArray(imagesPath: string): Promise<string[]> {
-	// NOT CURRENTLY IMPLEMENTED
+export async function getImageDataArray(imagePaths: string[]): Promise<string[]> {
 	const sig = 'db/mongo:getImageArray';
 
-	const imagesArray: string[] = []
+	const imagesArray: string[] = [];
 
-	betterPrint(`Getting image array: ${imagesPath}`, sig);
+	betterPrint(`Getting image array of ${imagePaths.length} item(s)`, sig);
+
+	for (const image of imagePaths) {
+		imagesArray.push(await getImageData(image));
+	}
+
+	betterPrint(`Completed getting image array, returning ${imagesArray.length} item(s)`, sig);
 
 	return imagesArray;
 }
+// #endregion

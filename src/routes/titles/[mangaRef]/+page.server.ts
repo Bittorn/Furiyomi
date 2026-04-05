@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { betterPrintWarning } from '$lib/logs/logger';
-import { mangaCollection } from '$lib/db/mongo';
+import { getImageData, mangaCollection } from '$lib/db/mongo';
 import type { Manga } from '$lib/db/mongo';
 
 export const load: PageServerLoad = async ({ params }) => {
@@ -15,7 +15,8 @@ export const load: PageServerLoad = async ({ params }) => {
 		foundManga._id = undefined;
 
 		return {
-			manga: foundManga
+			manga: foundManga,
+			cover: await getImageData(`${foundManga.cover}`)
 		};
 	}
 

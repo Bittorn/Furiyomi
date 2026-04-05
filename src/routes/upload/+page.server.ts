@@ -1,11 +1,9 @@
 import { fail } from '@sveltejs/kit';
 import { betterPrint } from '$lib/logs/logger.js';
-import { mangaBucket } from '$lib/db/mongo.js';
+import { uploadFile } from '$lib/db/mongo.js';
 import { writeManga, type Manga } from '$lib/db/mongo.js';
 import { downloadMetadata } from '$lib/import/metadata.js';
 import { generateID, isVolume } from '$lib/upload/helpers.js';
-import { unlink, writeFile } from 'node:fs/promises';
-import { createReadStream } from 'node:fs';
 
 export const actions = {
 	default: async ({ request }) => {
@@ -68,22 +66,10 @@ export const actions = {
 				});
 			}
 
-			// This works, so it's fine, but it's stupid, so it's not fine
+			// quick and dirty fix
+			if (fileName.includes('cover') && fileName.includes('vol1')) manga.cover = fileName
 
-			await writeFile('./temp', Buffer.from(await pFile.arrayBuffer()));
-
-			await new Promise((resolve) =>
-				createReadStream('./temp')
-					.pipe(
-						mangaBucket.openUploadStream(fileName, {
-							chunkSizeBytes: 1048576,
-							metadata: manga
-						})
-					)
-					.on('close', resolve)
-			);
-
-			await unlink('./temp')
+			await uploadFile(fileName, Buffer.from(await pFile.arrayBuffer()), manga);
 		}
 
 		betterPrint('File upload complete', sig);

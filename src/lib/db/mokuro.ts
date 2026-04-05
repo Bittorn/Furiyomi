@@ -1,8 +1,6 @@
-import { betterPrint, betterPrintError } from '$lib/logs/logger';
-import { createWriteStream } from 'node:fs';
+import { betterPrint } from '$lib/logs/logger';
 import { mangaBucket } from './mongo';
-import { readFile, unlink } from 'node:fs/promises';
-import { setTimeout } from 'node:timers/promises';
+import { fs } from 'memfs';
 
 // #region Interface - Mokuro
 export interface Mokuro {
@@ -31,50 +29,38 @@ export interface Block {
 }
 // #endregion
 
-export async function fetchMokuro(ref: string, volume: string): Promise<Mokuro> {
+export async function fetchMokuro(mokuroPath: string): Promise<Mokuro> {
 	const sig = 'db/mokuro:fetchMokuro';
 
-	betterPrint(`Fetching Mokuro file: ${ref}/${volume}.mokuro`, sig);
+	betterPrint(`Fetching Mokuro file: ${mokuroPath}`, sig);
 
-	try {
-		// OK, so this part? Dogwash.
+	const id = Math.ceil(Math.random() * 65535);
+	const destPath = `/mokuro-temp-${id}`;
 
-		mangaBucket
-			.openDownloadStreamByName(`${ref}/${volume}.mokuro`)
-			.pipe(createWriteStream('./mokuro-temp'));
+	await new Promise((resolve, reject) => {
+		const writeStream = fs.createWriteStream(destPath);
+		const downloadStream = mangaBucket.openDownloadStreamByName(mokuroPath);
 
-		// Literally the worst way to do this.
+		downloadStream.pipe(writeStream);
 
-		betterPrint(`Waiting for timeout (stupid)`, sig);
+		writeStream.on('finish', () => {
+			betterPrint(`Write stream finished successfully`, sig);
+			resolve(destPath);
+		});
 
-		await setTimeout(4);
+		downloadStream.on('error', reject);
+		writeStream.on('error', reject);
+	});
 
-		betterPrint(`Timeout complete, attempting to parse...`, sig);
+	const mokuroFile: Mokuro = JSON.parse(
+		fs.readFileSync(destPath, { encoding: 'utf-8' }).toString()
+	);
 
-		// So stupid and bad.
+	betterPrint(`Parsed Mokuro file: ${mokuroPath}`, sig);
 
-		const mokuroFile: Mokuro = JSON.parse(await readFile('./mokuro-temp', { encoding: 'utf-8' }));
+	fs.unlinkSync(destPath);
 
-		betterPrint(`Parsed Mokuro file: ${ref}/${volume}.mokuro`, sig);
+	betterPrint(`Removed temporary file`, sig);
 
-		await unlink('./mokuro-temp');
-
-		betterPrint(`Removed temporary file`, sig);
-
-		// #region Debug
-
-		// eslint-disable-next-line no-constant-condition
-		if (false) {
-			betterPrint(`Title: ${mokuroFile.title}`, sig)
-			betterPrint(`Volume title: ${mokuroFile.volume}`, sig)
-			betterPrint(`No. pages: ${mokuroFile.pages.length}`, sig)
-		}
-
-		// #endregion
-
-		return mokuroFile;
-	} catch {
-		betterPrintError(`Error parsing Mokuro file`, sig);
-		throw new Error('Error parsing Mokuro file');
-	}
+	return mokuroFile;
 }

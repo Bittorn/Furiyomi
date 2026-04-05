@@ -1,24 +1,21 @@
 <script lang="ts">
 	import styles from './reader.module.scss';
 	import Reader from '$lib/components/reader/Reader.svelte';
-	import type { Manga } from '$lib/db/helpers.js';
-	import type { Mokuro } from '$lib/db/mokuro.js';
-	import { betterPrintWarning } from '$lib/logs/logger.js';
+	import { betterPrintWarning } from '$lib/logs/logger';
 
 	const sig = '/reader/[mangaRef]/[volume]';
 
 	let { data } = $props();
 
-	interface pInterface {
-		manga: Manga,
-		mokuro: Mokuro
-	}
-
 	// svelte-ignore state_referenced_locally
-	let { manga, mokuro }: pInterface = data;
+	let { manga, mokuro, images } = data;
 
 	if (mokuro.pages.length == 0) {
-		betterPrintWarning('Mokuro has no pages', sig)
+		betterPrintWarning('Mokuro has no pages', sig);
+	}
+
+	if (images.length == 0) {
+		betterPrintWarning('Manga has no images', sig);
 	}
 </script>
 
@@ -27,5 +24,5 @@
 </svelte:head>
 
 <div id={styles.body}>
-	<Reader {mokuro}/>
+	<Reader {mokuro} {images}/>
 </div>

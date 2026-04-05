@@ -6,18 +6,19 @@
 
 	interface MangaEntryInterface {
 		manga: Manga;
+		cover: string;
 		[key: string]: unknown; // for all other properties
 	}
 
-	let { manga, ...rest }: MangaEntryInterface = $props();
+	let { manga, cover, ...rest }: MangaEntryInterface = $props();
 </script>
 
 <div class={styles.manga} {...rest}>
 	<h2>{manga.title.romaji}</h2>
 	<h3>{manga.title.native}</h3>
 	<img
-		src={manga.cover
-			? `/data/manga/${manga.ref}/${manga.volumes[0].title}/${manga.cover}`
+		src={manga.cover || cover
+			? cover
 			: noCover}
 		alt={manga.cover ? `${manga.title.romaji} Cover` : 'Manga Cover'}
 		class={styles.cover}

@@ -7,7 +7,7 @@
 	let { data } = $props();
 
 	// svelte-ignore state_referenced_locally
-	let { manga } = data;
+	let { manga, cover } = data;
 </script>
 
 <svelte:head>
@@ -23,7 +23,7 @@
 	<a href={resolve('/titles')} class={styles.back}>Back</a><br /><br /><br />
 
 	<img
-		src={manga.cover ? `/data/manga/${manga.ref}/${manga.volumes[0].title}/${manga.cover}` : noCover}
+		src={manga.cover || cover ? cover : noCover}
 		alt="Manga cover"
 		class={styles.solocover}
 	/>

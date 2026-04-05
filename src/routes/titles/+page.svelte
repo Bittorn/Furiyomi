@@ -6,7 +6,7 @@
 	let { data } = $props();
 
 	// svelte-ignore state_referenced_locally
-	let { mangaCount, mangaList } = data;
+	let { mangaCount, mangaList, mangaCovers } = data;
 </script>
 
 <svelte:head>
@@ -22,8 +22,8 @@
 
 {#if mangaCount}
 	<div class={styles.mangalist}>
-		{#each mangaList as manga (manga.ref)}
-			<MangaEntry {manga} />
+		{#each mangaList as manga, index (manga.ref)}
+			<MangaEntry {manga} cover={mangaCovers[index]}/>
 		{/each}
 	</div>
 {:else}
