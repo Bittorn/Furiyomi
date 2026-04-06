@@ -22,6 +22,7 @@ export async function downloadMetadata(manga: Manga) {
 	manga.genres = anilist_data.genres;
 	manga.tags = await processTags(anilist_data.tags);
 	manga.description = await formatDescription(anilist_data.description);
+	manga.cover_remote = anilist_data.coverImage.extralarge;
 
 	writeManga(manga)
 }

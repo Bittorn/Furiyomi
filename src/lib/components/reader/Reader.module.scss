@@ -1,35 +1,41 @@
 @use '$lib/app.scss' as globals;
 
 #pagesContainer {
-    display: inline-flex;
-    flex-direction: row;
-    overflow: visible;
+	display: inline-flex;
+	flex-direction: row;
+	overflow: visible;
+	transform-origin: 0px 0px 0px !important;
 }
 
-#leftScreen, #rightScreen, #leftPage, #rightPage {
-    z-index: 1;
-    background-color: globals.$button-color;
-}
-
-#leftPage, #rightPage {
-    font-size: xx-large;
+#leftScreen,
+#rightScreen,
+#leftPage,
+#rightPage {
+	z-index: 1;
+	background-color: globals.$button-color;
     display: inline-block;
-    opacity: 0;
-    position: absolute;
-    top: -5%;
-    width: 10%;
-    height: 110%;
+	opacity: 0;
+	position: absolute;
+	top: -5%;
+	width: 5%;
+	height: 110%;
+	transition: opacity ease 1;
+    cursor: pointer;
+}
+
+#leftScreen,
+#rightScreen {
     transition: opacity ease 1;
 
-    &:hover {
-        opacity: 1;
-    }
+	&:hover {
+		opacity: 1;
+	}
 }
 
-#leftPage {
-    left: -3%;
+#leftPage, #leftScreen {
+	left: 0;
 }
 
-#rightPage {
-    right: -3%;
+#rightPage, #rightScreen {
+	right: 0;
 }

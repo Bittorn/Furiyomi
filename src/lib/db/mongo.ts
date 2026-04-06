@@ -15,6 +15,7 @@ export interface Manga {
 	genres: string[];
 	tags: string[];
 	cover: string;
+	cover_remote?: string;
 	link: string;
 	description: string;
 	volumes: Volume[];

@@ -30,11 +30,26 @@
 
 	onMount(() => {
 		for (let i = 0; i < mokuro.pages.length; i++) {
-			pages[i] = document.getElementById(`page-${i}`)!
+			pages[i] = document.getElementById(`page-${i}`)!;
 		}
-		
-		updatePage(curPageIndex)
+
+		updatePage(curPageIndex);
 	});
+
+	function updateTransform() {
+		let scale_x = window.innerWidth / pagesContainer.offsetWidth;
+		let scale_y = window.innerHeight / pagesContainer.offsetHeight;
+		let scale = Math.min(scale_x, scale_y);
+		let offset = pagesContainer.clientWidth - mokuro.pages[curPageIndex].img_width / 2;
+
+		if (curPage2Index == -1) {
+			offset /= 3
+		} else {
+			offset /= 5
+		}
+
+		pagesContainer.style.transform = `matrix(${scale}, 0, 0, ${scale}, ${offset}, 0)`;
+	}
 
 	function onKeyDown(e: KeyboardEvent) {
 		switch (e.key) {
@@ -106,11 +121,21 @@
 		}
 
 		pages[curPageIndex].style.display = 'inline-block';
-		pages[curPageIndex].style.order = '2'; // wait, what?
+		pages[curPageIndex].style.order = '2'; // it's a number, idiot
+
+		if (pageIndex < pages.length - 1 && !isPageFirstOfPair(pageIndex + 1)) {
+			curPage2Index = curPageIndex + 1;
+			pages[curPage2Index].style.display = 'inline-block';
+			pages[curPage2Index].style.order = '1'; // refer to previous comment
+		} else {
+			curPage2Index = -1;
+		}
+
+		updateTransform()
 	}
 </script>
 
-<svelte:document onkeydown={onKeyDown} />
+<svelte:document onkeydown={onKeyDown} onresize={() => updateTransform()}/>
 
 <!-- svelte-ignore a11y_missing_attribute -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -129,7 +154,7 @@
 
 <div bind:this={pagesContainer} id={styles.pagesContainer}>
 	{#each mokuro.pages as page, pageIndex (page.img_path)}
-		<Page {page} {pageIndex} image={images[pageIndex]}/>
+		<Page {page} {pageIndex} image={images[pageIndex]} />
 	{/each}
 
 	<!-- svelte-ignore a11y_missing_attribute -->

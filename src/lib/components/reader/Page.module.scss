@@ -22,7 +22,7 @@
 }
 
 .textBox {
-	display: initial; // this is variable?
+	display: initial; // this is variable? probably not...
 	position: absolute;
 	padding: 0;
 	line-height: 1.1em;
@@ -32,7 +32,7 @@
 	background-color: transparent;
 
 	p {
-		display: table;
+		display: none;
 		color: transparent;
 		letter-spacing: 0.1em;
 		margin: 0;
@@ -44,6 +44,7 @@
 		z-index: 999 !important;
 
 		p {
+			display: table;
 			color: black;
 		}
 	}

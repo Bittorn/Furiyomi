@@ -24,5 +24,13 @@
 </svelte:head>
 
 <div id={styles.body}>
-	<Reader {mokuro} {images}/>
+	<Reader {mokuro} {images} />
 </div>
+
+<style>
+	:root {
+		overflow: hidden;
+		padding: 0 !important;
+		margin: 0 !important;
+	}
+</style>

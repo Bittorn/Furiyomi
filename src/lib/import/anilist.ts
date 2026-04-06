@@ -17,6 +17,7 @@ export interface Media {
 	startDate: StartDate;
 	genres: string[];
 	tags: Tags[];
+	coverImage: CoverImage;
 }
 
 export interface Page {
@@ -30,6 +31,10 @@ export interface StartDate {
 export interface Tags {
 	name: string;
 	isMediaSpoiler: boolean;
+}
+
+export interface CoverImage {
+	extralarge: string;
 }
 
 const query = `
@@ -51,6 +56,9 @@ const query = `
 				tags {
 					name
 					isMediaSpoiler
+				}
+				coverImage {
+					extraLarge
 				}
 			}
 		}

@@ -7,6 +7,9 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const sig = '/reader/[mangaRef]/[volume]/server';
+	const volumePath = `${params.mangaRef}/${params.volume}`;
+	const mokuroPath = `${volumePath}.mokuro`;
+	const images: string[] = [];
 
 	const manga: Manga | null = await mangaCollection.findOne({
 		ref: params.mangaRef
@@ -17,22 +20,15 @@ export const load: PageServerLoad = async ({ params }) => {
 		throw error(404, 'Manga not found, please try again.');
 	}
 
-	// strip ObjectId so stinky SvelteKit doesn't complain
-	// about non-POJO objects even when it literally is
+	// strip ObjectId so SvelteKit doesn't complain about non-POJO objects
 	manga._id = undefined;
-
-	const volumePath = `${params.mangaRef}/${params.volume}`
-
-	const mokuroPath = `${volumePath}.mokuro`;
 
 	betterPrint(`Requesting Mokuro: ${mokuroPath}`, sig);
 
 	const mokuro: Mokuro = await fetchMokuro(mokuroPath);
 
-	const images: string[] = []
-
 	for (const page of mokuro.pages) {
-		images.push(await getImageData(`${volumePath}/${page.img_path}`))
+		images.push(await getImageData(`${volumePath}/${page.img_path}`));
 	}
 
 	return {

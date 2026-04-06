@@ -20,6 +20,7 @@
 </script>
 
 <a
+	data-sveltekit-reload
 	href={resolve('/reader/[mangaRef]/[volume]', { mangaRef: manga.ref, volume: volume.title })}
 	{...rest}>Read {volumeTitle}</a
 >

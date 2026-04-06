@@ -1,7 +1,13 @@
 @use '$lib/app.scss' as globals;
 
-#body {
+body {
 	overflow: hidden;
-	margin: 0;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+#body {
 	background-color: globals.$header-bg-color;
+	height: 100vh !important;
+	width: 100vw !important;
 }
