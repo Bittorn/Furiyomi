@@ -1,42 +1,47 @@
-import micromatch from 'micromatch';
+import { betterPrint } from '$lib/logs/logger';
 
-const DEFAULT_FILES_TO_IGNORE = [
-	'.DS_Store', // OSX indexing file
+const filesToIgnore = [
+	'.DS_Store',
 	'.ds_store',
-	'Thumbs.db', // Windows indexing file
-	'.*~',
-	'~$*',
-	'.~lock.*',
-	'~*.tmp',
-	'*.~*',
-	'._*',
-	'.*.sw?',
-	'.*.*sw?',
+	'.Thumbs.db',
+	'.tmp',
 	'.TemporaryItems',
 	'.Trashes',
-	'.DocumentRevisions-V100',
-	'.Trash-*',
+	'.Trash',
 	'.fseventd',
-	'.apdisk',
-	'.directory',
-	'*.part',
-	'*.filepart',
-	'*.crdownload',
-	'*.kate-swp',
-	'*.gnucash.tmp-*',
-	'.synkron.*',
-	'.sync.ffs_db',
-	'.symform',
-	'.symform-store',
-	'.fuse_hidden*',
-	'*.unison',
-	'.nfs*'
+	'.nfs',
+	'_ocr'
 ];
 
-export function shouldIgnoreFile(file: File) {
-	return micromatch.isMatch(file.name, DEFAULT_FILES_TO_IGNORE);
+export function shouldIgnoreFile(name: string): boolean {
+	const sig = 'upload/helpers:shouldIgnoreFile';
+
+	let isMatch = false;
+
+	for (const test of filesToIgnore) {
+		// TODO: fix this
+
+		if (!isMatch) {
+			isMatch = name.includes(test);
+			betterPrint(`File ${name} matched pattern ${test}, ignoring`, sig);
+		}
+	}
+
+	return isMatch;
 }
 
-export function generateID(title: string): string {
-	return title.toLowerCase().replaceAll(' ', '-');
+export function isVolume(name: string): boolean {
+	const sig = 'upload/helpers:isVolume';
+
+	if (name.endsWith('.mokuro')) {
+		betterPrint(`File ${name} matched pattern ${name}`, sig);
+		return true;
+	} else {
+		return false;
+	}
+}
+
+export function generateID(name: string): string {
+	const id = name.toLowerCase().replaceAll(' ', '-');
+	return id;
 }

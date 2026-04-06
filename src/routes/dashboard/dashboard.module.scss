@@ -1,0 +1,32 @@
+@use '$lib/app.scss' as globals;
+
+.dashboard {
+	margin-bottom: 4rem;
+	display: inline-flex;
+	flex-direction: column;
+
+	button {
+		color: globals.$font-color;
+		font-size: large;
+		padding: 12px 28px;
+		background-color: globals.$button-color;
+		border: none;
+		border-radius: 50px;
+		cursor: pointer;
+		transition: background-color 0.2s ease 0s;
+		margin-bottom: 1rem;
+
+		&:hover {
+			background-color: globals.$button-hover-color;
+		}
+	}
+
+	.dropDatabase {
+		background-color: red;
+		margin-bottom: 3rem;
+
+		&:hover {
+			background-color: rgb(255, 127, 127);
+		}
+	}
+}

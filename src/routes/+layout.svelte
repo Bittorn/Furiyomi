@@ -2,17 +2,18 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import '$lib/app.scss';
+	import { page } from '$app/state';
 
 	let { children } = $props();
 </script>
 
 <svelte:head>
-	<link rel="manifest" href="/manifest.json" />
 	<link rel="icon" href={favicon} />
-	<meta name="google" content="notranslate" />
 	<title>Furiyomi</title>
 </svelte:head>
 
-<Sidebar />
+{#if !page.url.pathname.includes('/reader')}
+	<Sidebar />
+{/if}
 
 {@render children()}

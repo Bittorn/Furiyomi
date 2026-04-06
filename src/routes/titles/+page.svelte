@@ -1,13 +1,12 @@
 <script lang="ts">
 	import styles from './titles.module.scss';
-	import noCover from '$lib/assets/covers/no-cover.png';
 	import MangaEntry from '$lib/components/MangaEntry.svelte';
 	import { resolve } from '$app/paths';
 
 	let { data } = $props();
 
 	// svelte-ignore state_referenced_locally
-	let { mangaList } = data;
+	let { mangaCount, mangaList, mangaCovers } = data;
 </script>
 
 <svelte:head>
@@ -21,17 +20,10 @@
 	<input type="text" id="searchBar" placeholder="Search manga..." />
 </div>
 
-{#if mangaList.length != 0}
+{#if mangaCount}
 	<div class={styles.mangalist}>
-		{#each mangaList as manga (manga.uuid)}
-			<MangaEntry
-				mangaID={manga.id}
-				mangaTitleRomaji={manga.title.romaji}
-				mangaTitleNative={manga.title.native}
-				mangaCoverPath={manga.cover
-					? `/data/manga/${manga.id}/${manga.volumes[0].title}/${manga.cover}`
-					: noCover}
-			/>
+		{#each mangaList as manga, index (manga.ref)}
+			<MangaEntry {manga} cover={mangaCovers[index]}/>
 		{/each}
 	</div>
 {:else}

@@ -2,15 +2,16 @@
 	import styles from './manga.module.scss';
 	import noCover from '$lib/assets/covers/no-cover.png';
 	import MangaVolumeLink from '$lib/components/MangaVolumeLink.svelte';
+	import { resolve } from '$app/paths';
 
 	let { data } = $props();
 
 	// svelte-ignore state_referenced_locally
-	let { manga } = data;
+	let { manga, cover } = data;
 </script>
 
 <svelte:head>
-	<title>{manga.title.romaji} - Furiyomi</title>
+	<title>{manga.title.romaji} | Furiyomi</title>
 </svelte:head>
 
 <div class={styles.title}>
@@ -19,14 +20,10 @@
 </div>
 
 <div>
-	<!-- I DONT CARE !!! SHUT UP !!! -->
-	<!-- svelte-ignore a11y_click_events_have_key_events -->
-	<!-- svelte-ignore a11y_no_static_element_interactions -->
-	<!-- svelte-ignore a11y_missing_attribute -->
-	<a onclick={() => history.back()} class={styles.back}>Back</a><br /><br /><br />
+	<a href={resolve('/titles')} class={styles.back}>Back</a><br /><br /><br />
 
 	<img
-		src={manga.cover ? `/data/manga/${manga.id}/${manga.volumes[0].title}/${manga.cover}` : noCover}
+		src={manga.cover || cover ? cover : noCover}
 		alt="Manga cover"
 		class={styles.solocover}
 	/>

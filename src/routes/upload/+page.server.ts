@@ -1,18 +1,18 @@
-import { writeFileSync, existsSync, mkdirSync } from 'fs';
-import path from 'path';
 import { fail } from '@sveltejs/kit';
-import { generateID, shouldIgnoreFile } from '$lib/upload/helpers.js';
-import { processUpload } from '$lib/import/metadata.js';
-import { dbMangaPath } from '$lib/db/helpers.js';
 import { betterPrint } from '$lib/logs/logger.js';
+import { uploadFile } from '$lib/db/mongo.js';
+import { writeManga, type Manga } from '$lib/db/mongo.js';
+import { downloadMetadata } from '$lib/import/metadata.js';
+import { generateID, isVolume } from '$lib/upload/helpers.js';
 
 export const actions = {
 	default: async ({ request }) => {
+		const sig = '/upload/server';
 		const formData = await request.formData();
 
 		const files = formData.getAll('fileToUpload');
 
-		betterPrint(`Received upload request: ${files.length} items`, 'server:fileUpload');
+		betterPrint(`Received upload request: ${files.length} items`, sig);
 
 		if (files.length <= 0) {
 			return fail(400, {
@@ -21,44 +21,65 @@ export const actions = {
 			});
 		}
 
-		let mangaID, mangaRomaji;
-
-		// #region Upload files
+		const manga: Manga = {
+			ref: '',
+			upload_date: new Date().getTime(),
+			anilist_id: 0,
+			title: {
+				romaji: '',
+				english: '',
+				native: ''
+			},
+			year: 0,
+			genres: [],
+			tags: [],
+			cover: '',
+			link: '',
+			description: '',
+			volumes: []
+		};
 
 		for (const file of files) {
-			// TODO: do all this asynchronously
+			const pFile = file as File;
 
-			const fileToUpload = file as File;
+			const fileNameArray = pFile.name.split('/');
 
-			// eslint-disable-next-line prefer-const
-			let fileNameArray = fileToUpload.name.split('/');
-			mangaRomaji = fileNameArray[0]
-			fileNameArray[0] = generateID(fileNameArray[0]);
-			mangaID = fileNameArray[0]
-			const fileName = fileNameArray.join('/');
-
-			const filePath = `${dbMangaPath}/${fileName}`;
-
-			// Check if it's garbage
-			if (shouldIgnoreFile(fileToUpload)) return;
-
-			// Create directory if it doesn't exist
-			const fileDir = path.dirname(filePath);
-
-			if (!existsSync(fileDir)) {
-				mkdirSync(fileDir, { recursive: true });
-				betterPrint(`Directory ${fileDir} (and parents) created`, 'server:fileUpload');
+			if (manga.title.romaji == '') {
+				manga.title.romaji = fileNameArray[0];
 			}
 
-			// Write the file to the data folder
-			writeFileSync(filePath, Buffer.from(await fileToUpload.arrayBuffer()));
+			fileNameArray[0] = generateID(fileNameArray[0]);
+
+			if (manga.ref == '') {
+				manga.ref = fileNameArray[0];
+			}
+
+			const fileName = fileNameArray.join('/');
+
+			// Check if it's garbage
+			// if (shouldIgnoreFile(fileName)) return;
+
+			if (isVolume(fileName)) {
+				const array = fileName.split('/');
+				manga.volumes.push({
+					title: array[array.length - 1].replace('.mokuro', '')
+				});
+			}
+
+			// quick and dirty fix
+			if (fileName.includes('cover') && fileName.includes('vol1') && !(fileName.includes('_ocr') || fileName.endsWith('json'))) manga.cover = fileName
+
+			await uploadFile(fileName, Buffer.from(await pFile.arrayBuffer()), manga);
 		}
 
-		// #endregion
+		betterPrint('File upload complete', sig);
+		betterPrint('Updating manga collection...', sig);
 
-		betterPrint('File upload complete', 'server:fileUpload');
+		await writeManga(manga);
 
-		processUpload(mangaID!, mangaRomaji!)
+		betterPrint('File processing complete!', sig);
+
+		downloadMetadata(manga);
 
 		return {
 			success: true
