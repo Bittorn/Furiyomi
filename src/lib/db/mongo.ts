@@ -1,4 +1,4 @@
-import { env } from '$env/dynamic/private';
+// import { env } from '$env/dynamic/private';
 import { GridFSBucket, MongoClient } from 'mongodb';
 import { betterPrint, betterPrintError, betterPrintWarning } from '$lib/logs/logger';
 import type { ObjectId } from 'mongodb';
@@ -41,7 +41,7 @@ export interface User {
 
 // #region Setup
 
-const dbUrl = env.MONGO_URL;
+const dbUrl = 'mongodb://127.0.0.1:27017/'; // env.MONGO_URL
 const client = new MongoClient(dbUrl, {}); // Possible fix for dumb MongoDB error
 
 export async function startMongo(): Promise<MongoClient> {
