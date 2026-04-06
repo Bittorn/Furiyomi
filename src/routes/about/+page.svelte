@@ -35,7 +35,7 @@
 	style="width: 400px; border-radius: 2rem"
 />
 <h2>Hatsuseno Alpha <i>(Yokohama Kaidashi Kikou)</i></h2>
-<h3>Art by <a href="https://www.youtube.com/@ksrvgn">ksrvgn</a></h3>
+<h3>Art by <a href="https://www.youtube.com/@ksrvgn" target="_blank">ksrvgn</a></h3>
 
 <h1>What does that mean?</h1>
 <div class={styles.yapping}>
