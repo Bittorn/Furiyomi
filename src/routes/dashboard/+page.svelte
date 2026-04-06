@@ -1,6 +1,7 @@
 <script lang="ts">
 	import styles from './dashboard.module.scss';
 	import {
+		dropDatabaseRemote,
 		dropMangaBucketRemote,
 		dropMangaCollectionRemote,
 		dropUsersCollectionRemote
@@ -17,6 +18,16 @@
 
 <div class={styles.dashboard}>
 	<h2>Database Actions</h2>
+	<button
+		class={styles.dropDatabase}
+		onclick={async () => {
+			try {
+				await dropDatabaseRemote();
+			} catch (error) {
+				alert(`Something went wrong: ${error}`);
+			}
+		}}>Drop Database</button
+	>
 	<button
 		onclick={async () => {
 			try {

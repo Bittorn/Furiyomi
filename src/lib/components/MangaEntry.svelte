@@ -11,6 +11,11 @@
 	}
 
 	let { manga, cover, ...rest }: MangaEntryInterface = $props();
+
+	// svelte-ignore state_referenced_locally
+	if (manga.cover_remote) {
+		cover = manga.cover_remote;
+	}
 </script>
 
 <div class={styles.manga} {...rest}>

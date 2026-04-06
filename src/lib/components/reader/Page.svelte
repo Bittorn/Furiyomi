@@ -11,7 +11,7 @@
 	let { page, pageIndex, image }: PageInterface = $props();
 
 	const minFontSize = 12;
-	const maxFontSize = 32;
+	const maxFontSize = 60;
 
 	function clamp(num: number, lower: number, upper: number): number {
 		return Math.min(Math.max(num, lower), upper);

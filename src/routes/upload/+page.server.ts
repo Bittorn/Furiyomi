@@ -67,7 +67,7 @@ export const actions = {
 			}
 
 			// quick and dirty fix
-			if (fileName.includes('cover') && fileName.includes('vol1')) manga.cover = fileName
+			if (fileName.includes('cover') && fileName.includes('vol1') && !(fileName.includes('_ocr') || fileName.endsWith('json'))) manga.cover = fileName
 
 			await uploadFile(fileName, Buffer.from(await pFile.arrayBuffer()), manga);
 		}

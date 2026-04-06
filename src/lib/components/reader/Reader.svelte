@@ -2,7 +2,7 @@
 	import styles from './Reader.module.scss';
 	import Page from './Page.svelte';
 	import type { Mokuro } from '$lib/db/mokuro';
-	import { betterPrintWarning } from '$lib/logs/logger';
+	import { betterPrint, betterPrintWarning } from '$lib/logs/logger';
 	import { onMount } from 'svelte';
 
 	const sig = 'components/reader';
@@ -42,10 +42,10 @@
 		let scale = Math.min(scale_x, scale_y);
 		let offset = pagesContainer.clientWidth - mokuro.pages[curPageIndex].img_width / 2;
 
-		if (curPage2Index == -1) {
-			offset /= 3
-		} else {
+		if (curPage2Index >= 0) {
 			offset /= 5
+		} else {
+			offset /= 3
 		}
 
 		pagesContainer.style.transform = `matrix(${scale}, 0, 0, ${scale}, ${offset}, 0)`;
@@ -82,7 +82,7 @@
 		// 	return true;
 		// } else {
 		// 	if (state.hasCover) {
-		return pageIndex === 0 || pageIndex % 2 === 1;
+		return (pageIndex === 0 || (pageIndex % 2 === 1))
 		// 	} else {
 		// 		return page_idx % 2 === 0;
 		// 	}
@@ -106,7 +106,10 @@
 	}
 
 	function updatePage(pageIndex: number) {
-		pageIndex = Math.min(Math.max(pageIndex, 0), pages.length - 1);
+		const sig = 'components/reader/Reader:updatePage'
+		pageIndex = Math.min(Math.max(pageIndex, 0), pages.length - 2);
+
+		betterPrint(`Updating page to: ${pageIndex}`, sig)
 
 		pages[curPageIndex].style.display = 'none';
 
@@ -116,14 +119,16 @@
 
 		if (isPageFirstOfPair(pageIndex)) {
 			curPageIndex = pageIndex;
+			betterPrint(`Page is first of pair, curPageIndex = ${curPageIndex}`, sig)
 		} else {
 			curPageIndex = pageIndex - 1;
+			betterPrint(`curPageIndex = ${curPageIndex}`, sig)
 		}
 
 		pages[curPageIndex].style.display = 'inline-block';
 		pages[curPageIndex].style.order = '2'; // it's a number, idiot
 
-		if (pageIndex < pages.length - 1 && !isPageFirstOfPair(pageIndex + 1)) {
+		if (pageIndex < pages.length - 1 && !isPageFirstOfPair(curPageIndex + 1)) {
 			curPage2Index = curPageIndex + 1;
 			pages[curPage2Index].style.display = 'inline-block';
 			pages[curPage2Index].style.order = '1'; // refer to previous comment

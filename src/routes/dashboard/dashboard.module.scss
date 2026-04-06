@@ -20,4 +20,13 @@
 			background-color: globals.$button-hover-color;
 		}
 	}
+
+	.dropDatabase {
+		background-color: red;
+		margin-bottom: 3rem;
+
+		&:hover {
+			background-color: rgb(255, 127, 127);
+		}
+	}
 }
