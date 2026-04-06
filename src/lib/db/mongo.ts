@@ -40,7 +40,9 @@ export interface User {
 // #endregion
 
 // #region Setup
-const client = new MongoClient(env.MONGO_URL);
+
+const dbUrl = env.MONGO_URL;
+const client = new MongoClient(dbUrl, {}); // Possible fix for dumb MongoDB error
 
 export async function startMongo(): Promise<MongoClient> {
 	return client.connect();
