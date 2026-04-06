@@ -1,8 +1,9 @@
-// import { env } from '$env/dynamic/private';
+import { env } from '$env/dynamic/private';
 import { GridFSBucket, MongoClient } from 'mongodb';
 import { betterPrint, betterPrintError, betterPrintWarning } from '$lib/logs/logger';
 import type { ObjectId } from 'mongodb';
 import { fs } from 'memfs';
+import { building } from '$app/environment';
 
 // #region Interfaces
 export interface Manga {
@@ -41,7 +42,13 @@ export interface User {
 
 // #region Setup
 
-const dbUrl = 'mongodb://127.0.0.1:27017/'; // env.MONGO_URL
+let dbUrl: string;
+
+if (building) {
+	dbUrl = 'mongodb://127.0.0.1:27017';
+} else {
+	dbUrl = env.MONGO_URL;
+}
 const client = new MongoClient(dbUrl, {}); // Possible fix for dumb MongoDB error
 
 export async function startMongo(): Promise<MongoClient> {
