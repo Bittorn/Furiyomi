@@ -4,11 +4,6 @@
 	width: 20rem;
 	display: block;
 	margin: auto;
-	transition: width 0.4s ease 0s;
-
-	&:hover {
-		width: 26rem;
-	}
 }
 
 .links {
@@ -44,8 +39,8 @@
 .volumes {
 	display: grid;
 	grid-template-columns: auto auto auto;
-	gap: 2rem;
-	padding: 8px 24rem;
+	gap: 3rem;
+	padding: 8px 18rem;
 
 	a {
 		color: globals.$font-color;
@@ -56,7 +51,7 @@
 		border-radius: 50px;
 		cursor: pointer;
 		border-color: globals.$button-color;
-		transition: all 0.2s ease 0s;
+		transition: all 0.1s ease 0s;
 
 		&:hover {
 			border-color: globals.$button-hover-color;

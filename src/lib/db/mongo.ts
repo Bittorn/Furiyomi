@@ -47,7 +47,7 @@ let dbUrl: string;
 if (building) {
 	dbUrl = 'mongodb://127.0.0.1:27017';
 } else {
-	dbUrl = env.MONGO_URL;
+	dbUrl = env.MONGO_URL!;
 }
 const client = new MongoClient(dbUrl, {}); // Possible fix for dumb MongoDB error
 

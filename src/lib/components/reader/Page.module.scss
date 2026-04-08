@@ -9,6 +9,9 @@
 .pageContainer {
 	position: relative;
 	margin: 0 auto;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
 
 	* {
 		font-family: 'LINE Seed JP', 'Noto Sans JP', 'Meiryo', 'MS Gothic', sans-serif;
