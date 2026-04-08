@@ -2,7 +2,7 @@ import { fail } from '@sveltejs/kit';
 import { betterPrint } from '$lib/logs/logger.js';
 import { uploadFile } from '$lib/db/mongo.js';
 import { writeManga, type Manga } from '$lib/db/mongo.js';
-import { downloadMetadata } from '$lib/import/metadata.js';
+import { processUpload } from '$lib/import/metadata.js';
 import { generateID, isVolume } from '$lib/upload/helpers.js';
 
 export const actions = {
@@ -66,9 +66,6 @@ export const actions = {
 				});
 			}
 
-			// quick and dirty fix
-			if (fileName.includes('cover') && fileName.includes('vol1') && !(fileName.includes('_ocr') || fileName.endsWith('json'))) manga.cover = fileName
-
 			await uploadFile(fileName, Buffer.from(await pFile.arrayBuffer()), manga);
 		}
 
@@ -79,7 +76,7 @@ export const actions = {
 
 		betterPrint('File processing complete!', sig);
 
-		downloadMetadata(manga);
+		processUpload(manga);
 
 		return {
 			success: true

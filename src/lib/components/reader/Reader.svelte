@@ -45,7 +45,7 @@
 	});
 
 	async function updateImages() {
-		for (let i = curPageIndex - 2; i <= curPageIndex + 2; i++) {
+		for (let i = curPageIndex - 5; i <= curPageIndex + 5; i++) {
 			if (i >= 0 && i <= pages.length - 2) {
 				const page = pages[i].getElementsByTagName('div')[0];
 				if (!page.style.backgroundImage.includes('.svg')) {
@@ -59,12 +59,11 @@
 		let scale_x = window.innerWidth / pagesContainer.offsetWidth;
 		let scale_y = window.innerHeight / pagesContainer.offsetHeight;
 		let scale = Math.min(scale_x, scale_y);
-		let offset = pagesContainer.clientWidth - mokuro.pages[curPageIndex].img_width / 2;
+		let offset =
+			(pages[curPageIndex].clientWidth / 2) * (pages[curPageIndex].clientWidth / window.innerWidth);
 
-		if (curPage2Index >= 0) {
-			offset /= 5;
-		} else {
-			offset /= 3;
+		if (curPage2Index < 0) {
+			offset /= 2;
 		}
 
 		pagesContainer.style.transform = `matrix(${scale}, 0, 0, ${scale}, ${offset}, 0)`;
