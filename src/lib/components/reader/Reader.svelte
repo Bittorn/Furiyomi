@@ -4,15 +4,17 @@
 	import type { Mokuro } from '$lib/db/mokuro';
 	import { betterPrint, betterPrintWarning } from '$lib/logs/logger';
 	import { onMount } from 'svelte';
+	import type { Manga } from '$lib/db/mongo';
 
 	const sig = 'components/reader';
 
 	interface ReaderInterface {
 		mokuro: Mokuro;
-		images: string[];
+		manga: Manga;
+		volume: string;
 	}
 
-	let { mokuro, images }: ReaderInterface = $props();
+	let { mokuro, manga, volume }: ReaderInterface = $props();
 
 	let leftScreen, rightScreen, leftPage, rightPage: HTMLAnchorElement;
 
@@ -21,20 +23,37 @@
 	let curPageIndex = 0;
 	let curPage2Index = -1;
 
-	const pages: HTMLElement[] = [];
+	const pages: HTMLDivElement[] = [];
 
 	// svelte-ignore state_referenced_locally
 	if (mokuro.pages.length == 0) {
 		betterPrintWarning('Mokuro has no pages', sig);
 	}
 
+	async function getImage(imagePath: string): Promise<string> {
+		const response = await fetch(`/api/image?image=${manga.ref}%2F${volume}%2F${imagePath}`, {});
+
+		return await response.json();
+	}
+
 	onMount(() => {
 		for (let i = 0; i < mokuro.pages.length; i++) {
-			pages[i] = document.getElementById(`page-${i}`)!;
+			pages[i] = document.getElementById(`page-${i}`)! as HTMLDivElement;
 		}
 
 		updatePage(curPageIndex);
 	});
+
+	async function updateImages() {
+		for (let i = curPageIndex - 2; i <= curPageIndex + 2; i++) {
+			if (i >= 0 && i <= pages.length - 2) {
+				const page = pages[i].getElementsByTagName('div')[0];
+				if (!page.style.backgroundImage.includes('.svg')) {
+					page.style.backgroundImage = `url('${await getImage(mokuro.pages[i].img_path)}')`;
+				}
+			}
+		}
+	}
 
 	function updateTransform() {
 		let scale_x = window.innerWidth / pagesContainer.offsetWidth;
@@ -43,9 +62,9 @@
 		let offset = pagesContainer.clientWidth - mokuro.pages[curPageIndex].img_width / 2;
 
 		if (curPage2Index >= 0) {
-			offset /= 5
+			offset /= 5;
 		} else {
-			offset /= 3
+			offset /= 3;
 		}
 
 		pagesContainer.style.transform = `matrix(${scale}, 0, 0, ${scale}, ${offset}, 0)`;
@@ -82,7 +101,7 @@
 		// 	return true;
 		// } else {
 		// 	if (state.hasCover) {
-		return (pageIndex === 0 || (pageIndex % 2 === 1))
+		return pageIndex === 0 || pageIndex % 2 === 1;
 		// 	} else {
 		// 		return page_idx % 2 === 0;
 		// 	}
@@ -106,10 +125,10 @@
 	}
 
 	function updatePage(pageIndex: number) {
-		const sig = 'components/reader/Reader:updatePage'
+		const sig = 'components/reader/Reader:updatePage';
 		pageIndex = Math.min(Math.max(pageIndex, 0), pages.length - 2);
 
-		betterPrint(`Updating page to: ${pageIndex}`, sig)
+		betterPrint(`Updating page to: ${pageIndex}`, sig);
 
 		pages[curPageIndex].style.display = 'none';
 
@@ -119,10 +138,10 @@
 
 		if (isPageFirstOfPair(pageIndex)) {
 			curPageIndex = pageIndex;
-			betterPrint(`Page is first of pair, curPageIndex = ${curPageIndex}`, sig)
+			betterPrint(`Page is first of pair, curPageIndex = ${curPageIndex}`, sig);
 		} else {
 			curPageIndex = pageIndex - 1;
-			betterPrint(`curPageIndex = ${curPageIndex}`, sig)
+			betterPrint(`curPageIndex = ${curPageIndex}`, sig);
 		}
 
 		pages[curPageIndex].style.display = 'inline-block';
@@ -136,11 +155,12 @@
 			curPage2Index = -1;
 		}
 
-		updateTransform()
+		updateTransform();
+		updateImages();
 	}
 </script>
 
-<svelte:document onkeydown={onKeyDown} onresize={() => updateTransform()}/>
+<svelte:document onkeydown={onKeyDown} onresize={() => updateTransform()} />
 
 <!-- svelte-ignore a11y_missing_attribute -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -159,7 +179,7 @@
 
 <div bind:this={pagesContainer} id={styles.pagesContainer}>
 	{#each mokuro.pages as page, pageIndex (page.img_path)}
-		<Page {page} {pageIndex} image={images[pageIndex]} />
+		<Page {page} {pageIndex} />
 	{/each}
 
 	<!-- svelte-ignore a11y_missing_attribute -->

@@ -3,6 +3,7 @@
 	import noCover from '$lib/assets/covers/no-cover.png';
 	import MangaVolumeLink from '$lib/components/MangaVolumeLink.svelte';
 	import { resolve } from '$app/paths';
+	import { refreshMetadata } from './manga.remote.js';
 
 	let { data } = $props();
 
@@ -22,14 +23,23 @@
 <div>
 	<a href={resolve('/titles')} class={styles.back}>Back</a><br /><br /><br />
 
-	<img
-		src={manga.cover || cover ? cover : noCover}
-		alt="Manga cover"
-		class={styles.solocover}
-	/>
+	<img src={manga.cover || cover ? cover : noCover} alt="Manga cover" class={styles.solocover} />
 
 	<div class={styles.links}>
 		<a href={manga.link} rel="external" target="_blank" class={styles.back}>View on AniList</a>
+	</div>
+
+	<div class={styles.actions}>
+		<button
+			onclick={async () => {
+				try {
+					await refreshMetadata(manga);
+					location.reload();
+				} catch (error) {
+					alert(`Something went wrong: ${error}`);
+				}
+			}}>Refresh Metadata</button
+		>
 	</div>
 </div>
 
@@ -43,6 +53,6 @@
 
 <div class={styles.volumes}>
 	{#each manga.volumes as volume (volume.title)}
-		<MangaVolumeLink manga={manga} volume={volume} />
+		<MangaVolumeLink {manga} {volume} />
 	{/each}
 </div>

@@ -8,14 +8,10 @@
 	let { data } = $props();
 
 	// svelte-ignore state_referenced_locally
-	let { manga, mokuro, images } = data;
+	let { manga, mokuro, volume } = data;
 
 	if (mokuro.pages.length == 0) {
 		betterPrintWarning('Mokuro has no pages', sig);
-	}
-
-	if (images.length == 0) {
-		betterPrintWarning('Manga has no images', sig);
 	}
 </script>
 
@@ -24,7 +20,7 @@
 </svelte:head>
 
 <div id={styles.body}>
-	<Reader {mokuro} {images} />
+	<Reader {mokuro} {manga} {volume} />
 </div>
 
 <style>
