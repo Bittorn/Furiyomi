@@ -1,17 +1,63 @@
 <script lang="ts">
-	import { applyAction, enhance } from '$app/forms';
-	import { goto } from '$app/navigation';
-	import { betterPrint } from '$lib/logs/logger';
+	import { betterPrint, betterPrintError } from '$lib/logs/logger';
 	import styles from './upload.module.scss';
 
 	let fileInput: HTMLInputElement;
 	let loadingDiv: HTMLDivElement;
+	let dataForm: HTMLFormElement;
 
-	let loadingText = $state('Uploading...');
+	let loadingText = $state('Starting upload...');
 
 	async function timeoutLoading() {
-		await new Promise(resolve => setTimeout(resolve, 3000))
+		await new Promise((resolve) => setTimeout(resolve, 5000));
 		loadingDiv.classList.add(styles.hidden);
+	}
+
+	async function doUploads(event: SubmitEvent & { currentTarget: EventTarget & HTMLFormElement }) {
+		const sig = '/upload:doUploads';
+		event.preventDefault();
+
+		betterPrint('Uploading files...', sig);
+		loadingDiv.classList.remove(styles.hidden);
+
+		let request = new XMLHttpRequest();
+
+		request.open('POST', '/api/upload');
+
+		const formData = new FormData(dataForm);
+
+		request.upload.onprogress = (pe) => {
+			if (pe.lengthComputable) {
+				loadingText = `Uploading (${Math.ceil((pe.loaded / pe.total) * 100)}% complete)`;
+
+				if (Math.floor((pe.loaded / pe.total) * 100) == 100) {
+					loadingText = 'Processing upload...';
+				}
+			}
+		};
+
+		request.onloadend = () => {
+			if (request.status == 200) {
+				loadingDiv.classList.add(styles.success);
+				loadingText = 'Upload complete!';
+				betterPrint('Received 200 response', sig);
+				timeoutLoading();
+			} else {
+				loadingDiv.classList.add(styles.error);
+				loadingText = `Error: received ${request.status} response`;
+				betterPrintError(`Received ${request.status} response`, sig);
+				timeoutLoading();
+			}
+		};
+
+		request.onerror = () => {
+			loadingDiv.classList.add(styles.error);
+			loadingText = 'Upload failed';
+			betterPrintError('Event encountered an error', sig);
+			timeoutLoading();
+		};
+
+		request.send(formData);
 	}
 </script>
 
@@ -21,35 +67,7 @@
 
 <h1>Upload</h1>
 
-<form
-	method="post"
-	use:enhance={() => {
-		betterPrint('Uploading files...', 'fileUpload');
-		loadingDiv.classList.remove(styles.hidden);
-
-		return async ({ result }) => {
-			// `result` is an `ActionResult` object
-
-			if (result.type === 'redirect') {
-				// eslint-disable-next-line svelte/no-navigation-without-resolve
-				goto(result.location);
-			} else if (result.type === 'success') {
-				loadingDiv.classList.add(styles.success);
-				loadingText = 'Upload complete!';
-				betterPrint(loadingText, 'fileUpload');
-				timeoutLoading();
-				await applyAction(result);
-			} else {
-				loadingDiv.classList.add(styles.error);
-				loadingText = 'Upload failed';
-				betterPrint(loadingText, 'fileUpload');
-				timeoutLoading();
-				await applyAction(result);
-			}
-		};
-	}}
-	enctype="multipart/form-data"
->
+<form onsubmit={doUploads} bind:this={dataForm} enctype="multipart/form-data">
 	<div class={styles.upload}>
 		<label
 			for="file"
