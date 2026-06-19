@@ -7,6 +7,6 @@ import (
 )
 
 func Page(w http.ResponseWriter, r *http.Request) {
-	component := components.Home("Dev")
+	component := components.Home()
 	component.Render(r.Context(), w)
 }

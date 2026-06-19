@@ -1,0 +1,70 @@
+package components
+
+css logo() {
+	width: 12rem;
+	width: 12rem;
+	display: block;
+	margin: auto;
+	filter: drop-shadow(0 0 0.75rem var(--shadow-color));
+}
+
+css title() {
+	font-family: 'LINE Seed JP', 'Zain', sans-serif;
+	font-weight: 700;
+	font-size: 3.5rem;
+	font-style: normal;
+	background: linear-gradient(135deg, white, var(--primary-color));
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+css yapping() {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 60%;
+}
+
+templ Home() {
+	@Base(true, "dark", "Home") {
+		<h1 class={ title() }>Furiyomi</h1>
+		<img src="/static/favicon.svg" alt="Furiyomi logo" class={ logo() }/>
+		<h2>A manga platform designed for Japanese learners</h2>
+		<div class={ yapping() }>
+			<p>
+				Furiyomi is a manga platform for the discovery, tracking, and reading of manga that you can
+				actually understand. All manga on the platform has full furigana support, which you can
+				fine-tune to your individual skill level. In addition, you can easily toggle between Japanese
+				and English versions of the text on-screen, so you can know that yes, <a
+	href="https://mangadex.org/chapter/7f1b24f9-aaf0-4436-a479-c521d6b1d42b/1"
+	rel="external"
+	target="_blank"
+>they really did just say that.</a>
+			</p>
+		</div>
+		<h1>🚧 We are currently migrating 🚧</h1>
+		<img
+			src="https://cdn.donmai.us/original/f6/23/__hatsuseno_alpha_yokohama_kaidashi_kikou_drawn_by_kona_ming__f6238c9fbe826157f9eec0bf6eae232d.jpg"
+			alt="Hatsuseno Alpha"
+			style="width: 400px; border-radius: 2rem"
+		/>
+		<h2>Hatsuseno Alpha <i>(Yokohama Kaidashi Kikou)</i></h2>
+		<h3>Art by <a href="https://www.youtube.com/@ksrvgn" target="_blank">ksrvgn</a></h3>
+		<h1>What does that mean?</h1>
+		<div class={ yapping() }>
+			<p>
+				Most critical features are not yet implemented. Sorry about that!
+			</p>
+		</div>
+		<div style="margin-top: 6rem;">
+			<a href="https://noaiuse.org" target="_blank">
+				<img
+					src="https://noaiuse.org/download/no-ai-white-compact.svg"
+					style="width: 20em; height: 20em;"
+					alt="noaiuse.org graphic"
+				/>
+			</a>
+		</div>
+	}
+}

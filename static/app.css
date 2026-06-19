@@ -1,0 +1,118 @@
+@import url("https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&family=Zain:ital,wght@0,400;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=LINE+Seed+JP:wght@400;700&display=swap");
+
+.zain-regular {
+  font-family: "Zain", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.zain-bold {
+  font-family: "Zain", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.zain-regular-italic {
+  font-family: "Zain", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.atkinson-hyperlegible-next-400 {
+  font-family: "Atkinson Hyperlegible Next", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.atkinson-hyperlegible-next-600 {
+  font-family: "Atkinson Hyperlegible Next", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.line-seed-jp-regular {
+  font-family: "LINE Seed JP", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.line-seed-jp-bold {
+  font-family: "LINE Seed JP", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+html {
+  --bg-color: whitesmoke;
+  --header-bg-color: hsla(240, 100%, 97%, 0.4);
+  --shadow-color: hsla(238, 13%, 26%, 15%);
+  --font-color: hsl(250, 25%, 10%);
+  --link-color: var(--font-color);
+  --link-unfocused-color: hsl(237, 10%, 35%);
+  --primary-color: #f26e84;
+  --button-color: var(--primary-color);
+  --button-hover-color: #f69dac;
+  --success-color: rgb(0, 180, 0);
+  --warning-color: rgb(230, 140, 0);
+  --error-color: rgb(200, 0, 0);
+
+  background: var(--bg-color);
+}
+
+html.dark {
+  --bg-color: hsl(250, 25%, 10%);
+  --header-bg-color: hsla(238, 13%, 26%, 0.4);
+  --shadow-color: hsla(238, 13%, 26%, 15%);
+  --font-color: whitesmoke;
+  --link-color: var(--font-color);
+  --link-unfocused-color: hsl(238, 10%, 50%);
+  --primary-color: #f26e84;
+  --button-color: var(--primary-color);
+  --button-hover-color: #f69dac;
+  --success-color: rgb(0, 180, 0);
+  --warning-color: rgb(230, 140, 0);
+  --error-color: rgb(200, 0, 0);
+}
+
+body {
+  color: var(--font-color);
+  text-align: center;
+  font-family: "Atkinson Hyperlegible Next", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  text-shadow: 2px 2px 10px var(--shadow-color);
+  margin-left: 90px;
+  margin-right: 20px;
+  padding-top: 2rem;
+  padding-bottom: 6rem;
+}
+
+h1 {
+  font-family: "Zain", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 2.4rem;
+  padding-top: 1rem;
+}
+
+h2 {
+  font-family: "Zain", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+  font-style: normal;
+}
+
+a {
+  color: var(--link-unfocused-color);
+  text-decoration: none;
+}
+
+a:hover,
+a.current {
+  color: var(--link-color);
+  transition-duration: 0.2s;
+}

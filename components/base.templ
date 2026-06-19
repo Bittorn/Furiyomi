@@ -1,22 +1,23 @@
 package components
 
-templ Base(nav bool, title string) {
-    <!DOCTYPE html>
-    <html lang="en">
-        <head>
-            <meta charset="utf-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
-            <meta name="author" content="Wind Tempos" />
-            <meta name="google" content="notranslate" />
-            <link rel="icon" href="/static/favicon.ico" />
-            <title>{title} | Furiyomi</title>
-        </head>
-        if nav {
-            // for when navbar exists
-            // @Navbar()
-        }
-        <body>
-            {children...}
-        </body>
-    </html>
+templ Base(nav bool, theme string, title string) {
+	<!DOCTYPE html>
+	<html lang="en" class={ theme }>
+		<head>
+			<meta charset="utf-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<meta name="author" content="Wind Tempos"/>
+			<meta name="google" content="notranslate"/>
+			<link rel="icon" href="/static/favicon.ico"/>
+			<link rel="stylesheet" href="/static/app.css"/>
+			<title>{ title } | Furiyomi</title>
+		</head>
+		if nav {
+			// for when navbar exists
+			// @Navbar()
+		}
+		<body>
+			{ children... }
+		</body>
+	</html>
 }
