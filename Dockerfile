@@ -7,8 +7,10 @@ COPY go.mod go.sum ./
 RUN go mod download
 # Copy source code
 COPY . .
+# Generate templ code
+RUN go tool templ generate
 # Build the application
-RUN go tool templ generate && go build -o main .
+RUN go build -o main .
 
 # Step 2: Use a minimal base image for final deployment
 FROM alpine:latest

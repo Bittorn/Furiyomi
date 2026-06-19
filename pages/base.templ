@@ -1,0 +1,64 @@
+package pages
+
+import "github.com/Bittorn/Furiyomi/components"
+
+templ Base(title string, dark bool) {
+	@base(true, dark, title) {
+		{ children... }
+	}
+}
+
+templ BaseNoNav(title string, dark bool) {
+	@base(false, dark, title) {
+		{ children... }
+	}
+}
+
+templ base(nav bool, dark bool, title string) {
+	<!DOCTYPE html>
+	<script defer>
+		function setCookie(cname, cvalue, exdays) {
+			const d = new Date();
+			d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+			let expires = "expires="+d.toUTCString();
+			document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+		}
+
+		function getCookie(cname) {
+			let name = cname + "=";
+			let decodedCookie = decodeURIComponent(document.cookie);
+			let ca = decodedCookie.split(';');
+			for(let i = 0; i <ca.length; i++) {
+				let c = ca[i];
+				while (c.charAt(0) == ' ') {
+				c = c.substring(1);
+				}
+				if (c.indexOf(name) == 0) {
+				return c.substring(name.length, c.length);
+				}
+			}
+			return "";
+		}
+
+		if (getCookie("theme") == "") {
+			setCookie("theme", "dark", 365)
+		}
+	</script>
+	<html lang="en" class={ templ.KV("dark", dark) }>
+		<head>
+			<meta charset="utf-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<meta name="author" content="Wind Tempos"/>
+			<meta name="google" content="notranslate"/>
+			<link rel="icon" href="/static/favicon.ico"/>
+			<link rel="stylesheet" href="/static/app.css"/>
+			<title>{ title } | Furiyomi</title>
+		</head>
+		if nav {
+			@components.Navbar()
+		}
+		<body style={ templ.KV("margin-left: 90px;", nav) }>
+			{ children... }
+		</body>
+	</html>
+}
