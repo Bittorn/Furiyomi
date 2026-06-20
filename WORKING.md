@@ -1,6 +1,6 @@
 ## To-do list
 
-[] Empty
+[] Navbar subpath matches (/titles/blah should still match /titles)
 
 ## Misc
 
