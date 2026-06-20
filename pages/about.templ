@@ -1,0 +1,178 @@
+package pages
+
+templ about_css() {
+	<style>
+		.logo {
+			width: 12rem;
+			width: 12rem;
+			display: block;
+			margin: auto;
+			filter: drop-shadow(0 0 0.75rem var(--shadow-color));
+		}
+		.title {
+			font-family: 'LINE Seed JP', 'Zain', sans-serif;
+			font-weight: 700;
+			font-size: 3.5rem;
+			font-style: normal;
+			background: linear-gradient(135deg, var(--primary-color), var(--primary-color));
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+		}
+		.title::after {
+			content: '振り読み';
+			animation: cycleText 12s linear infinite;
+		}
+		@keyframes cycleText {
+			0% {
+				content: '振り読み';
+			}
+			40% {
+				content: '振り読み';
+			}
+			41% {
+				content: '振り読';
+			}
+			42% {
+				content: '振り';
+			}
+			43% {
+				content: '振';
+			}
+			44% {
+				content: 'F';
+			}
+			45% {
+				content: 'Fu';
+			}
+			46% {
+				content: 'Fur';
+			}
+			47% {
+				content: 'Furi';
+			}
+			48% {
+				content: 'Furiy';
+			}
+			49% {
+				content: 'Furiyo';
+			}
+			50% {
+				content: 'Furiyom';
+			}
+			51% {
+				content: 'Furiyomi';
+			}
+			90% {
+				content: 'Furiyomi';
+			}
+			91% {
+				content: 'Furiyom';
+			}
+			92% {
+				content: 'Furiyo';
+			}
+			93% {
+				content: 'Furiy';
+			}
+			94% {
+				content: 'Furi';
+			}
+			95% {
+				content: 'Fur';
+			}
+			96% {
+				content: 'Fu';
+			}
+			97% {
+				content: 'F';
+			}
+			98% {
+				content: '振';
+			}
+			99% {
+				content: '振り';
+			}
+			100% {
+				content: '振り読';
+			}
+		}
+		.yapping {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			max-width: 60%;
+		}
+		@media only screen and (max-width: 1100px) {
+			.yapping {
+				max-width: 100%;
+			}
+		}
+
+		html .noAI {
+			margin-top: 6rem;
+			filter: invert(100%);
+		}
+
+		html.dark .noAI {
+			margin-top: 6rem;
+			filter: none;
+		}
+	</style>
+}
+
+templ about_yapping() {
+	<div class="yapping">
+		<p>
+			Furiyomi is a manga platform for the discovery, tracking, and reading of manga that you can
+			actually understand. All manga on the platform has full furigana support, which you can
+			fine-tune to your individual skill level. In addition, you can easily toggle between Japanese
+			and English versions of the text on-screen, so you can know that yes, <a
+	href="https://mangadex.org/chapter/7f1b24f9-aaf0-4436-a479-c521d6b1d42b/1"
+	rel="external"
+	target="_blank"
+>they really did just say that.</a>
+		</p>
+	</div>
+}
+
+templ about_changelog() {
+	<h1>🚧 We are currently in Alpha 🚧</h1>
+	<img
+		src="https://cdn.donmai.us/original/f6/23/__hatsuseno_alpha_yokohama_kaidashi_kikou_drawn_by_kona_ming__f6238c9fbe826157f9eec0bf6eae232d.jpg"
+		alt="Hatsuseno Alpha"
+		style="width: 400px; border-radius: 2rem"
+	/>
+	<h2>Hatsuseno Alpha <i>(Yokohama Kaidashi Kikou)</i></h2>
+	<h3>Art by <a href="https://www.youtube.com/@ksrvgn" target="_blank">ksrvgn</a></h3>
+	<h1>What does that mean?</h1>
+	<div class="yapping">
+		<p>
+			Most critical features are not yet implemented. Sorry about that!
+		</p>
+	</div>
+}
+
+templ about_noAI() {
+	<div class="noAI">
+		<a href="https://noaiuse.org" target="_blank">
+			<img
+				src="https://noaiuse.org/download/no-ai-white-compact.svg"
+				style="width: 20em; height: 20em;"
+				alt="noaiuse.org graphic"
+			/>
+		</a>
+	</div>
+}
+
+templ About(dark bool) {
+	@Base("About", dark) {
+		@about_css()
+		<h1 class="title"></h1> // intentionally blank
+		<img src="/static/favicon.svg" alt="Furiyomi logo" class="logo"/>
+		<h2>A manga platform designed for Japanese learners</h2>
+		@about_yapping()
+		@about_changelog()
+		@about_noAI()
+	}
+}

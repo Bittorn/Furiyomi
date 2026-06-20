@@ -11,10 +11,10 @@ func main() {
 	mux := http.NewServeMux()
 
 	// Handle routes
-	mux.HandleFunc("GET /", handlers.Page)
+	mux.HandleFunc("GET /", handlers.Home)
 	mux.HandleFunc("GET /titles", handlers.NotFound)
 	mux.HandleFunc("GET /upload", handlers.NotFound)
-	mux.HandleFunc("GET /about", handlers.NotFound)
+	mux.HandleFunc("GET /about", handlers.About)
 	mux.HandleFunc("GET /dashboard", handlers.NotFound)
 
 	// Serve static assets

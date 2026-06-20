@@ -1,6 +1,8 @@
 ## To-do list
 
 [] Navbar subpath matches (/titles/blah should still match /titles)
+[] templ components starting with lowercase letters are not private, they are scoped to the entire module
+ - really stupid fix, prefix components with name of file (e.g. @css in about.templ becomes @about_css)
 
 ## Misc
 

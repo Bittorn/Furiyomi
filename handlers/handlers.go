@@ -21,7 +21,12 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 	component.Render(r.Context(), w)
 }
 
-func Page(w http.ResponseWriter, r *http.Request) {
+func About(w http.ResponseWriter, r *http.Request) {
+	component := pages.About(prefersDarkMode(r))
+	component.Render(r.Context(), w)
+}
+
+func Home(w http.ResponseWriter, r *http.Request) {
 	component := pages.Home(prefersDarkMode(r))
 	component.Render(r.Context(), w)
 }
