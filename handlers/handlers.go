@@ -1,9 +1,12 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
+	"github.com/Bittorn/Furiyomi/auth"
 	"github.com/Bittorn/Furiyomi/pages"
+	"github.com/gorilla/schema"
 )
 
 func prefersDarkMode(r *http.Request) bool {
@@ -26,7 +29,48 @@ func About(w http.ResponseWriter, r *http.Request) {
 	component.Render(r.Context(), w)
 }
 
-func Home(w http.ResponseWriter, r *http.Request) {
-	component := pages.Home(prefersDarkMode(r))
+func Dashboard(w http.ResponseWriter, r *http.Request) {
+	component := pages.Dashboard(prefersDarkMode(r))
 	component.Render(r.Context(), w)
+}
+
+func Login(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		component := pages.Login(prefersDarkMode(r))
+		component.Render(r.Context(), w)
+	case http.MethodPost:
+		err := r.ParseForm()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		var loginForm auth.LoginForm
+
+		dec := schema.NewDecoder()
+		dec.IgnoreUnknownKeys(true)
+		err = dec.Decode(&loginForm, r.PostForm)
+		if err != nil {
+			fmt.Printf("LOG %s - Failed to decode form: %s\n", r.RemoteAddr, err)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		// TODO protect against CSRF with gorilla/csrf middleware
+
+		if auth.ShouldLogin(loginForm) {
+			c := auth.NewSession()
+			http.SetCookie(w, &c)
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+		} else {
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+		}
+	}
+}
+
+func Home(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/about", http.StatusSeeOther)
+	// component := pages.Home(prefersDarkMode(r))
+	// component.Render(r.Context(), w)
 }

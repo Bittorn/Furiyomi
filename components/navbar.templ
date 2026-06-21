@@ -1,6 +1,6 @@
 package components
 
-templ css() {
+templ navbar_css() {
 	<style>
         .nav__cont {
             position: fixed;
@@ -70,7 +70,7 @@ templ css() {
     </style>
 }
 
-templ js() {
+templ navbar_js() {
     <script>
         document.getElementById(window.location.pathname).classList.add("current") // TODO subpath matches
     </script>
@@ -85,7 +85,7 @@ templ navlink(href string) {
 }
 
 templ Navbar() {
-	@css()
+	@navbar_css()
 	<nav class="nav__cont">
 		<ul class="nav">
 			@navlink("/") {
@@ -135,18 +135,14 @@ templ Navbar() {
 				</svg>
 				<span>Dashboard</span>
 			}
-            <li>
-                <a onclick="toggleTheme()" style="cursor:pointer;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 750 850">
-                        <path 
-                            fill="currentColor"
-                            d="M371 8q76 0 144 29t118 79t79 118t29 145t-29 144t-79 118t-118 80t-144.5 29T227 721t-118-80t-80-118T0 379t29-145t80-118t118-79T371 8m0 117q0-11-7-18t-19-5q-53 5-99 28t-80 61t-53 85t-20 103t20 102t53 86t80 60t99 29q11 1 19-6t7-17z">
-                            </path>
-                        </svg>
-                    <span>Theme</span>
-                </a>
-            </li>
+            @navlink("/login") {
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path fill="currentColor" d="M7.39 16.539a8 8 0 1 1 9.221 0l2.083 4.76a.5.5 0 0 1-.459.701H5.765a.5.5 0 0 1-.459-.7zm6.735-.693l1.332-.941a6 6 0 1 0-6.913 0l1.331.941L8.058 20h7.884zM8.119 10.97l1.94-.485a2 2 0 0 0 3.882 0l1.94.485a4.002 4.002 0 0 1-7.762 0" />
+                </svg>
+				<span>Login</span>
+            }
 		</ul>
 	</nav>
-    @js()
+    @navbar_js()
 }

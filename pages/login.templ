@@ -1,0 +1,37 @@
+package pages
+
+templ login_css() {
+    <style>
+    </style>
+}
+
+templ login_js() {
+    <script>
+
+    </script>
+}
+
+templ Login(dark bool) {
+	@Base("Login", dark) {
+        <h1>User Login</h1>
+        <form method="post">
+            <p>	
+                <input type="text" name="username" id="username" required/>
+                <label for="username" >Username</label>
+            </p>
+            <p>
+                <input type="password" name="password" id="password" required />
+                <label for="password">Password</label>
+            </p>
+            <p>
+                <input type="checkbox" name="stayLoggedIn" id="stayLoggedIn"/>
+                <label for="stayLoggedIn">Stay logged in for 30 days</label>
+            </p>
+            <p>
+                <input type="submit" value="Login" />
+            </p>
+        </form>
+        <br>
+        <p>user — pass</p>
+    }
+}

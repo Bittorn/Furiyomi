@@ -47,11 +47,11 @@
 
 html {
   --bg-color: whitesmoke;
-  --header-bg-color: hsla(240, 100%, 97%, 0.4);
+  --header-bg-color: hsla(0, 0%, 100%, 0.4);
   --shadow-color: hsla(238, 13%, 26%, 8%);
   --font-color: hsl(250, 25%, 10%);
   --link-color: var(--font-color);
-  --link-unfocused-color: hsl(237, 10%, 38%);
+  --link-unfocused-color: hsl(238, 10%, 50%);
   --primary-color: #f26e84;
   --button-color: var(--primary-color);
   --button-hover-color: #f69dac;
