@@ -1,14 +1,62 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 
 	"github.com/Bittorn/Furiyomi/handlers"
+	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
+func mongoInit(uri string) {
+	log.Println("Connecting to MongoDB at", uri)
+
+	ctx := context.Background()
+
+	client, err := mongo.Connect(options.Client().
+		ApplyURI(uri))
+	if err != nil {
+		log.Println("Unable to connect to MongoDB")
+		panic(err)
+	}
+
+	err = client.Ping(ctx, nil)
+	if err != nil {
+		log.Println("Unable to connect to MongoDB")
+		log.Fatalln(err)
+	} else {
+		log.Println("MongoDB successfully connected")
+	}
+
+	defer func() {
+		if err := client.Disconnect(context.TODO()); err != nil {
+			panic(err)
+		}
+	}()
+}
+
 func main() {
+	// Check environment variables
+	port, portPresent := os.LookupEnv("PORT")
+	_, portErr := strconv.Atoi(port)
+	if !portPresent || portErr != nil {
+		log.Println("PORT environment variable not set, assuming default 3000")
+		port = "3000"
+	}
+
+	mongoUri, mongoUriPresent := os.LookupEnv("MONGODB_URI")
+	if !mongoUriPresent || mongoUri == "" {
+		log.Println("MONGODB_URI environment variable not set, assuming default :27017")
+		mongoUri = "mongodb://127.0.0.1:27017"
+	}
+
 	mux := http.NewServeMux()
+
+	log.Println("Server starting...")
 
 	// Handle routes
 	mux.HandleFunc("GET /", handlers.Home)
@@ -24,6 +72,9 @@ func main() {
 	// Serve static assets
 	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-	log.Println("Server starting on :3000")
-	log.Fatal(http.ListenAndServe(":3000", logRequestMiddleware(secureHeadersMiddleware(mux))))
+	log.Println("Routes initialised")
+	mongoInit(mongoUri)
+
+	log.Println("Server started on port", port)
+	log.Fatal(http.ListenAndServe(":"+port, logRequestMiddleware(secureHeadersMiddleware(mux))))
 }

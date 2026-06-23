@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -14,7 +14,7 @@ import (
 // URL: Request URL
 func logRequestMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("LOG %s - %s %s %s\n", r.RemoteAddr, r.Proto, r.Method, r.URL)
+		log.Printf("[%s] %s %s\n", r.RemoteAddr, r.Method, r.URL)
 
 		next.ServeHTTP(w, r)
 	})
@@ -32,7 +32,7 @@ func checkAuthMiddleware(next http.Handler) http.Handler {
 		// 		http.Redirect(w, r, "/login", http.StatusFound) // might not be correct status code
 		// 	}
 		// }
-		next.ServeHTTP(w, r)
+		next.ServeHTTP(w, r) // REMOVE ON PROD
 	})
 }
 

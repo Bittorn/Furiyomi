@@ -20,5 +20,8 @@ WORKDIR /root/
 COPY --from=builder /app/main .
 # Expose the application port
 EXPOSE 3000
+# Set environment variables
+ENV MONGODB_URI=mongodb://127.0.0.1:27017/
+ENV PORT=3000
 # Run the application
 CMD ["./main"]
