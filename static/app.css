@@ -49,7 +49,7 @@ html {
   --bg-color: whitesmoke;
   --header-bg-color: hsla(0, 0%, 100%, 0.4);
   --shadow-color: hsla(238, 13%, 26%, 8%);
-  --font-color: hsl(250, 25%, 10%);
+  --font-color: #16161d;
   --link-color: var(--font-color);
   --link-unfocused-color: hsl(238, 10%, 50%);
   --primary-color: #f26e84;
@@ -63,7 +63,7 @@ html {
 }
 
 html.dark {
-  --bg-color: hsl(250, 25%, 10%);
+  --bg-color: #16141d;
   --header-bg-color: hsla(238, 13%, 26%, 0.4);
   --shadow-color: hsla(238, 13%, 26%, 15%);
   --font-color: whitesmoke;

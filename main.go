@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/Bittorn/Furiyomi/handlers"
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
@@ -40,7 +41,12 @@ func mongoInit(uri string) {
 }
 
 func main() {
-	// Check environment variables
+	// Environment stuff
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	port, portPresent := os.LookupEnv("PORT")
 	_, portErr := strconv.Atoi(port)
 	if !portPresent || portErr != nil {
@@ -73,7 +79,15 @@ func main() {
 	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	log.Println("Routes initialised")
-	mongoInit(mongoUri)
+
+	// Should enable MongoDB
+	disableDb, disableDbPresent := os.LookupEnv("DISABLE_DB")
+	disableDbBool, disableDbErr := strconv.ParseBool(disableDb)
+	if !disableDbPresent || disableDbErr != nil || !disableDbBool {
+		mongoInit(mongoUri)
+	} else {
+		log.Println("DISABLE_DB is true, will not connect to MongoDB")
+	}
 
 	log.Println("Server started on port", port)
 	log.Fatal(http.ListenAndServe(":"+port, logRequestMiddleware(secureHeadersMiddleware(mux))))

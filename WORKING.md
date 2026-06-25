@@ -1,8 +1,8 @@
 ## To-do list
 
-[] Navbar subpath matches (/titles/blah should still match /titles)
-[] templ components starting with lowercase letters are not private, they are scoped to the entire module
- - really stupid fix, prefix components with name of file (e.g. @css in about.templ becomes @about_css)
+- [ ] Navbar subpath matches (/titles/blah should still match /titles)
+- [ ] templ components starting with lowercase letters are not private, they are scoped to the entire module
+- [ ] switch to env package for loading config
 
 ## Misc
 
@@ -15,3 +15,4 @@
     - check htmx-history and htmx-beforeswap
 - [alice](https://github.com/justinas/alice) for better middleware management
     - has not been updated in 2 years - does it need to be?
+    - not needed ATM
