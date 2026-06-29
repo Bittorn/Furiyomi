@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/Bittorn/Furiyomi/api"
 	"github.com/Bittorn/Furiyomi/db"
 	"github.com/Bittorn/Furiyomi/handlers"
 	"github.com/joho/godotenv"
@@ -20,7 +21,7 @@ func main() {
 
 	log.Println("Server starting...")
 
-	// Handle routes
+	// Frontend routes
 	mux.HandleFunc("GET /", handlers.Home)
 	mux.HandleFunc("GET /titles", handlers.Titles)
 	mux.HandleFunc("GET /titles/{ref}", handlers.MangaDetail)
@@ -29,10 +30,13 @@ func main() {
 	mux.HandleFunc("GET /login", handlers.Login)
 	mux.HandleFunc("POST /login", handlers.Login)
 
+	// API routes
+	mux.HandleFunc("GET /api/image/{image}", api.Image)
+	mux.HandleFunc("GET /api/health", api.Health)
+
 	// Protected routes
 	mux.Handle("GET /dashboard", checkAuthMiddleware(http.HandlerFunc(handlers.Dashboard)))
 
-	// Serve static assets
 	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	log.Println("Routes initialised")
@@ -55,7 +59,7 @@ func handleEnv() {
 		log.Println("PORT environment variable not set or invalid, assuming default 3000")
 		port = "3000"
 	} else {
-		log.Println("PORT environment variable parsed as " + port)
+		log.Println("PORT environment variable parsed as", port)
 	}
 
 	mongoUri, present = os.LookupEnv("MONGODB_URI")
@@ -63,7 +67,7 @@ func handleEnv() {
 		log.Println("MONGODB_URI environment variable not set, assuming default " + mongoUri)
 		mongoUri = "mongodb://admin:pass@127.0.0.1:27017"
 	} else {
-		log.Println("MONGO_URI environment variable parsed as " + mongoUri)
+		log.Println("MONGO_URI environment variable parsed as", mongoUri)
 	}
 
 	disableDb, present := os.LookupEnv("DISABLE_DB")

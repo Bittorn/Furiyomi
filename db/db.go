@@ -1,8 +1,11 @@
 package db
 
 import (
+	"bytes"
 	"context"
+	"encoding/base64"
 	"errors"
+	"fmt"
 	"log"
 
 	"go.mongodb.org/mongo-driver/v2/bson"
@@ -198,6 +201,24 @@ func DeleteUser(user User) {
 	} else {
 		log.Printf("Removed user %s\n", user.Username)
 	}
+}
+
+// endregion
+
+// region Files
+
+// TODO return (string, error)
+func GetImageData(imagePath string) string {
+	fileBuffer := bytes.NewBuffer(nil)
+
+	if _, err := MangaBucket.DownloadToStreamByName(context.TODO(), imagePath, fileBuffer); err != nil {
+		panic(err)
+	}
+
+	// This feels wrong
+	image := base64.RawStdEncoding.EncodeToString(fileBuffer.AvailableBuffer())
+
+	return fmt.Sprintf("data:image;base64,%s", image)
 }
 
 // endregion
