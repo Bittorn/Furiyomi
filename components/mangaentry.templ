@@ -1,0 +1,74 @@
+package components
+
+import "github.com/Bittorn/Furiyomi/db"
+
+// Check if this does what it says
+var onceHandle = templ.NewOnceHandle()
+
+templ mangaEntry_css() {
+    <style>
+    .mangaentry {
+        background-color: var(--header-bg-color);
+        border-radius: 16px;
+        padding: 1rem;
+        padding-top: 0;
+        padding-bottom: 3rem;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+
+    .mangaentry h2 {
+        font-family: 'Zain', sans-serif;
+		font-weight: 400;
+		font-style: normal;
+    }
+
+    .mangaentry h3 {
+        margin-top: -1.5rem;
+		margin-bottom: 1rem;
+		font-family: 'LINE Seed JP', sans-serif;
+		font-weight: 400;
+		font-style: normal;
+    }
+
+    .mangaentry a {
+		color: var(--font-color);
+		font-size: large;
+		padding: 12px 28px;
+		background-color: var(--button-color);
+		border: none;
+		border-radius: 50px;
+		cursor: pointer;
+		transition: background-color 0.2s ease 0s;
+	}
+
+    .mangaentry a:hover {
+        background-color: var(--button-hover-color);
+    }
+
+    .mangaentry br {
+		margin-bottom: 1rem;
+	}
+
+    .mangaentry .mangaentrycover {
+        width: 12rem;
+        display: block;
+        margin: auto;
+    }
+    </style>
+}
+
+templ MangaEntry(manga db.Manga) {
+    @onceHandle.Once() {
+        @mangaEntry_css()
+    }
+    <div class="mangaentry">
+	<h2>{manga.Romaji}</h2>
+	<h3>{manga.Native}</h3>
+	<img
+		src="/static/nocover.png"
+		class="mangaentrycover"
+	/><br />
+	<a href={templ.SafeURL("/titles/" + manga.Ref)}>View</a>
+</div>
+}

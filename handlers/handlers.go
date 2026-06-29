@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/Bittorn/Furiyomi/auth"
+	"github.com/Bittorn/Furiyomi/db"
 	"github.com/Bittorn/Furiyomi/pages"
 	"github.com/gorilla/schema"
 )
@@ -24,6 +25,11 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 	component.Render(r.Context(), w)
 }
 
+func Titles(w http.ResponseWriter, r *http.Request) {
+	component := pages.Titles(prefersDarkMode(r), db.GetAllManga())
+	component.Render(r.Context(), w)
+}
+
 func About(w http.ResponseWriter, r *http.Request) {
 	component := pages.About(prefersDarkMode(r))
 	component.Render(r.Context(), w)
@@ -32,6 +38,18 @@ func About(w http.ResponseWriter, r *http.Request) {
 func Dashboard(w http.ResponseWriter, r *http.Request) {
 	component := pages.Dashboard(prefersDarkMode(r))
 	component.Render(r.Context(), w)
+}
+
+func MangaDetail(w http.ResponseWriter, r *http.Request) {
+	ref := r.PathValue("ref")
+
+	manga, err := db.GetManga(ref)
+	if err != nil {
+		NotFound(w, r)
+	} else {
+		component := pages.MangaDetail(prefersDarkMode(r), manga)
+		component.Render(r.Context(), w)
+	}
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {

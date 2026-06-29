@@ -1,64 +1,20 @@
 package main
 
 import (
-	"context"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 
+	"github.com/Bittorn/Furiyomi/db"
 	"github.com/Bittorn/Furiyomi/handlers"
 	"github.com/joho/godotenv"
-	"go.mongodb.org/mongo-driver/v2/mongo"
-	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
-func mongoInit(uri string) {
-	log.Println("Connecting to MongoDB at", uri)
-
-	ctx := context.Background()
-
-	client, err := mongo.Connect(options.Client().
-		ApplyURI(uri))
-	if err != nil {
-		log.Println("Unable to connect to MongoDB")
-		panic(err)
-	}
-
-	err = client.Ping(ctx, nil)
-	if err != nil {
-		log.Println("Unable to connect to MongoDB")
-		log.Fatalln(err)
-	} else {
-		log.Println("MongoDB successfully connected")
-	}
-
-	defer func() {
-		if err := client.Disconnect(context.TODO()); err != nil {
-			panic(err)
-		}
-	}()
-}
+var port, mongoUri string
 
 func main() {
-	// Environment stuff
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	port, portPresent := os.LookupEnv("PORT")
-	_, portErr := strconv.Atoi(port)
-	if !portPresent || portErr != nil {
-		log.Println("PORT environment variable not set, assuming default 3000")
-		port = "3000"
-	}
-
-	mongoUri, mongoUriPresent := os.LookupEnv("MONGODB_URI")
-	if !mongoUriPresent || mongoUri == "" {
-		log.Println("MONGODB_URI environment variable not set, assuming default :27017")
-		mongoUri = "mongodb://127.0.0.1:27017"
-	}
+	handleEnv()
 
 	mux := http.NewServeMux()
 
@@ -66,7 +22,8 @@ func main() {
 
 	// Handle routes
 	mux.HandleFunc("GET /", handlers.Home)
-	mux.HandleFunc("GET /titles", handlers.NotFound)
+	mux.HandleFunc("GET /titles", handlers.Titles)
+	mux.HandleFunc("GET /titles/{ref}", handlers.MangaDetail)
 	mux.HandleFunc("GET /upload", handlers.NotFound)
 	mux.HandleFunc("GET /about", handlers.About)
 	mux.HandleFunc("GET /login", handlers.Login)
@@ -80,15 +37,40 @@ func main() {
 
 	log.Println("Routes initialised")
 
-	// Should enable MongoDB
-	disableDb, disableDbPresent := os.LookupEnv("DISABLE_DB")
-	disableDbBool, disableDbErr := strconv.ParseBool(disableDb)
-	if !disableDbPresent || disableDbErr != nil || !disableDbBool {
-		mongoInit(mongoUri)
+	log.Println("Server started on port", port)
+	log.Fatal(http.ListenAndServe(":"+port, logRequestMiddleware(secureHeadersMiddleware(mux))))
+}
+
+func handleEnv() {
+	present := false
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	port, present = os.LookupEnv("PORT")
+	_, err = strconv.Atoi(port)
+	if !present || err != nil {
+		log.Println("PORT environment variable not set or invalid, assuming default 3000")
+		port = "3000"
+	} else {
+		log.Println("PORT environment variable parsed as " + port)
+	}
+
+	mongoUri, present = os.LookupEnv("MONGODB_URI")
+	if !present || mongoUri == "" {
+		log.Println("MONGODB_URI environment variable not set, assuming default " + mongoUri)
+		mongoUri = "mongodb://admin:pass@127.0.0.1:27017"
+	} else {
+		log.Println("MONGO_URI environment variable parsed as " + mongoUri)
+	}
+
+	disableDb, present := os.LookupEnv("DISABLE_DB")
+	disableDbBool, err := strconv.ParseBool(disableDb)
+	if !present || err != nil || !disableDbBool {
+		db.MongoInit(mongoUri)
 	} else {
 		log.Println("DISABLE_DB is true, will not connect to MongoDB")
 	}
-
-	log.Println("Server started on port", port)
-	log.Fatal(http.ListenAndServe(":"+port, logRequestMiddleware(secureHeadersMiddleware(mux))))
 }
