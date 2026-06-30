@@ -24,6 +24,6 @@ EXPOSE 3000
 ENV MONGODB_URI=mongodb://127.0.0.1:27017/
 ENV PORT=3000
 # This part here is extremely bad, need an actual fix
-ENV GODEBUG=multipartmaxparts=50000
+ENV GODEBUG=multipartmaxparts=50000,multipartmaxheaders=100000
 # Run the application
 CMD ["./main"]
