@@ -56,17 +56,16 @@
 	}
 
 	function updateTransform() {
-		let scale_x = window.innerWidth / pagesContainer.offsetWidth;
-		let scale_y = window.innerHeight / pagesContainer.offsetHeight;
-		let scale = Math.min(scale_x, scale_y);
-		let offset =
-			(pages[curPageIndex].clientWidth / 2) * (pages[curPageIndex].clientWidth / window.innerWidth);
+		const scale = Math.min(
+			window.innerWidth / pagesContainer.offsetWidth,
+			window.innerHeight / pagesContainer.offsetHeight
+		);
 
-		if (curPage2Index < 0) {
-			offset /= 2;
-		}
+		const scaledWidth = pagesContainer.offsetWidth * scale;
+		const translateX = (window.innerWidth - scaledWidth) / 2;
 
-		pagesContainer.style.transform = `matrix(${scale}, 0, 0, ${scale}, ${offset}, 0)`;
+		pagesContainer.style.transform =
+			`translateX(${translateX}px) scale(${scale})`;
 	}
 
 	function onKeyDown(e: KeyboardEvent) {
@@ -116,16 +115,24 @@
 	}
 
 	function prevPage() {
-		updatePage(curPageIndex - 2);
+		if (curPageIndex === 1) {
+			updatePage(0);
+		} else {
+			updatePage(curPageIndex - 2);
+		}
 	}
 
 	function nextPage() {
-		updatePage(curPageIndex + 2);
+		if (curPageIndex === 0) {
+			updatePage(1);
+		} else {
+			updatePage(curPageIndex + 2);
+		}
 	}
 
 	function updatePage(pageIndex: number) {
 		const sig = 'components/reader/Reader:updatePage';
-		pageIndex = Math.min(Math.max(pageIndex, 0), pages.length - 2);
+		pageIndex = Math.min(Math.max(pageIndex, 0), pages.length - 1);
 
 		betterPrint(`Updating page to: ${pageIndex}`, sig);
 
@@ -146,10 +153,13 @@
 		pages[curPageIndex].style.display = 'inline-block';
 		pages[curPageIndex].style.order = '2'; // it's a number, idiot
 
-		if (pageIndex < pages.length - 1 && !isPageFirstOfPair(curPageIndex + 1)) {
+		if (curPageIndex === 0) {
+			// cover is shown by itself
+			curPage2Index = -1;
+		} else if (curPageIndex + 1 < pages.length) {
 			curPage2Index = curPageIndex + 1;
 			pages[curPage2Index].style.display = 'inline-block';
-			pages[curPage2Index].style.order = '1'; // refer to previous comment
+			pages[curPage2Index].style.order = '1';
 		} else {
 			curPage2Index = -1;
 		}

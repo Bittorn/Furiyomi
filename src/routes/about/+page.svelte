@@ -43,8 +43,7 @@
 		Currently, you can read uploaded manga with support for looking up furigana via a popup
 		dictionary like Yomitan/Yomichan, or copy/paste to Google Translate/DeepL/etc.<br /><br />
 		<b>Toggling English translations is currently not supported.</b> Progress tracking is also not
-		implemented.<br />
-		The reader also doesn't properly center your manga, due to my not understanding how to use CSS matrix().
+		implemented.
 	</p>
 </div>
 
