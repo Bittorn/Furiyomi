@@ -63,10 +63,10 @@ templ MangaEntry(manga db.Manga) {
         @mangaEntry_css()
     }
     <div class="mangaentry">
-	<h2>{manga.Romaji}</h2>
-	<h3>{manga.Native}</h3>
-    @MangaCover(manga, "mangaentrycover")
-	<br />
-	<a href={templ.SafeURL("/titles/" + manga.Ref)}>View</a>
-</div>
+        <h2>{manga.Romaji}</h2>
+        <h3>{manga.Native}</h3>
+        @MangaCover(manga, "mangaentrycover")
+        <br />
+        <a href={templ.SafeURL("/titles/" + manga.Ref)}>View</a>
+    </div>
 }
