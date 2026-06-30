@@ -25,7 +25,7 @@ func main() {
 	mux.HandleFunc("GET /", handlers.Home)
 	mux.HandleFunc("GET /titles", handlers.Titles)
 	mux.HandleFunc("GET /titles/{ref}", handlers.MangaDetail)
-	mux.HandleFunc("GET /upload", handlers.NotFound)
+	mux.HandleFunc("GET /upload", handlers.Upload)
 	mux.HandleFunc("GET /about", handlers.About)
 	mux.HandleFunc("GET /login", handlers.Login)
 	mux.HandleFunc("POST /login", handlers.Login)

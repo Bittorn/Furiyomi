@@ -116,3 +116,7 @@ a.current {
   color: var(--link-color);
   transition-duration: 0.2s;
 }
+
+.hidden {
+  display: none !important;
+}

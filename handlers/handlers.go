@@ -30,6 +30,11 @@ func Titles(w http.ResponseWriter, r *http.Request) {
 	component.Render(r.Context(), w)
 }
 
+func Upload(w http.ResponseWriter, r *http.Request) {
+	component := pages.Upload(prefersDarkMode(r))
+	component.Render(r.Context(), w)
+}
+
 func About(w http.ResponseWriter, r *http.Request) {
 	component := pages.About(prefersDarkMode(r))
 	component.Render(r.Context(), w)

@@ -108,16 +108,6 @@ templ about_css() {
 				max-width: 100%;
 			}
 		}
-
-		html .noAI {
-			margin-top: 6rem;
-			filter: invert(100%);
-		}
-
-		html.dark .noAI {
-			margin-top: 6rem;
-			filter: none;
-		}
 	</style>
 }
 
@@ -153,18 +143,6 @@ templ about_changelog() {
 	</div>
 }
 
-templ about_noAI() {
-	<div class="noAI">
-		<a href="https://noaiuse.org" target="_blank">
-			<img
-				src="https://noaiuse.org/download/no-ai-white-compact.svg"
-				style="width: 20em; height: 20em;"
-				alt="noaiuse.org graphic"
-			/>
-		</a>
-	</div>
-}
-
 templ About(dark bool) {
 	@Base("About", dark) {
 		@about_css()
@@ -173,6 +151,5 @@ templ About(dark bool) {
 		<h2>A manga platform designed for Japanese learners</h2>
 		@about_yapping()
 		@about_changelog()
-		@about_noAI()
 	}
 }

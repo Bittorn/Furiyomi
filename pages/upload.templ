@@ -1,0 +1,234 @@
+package pages
+
+templ upload_css() {
+    <style>
+    .upload input[type='file'] {
+        width: 350px;
+        max-width: 100%;
+        color: var(--font-color);
+        padding: 5px;
+        background-color: var(--header-bg-color);
+        border-radius: 16px;
+        border: 1px solid #555;
+    }
+
+    .upload input[type='file']::file-selector-button {
+        margin-right: 20px;
+        border: solid 2px;
+        background-color: transparent;
+        padding: 16px 32px;
+        border-radius: 12px;
+        color: var(--font-color);
+        cursor: pointer;
+        border-color: var(--button-color);
+        transition: all 0.1s ease 0s;
+    }
+
+    .upload input[type='file']::file-selector-button:hover {
+        border-color: var(--button-hover-color);
+        background-color: var(--button-hover-color);
+    }
+
+    .upload .dropcontainer {
+        position: relative;
+        display: inline-flex;
+        gap: 10px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 200px;
+        padding: 30px;
+        border-radius: 16px;
+        border: 2px dashed #555;
+        color: var(--font-color);
+        cursor: pointer;
+        transition:
+            background-color 0.1s ease-in-out,
+            border 0.1s ease-in-out;
+    }
+
+    .upload .dropcontainer:hover {
+        background-color: var(--header-bg-color);
+        border-color: var(--button-hover-color);
+    }
+
+    .upload .dropcontainer:hover .droptitle {
+        color: var(--font-color);
+    }
+
+    .upload .droptitle {
+        color: var(--link-unfocused-color);
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        transition: color 0.1s ease-in-out;
+    }
+
+    .uploadbutton {
+        color: var(--font-color);
+        font-size: large;
+        padding: 12px 28px;
+        background-color: var(--button-color);
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: background-color 0.1s ease 0s;
+    }
+
+    .uploadbutton:hover {
+        background-color: var(--button-hover-color);
+    }
+
+    .uploadstatus {
+        display: inline-flex;
+        margin-top: 2rem;
+        border: solid 2px;
+        padding: 16px 64px;
+        border-radius: 12px;
+        color: var(--font-color);
+        border-color: var(--warning-color);
+    }
+
+    .success {
+        border-color: var(--success-color);
+        background-color: var(--success-color);
+    }
+
+    .error {
+        border-color: var(--error-color);
+        background-color: var(--error-color);
+    }
+
+    .uploadinformation ul {
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .uploadinformation h1 {
+        margin-top: 4rem;
+        margin-bottom: 0;
+    }
+    </style>
+}
+
+templ upload_js() {
+    <script defer>
+    async function timeoutLoading() {
+        await new Promise(resolve => setTimeout(resolve, 5000))
+        loadingDiv.classList.add("hidden")
+    }
+
+    async function doUploads(event) {
+        event.preventDefault()
+
+        console.log("Uploading files...")
+        loadingDiv.classList.remove("hidden")
+
+        let request = new XMLHttpRequest()
+
+        request.open("POST", "/api/upload")
+
+        const formData = new FormData(dataForm)
+
+        request.upload.onprogress = pe => {
+            if (pe.lengthComputable) {
+            loadingText.textContent = `Uploading (${Math.ceil(
+                (pe.loaded / pe.total) * 100
+            )}% complete)`
+
+            if (Math.floor((pe.loaded / pe.total) * 100) == 100) {
+                loadingText.textContent = "Processing upload..."
+            }
+            }
+        }
+
+        request.onloadend = () => {
+            if (request.status == 200) {
+                loadingDiv.classList.add("success")
+                loadingText.textContent = "Upload complete!"
+                console.log("Received 200 response")
+                timeoutLoading()
+            } else {
+                loadingDiv.classList.add("error")
+                loadingText.textContent = `Error: received ${request.status} response`
+                console.error(`Received ${request.status} response`)
+                timeoutLoading()
+            }
+        }
+
+        request.onerror = () => {
+            loadingDiv.classList.add("error")
+            loadingText = "Upload failed"
+            console.error("Event encountered an error")
+            timeoutLoading()
+        }
+
+        request.send(formData)
+    }
+
+    let fileInput = document.getElementById("file")
+    let loadingDiv = document.getElementById("loadingdiv")
+    let dataForm = document.getElementById("dataform")
+    let loadingText = document.getElementById("loadingtext")
+
+    </script>
+}
+
+templ Upload(dark bool) {
+    @Base("Upload", dark) {
+        @upload_css()
+        <h1>Upload</h1>
+
+        <form id="dataform" enctype="multipart/form-data">
+            <div class="upload">
+                // TODO check if label allows drag-and-drop properly
+                <label
+                    for="file"
+                    class="dropcontainer"
+                    ondragover="event.preventDefault()"
+                    ondrop="(e) => {
+                        e.preventDefault();
+                        fileInput.files = e.dataTransfer.files;
+                    }"
+                >
+                    <span class="droptitle">Drop directory here</span>
+                    or
+                    <input
+                        type="file"
+                        id="file"
+                        name="fileToUpload"
+                        webkitdirectory
+                        multiple
+                        required
+                    />
+                </label>
+            </div>
+            <br />
+            <button class="uploadbutton" type="submit">Upload</button>
+        </form>
+
+        <div id="loadingdiv" class="uploadstatus hidden">
+            <h1 id="loadingtext">Loading text here</h1>
+        </div>
+
+        <div class="uploadinformation">
+            <h1>⚠️ Before Uploading ⚠️</h1>
+            <ul>
+                <li>This app is intended for use only with <b>manga pre-processed with Mokuro.</b></li>
+                <li>
+                    When uploading, be sure to select the directory .mokuro files are located in, and <b>not</b> any
+                    child or parent directories.
+                </li>
+                <li>
+                    Ensure the name of the directory matches the manga you are uploading, as this will be used for
+                    metadata fetching.
+                </li>
+                // TODO allow selecting name of manga and desired ref
+            </ul>
+        </div>
+        @upload_js()
+    }
+}
