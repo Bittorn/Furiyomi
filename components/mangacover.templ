@@ -1,0 +1,34 @@
+package components
+
+import "github.com/Bittorn/Furiyomi/db"
+
+var coverHandle = templ.NewOnceHandle()
+
+templ mangaCover_js() {
+    <script defer>
+    let hasFetched = false
+    async function getImage(imagePath) {
+        console.log(`Getting image ${imagePath}`)
+
+		const response = await fetch(`/api/image/${encodeURIComponent(imagePath)}`, {});
+
+		return await response.json();
+	}
+
+    async function getCover(event, cover) {
+        if (hasFetched) return
+
+        let image = event.target
+        
+        image.src = await getImage(cover)
+        hasFetched = true
+    }
+    </script>
+}
+
+templ MangaCover(manga db.Manga, class string) {
+    <img onload={templ.JSFuncCall("getCover", templ.JSExpression("event"), manga.Cover)} src="/static/loading-manga.svg" class={class} />
+    @coverHandle.Once() {
+        @mangaCover_js()
+    }
+}

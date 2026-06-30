@@ -1,7 +1,6 @@
 package db
 
 import (
-	"errors"
 	"log"
 )
 
@@ -39,9 +38,9 @@ func mockAllManga() []Manga {
 	}
 }
 
-func mockManga(ref string) (Manga, error) {
+func mockManga(ref string) Manga {
 	if ref == mockMangaEntry.Ref {
-		return mockMangaEntry, nil
+		return mockMangaEntry
 	}
-	return Manga{}, errors.New("No manga found")
+	return Manga{}
 }

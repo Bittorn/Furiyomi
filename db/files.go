@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
@@ -36,8 +37,13 @@ func GetFile(path string) []byte {
 		log.Panicln("Error creating download stream:", err)
 	}
 
+	file, err := io.ReadAll(fileBuffer)
+	if err != nil {
+		log.Panicf("Error reading file data:", err)
+	}
+
 	log.Println("Successfully fetched file from", path)
-	return fileBuffer.AvailableBuffer()
+	return file
 }
 
 func UploadFile(fileName string, fileData []byte, manga Manga) {

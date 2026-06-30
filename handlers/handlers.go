@@ -48,12 +48,12 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 func MangaDetail(w http.ResponseWriter, r *http.Request) {
 	ref := r.PathValue("ref")
 
-	manga, err := db.GetManga(ref)
-	if err != nil {
-		NotFound(w, r)
-	} else {
+	manga, found := db.GetManga(ref)
+	if found {
 		component := pages.MangaDetail(prefersDarkMode(r), manga)
 		component.Render(r.Context(), w)
+	} else {
+		NotFound(w, r)
 	}
 }
 

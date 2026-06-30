@@ -8,11 +8,10 @@ import (
 
 	"github.com/Bittorn/Furiyomi/api"
 	"github.com/Bittorn/Furiyomi/db"
+	"github.com/Bittorn/Furiyomi/globals"
 	"github.com/Bittorn/Furiyomi/handlers"
 	"github.com/joho/godotenv"
 )
-
-var port, mongoUri string
 
 func main() {
 	handleEnv()
@@ -22,27 +21,27 @@ func main() {
 	log.Println("Server starting...")
 
 	// Frontend routes
-	mux.HandleFunc("GET /", handlers.Home)
-	mux.HandleFunc("GET /titles", handlers.Titles)
-	mux.HandleFunc("GET /titles/{ref}", handlers.MangaDetail)
-	mux.HandleFunc("GET /upload", handlers.Upload)
-	mux.HandleFunc("GET /about", handlers.About)
-	mux.HandleFunc("GET /login", handlers.Login)
-	mux.HandleFunc("POST /login", handlers.Login)
+	mux.HandleFunc("/", handlers.Home)
+	mux.HandleFunc("/titles", handlers.Titles)
+	mux.HandleFunc("/titles/{ref}", handlers.MangaDetail)
+	mux.HandleFunc("/upload", handlers.Upload)
+	mux.HandleFunc("/about", handlers.About)
+	mux.HandleFunc("/login", handlers.Login)
 
 	// API routes
-	mux.HandleFunc("GET /api/image/{image}", api.Image)
-	mux.HandleFunc("GET /api/health", api.Health)
+	mux.HandleFunc("/api/image/{image}", api.Image)
+	mux.HandleFunc("/api/upload", api.Upload)
+	mux.HandleFunc("/api/health", api.Health)
 
 	// Protected routes
-	mux.Handle("GET /dashboard", checkAuthMiddleware(http.HandlerFunc(handlers.Dashboard)))
+	mux.Handle("/dashboard", checkAuthMiddleware(http.HandlerFunc(handlers.Dashboard)))
 
-	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	log.Println("Routes initialised")
 
-	log.Println("Server started on port", port)
-	log.Fatal(http.ListenAndServe(":"+port, logRequestMiddleware(secureHeadersMiddleware(mux))))
+	log.Println("Server started on port", globals.Port)
+	log.Fatal(http.ListenAndServe(":"+globals.Port, logRequestMiddleware(secureHeadersMiddleware(mux))))
 }
 
 func handleEnv() {
@@ -53,27 +52,27 @@ func handleEnv() {
 		log.Fatal(err)
 	}
 
-	port, present = os.LookupEnv("PORT")
-	_, err = strconv.Atoi(port)
+	globals.Port, present = os.LookupEnv("PORT")
+	_, err = strconv.Atoi(globals.Port)
 	if !present || err != nil {
 		log.Println("PORT environment variable not set or invalid, assuming default 3000")
-		port = "3000"
+		globals.Port = "3000"
 	} else {
-		log.Println("PORT environment variable parsed as", port)
+		log.Println("PORT environment variable parsed as", globals.Port)
 	}
 
-	mongoUri, present = os.LookupEnv("MONGODB_URI")
-	if !present || mongoUri == "" {
-		log.Println("MONGODB_URI environment variable not set, assuming default " + mongoUri)
-		mongoUri = "mongodb://admin:pass@127.0.0.1:27017"
+	globals.MongoUri, present = os.LookupEnv("MONGODB_URI")
+	if !present || globals.MongoUri == "" {
+		log.Println("MONGODB_URI environment variable not set, assuming default " + globals.MongoUri)
+		globals.MongoUri = "mongodb://admin:pass@127.0.0.1:27017"
 	} else {
-		log.Println("MONGO_URI environment variable parsed as", mongoUri)
+		log.Println("MONGO_URI environment variable parsed as", globals.MongoUri)
 	}
 
-	disableDb, present := os.LookupEnv("DISABLE_DB")
-	disableDbBool, err := strconv.ParseBool(disableDb)
-	if !present || err != nil || !disableDbBool {
-		db.MongoInit(mongoUri)
+	disableDbString, present := os.LookupEnv("DISABLE_DB")
+	globals.DisableDb, err = strconv.ParseBool(disableDbString)
+	if !present || err != nil || !globals.DisableDb {
+		db.MongoInit(globals.MongoUri)
 	} else {
 		log.Println("DISABLE_DB is true, will not connect to MongoDB")
 	}

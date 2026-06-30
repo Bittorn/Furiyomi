@@ -65,10 +65,8 @@ templ MangaEntry(manga db.Manga) {
     <div class="mangaentry">
 	<h2>{manga.Romaji}</h2>
 	<h3>{manga.Native}</h3>
-	<img
-		src="/static/nocover.png"
-		class="mangaentrycover"
-	/><br />
+    @MangaCover(manga, "mangaentrycover")
+	<br />
 	<a href={templ.SafeURL("/titles/" + manga.Ref)}>View</a>
 </div>
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/Bittorn/Furiyomi/globals"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
@@ -31,46 +32,51 @@ func WriteManga(manga Manga) {
 
 func GetAllManga() []Manga {
 
-	if true {
+	if globals.DisableDb {
 		return mockAllManga()
 	}
 
 	count, err := MangaCollection.CountDocuments(context.TODO(), bson.D{})
 
 	if err != nil {
-		panic(err)
+		log.Panicln("Error counting documents:", err)
 	}
 
 	if count == 0 {
-		log.Printf("Manga collection is empty")
+		log.Println("Manga collection is empty")
 	}
 
 	cursor, err := MangaCollection.Find(context.TODO(), bson.D{})
 
 	var results []Manga
 	if err = cursor.All(context.TODO(), &results); err != nil {
-		panic(err)
+		log.Panicln("Error parsing results:", err)
 	}
 
 	return results
 }
 
-func GetManga(ref string) (Manga, error) {
+func GetManga(ref string) (Manga, bool) {
 
-	if true {
-		return mockManga(ref)
+	if globals.DisableDb {
+		return mockManga(ref), true
 	}
 
 	filter := bson.D{{Key: "ref", Value: ref}}
 	result := MangaCollection.FindOne(context.TODO(), filter)
 
-	var manga Manga
-	err := result.Decode(manga)
-	if err != nil {
-		return Manga{}, err
+	if err := result.Err(); err != nil {
+		log.Println("Could not find manga", ref)
+		return Manga{}, false
 	}
 
-	return manga, nil
+	var manga Manga
+	err := result.Decode(&manga)
+	if err != nil {
+		log.Panicln("Error parsing response:", err)
+	}
+
+	return manga, true
 }
 
 func DeleteManga(manga Manga) {

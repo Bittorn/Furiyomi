@@ -1,6 +1,7 @@
 package pages
 
 import "github.com/Bittorn/Furiyomi/db"
+import "github.com/Bittorn/Furiyomi/components"
 
 templ mangaDetail_css() {
     <style>
@@ -103,7 +104,7 @@ templ MangaDetail(dark bool, manga db.Manga) {
         <div>
             <a onclick="history.back()" class="detaillink">Back</a><br /><br />
 
-            <img src="/static/nocover.png" class="detailsolocover" />
+            @components.MangaCover(manga, "detailsolocover")
 
             <div class="detaillinks">
                 <a href={manga.Link} rel="external" target="_blank" class="detaillink">View on AniList</a>

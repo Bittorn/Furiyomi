@@ -5,6 +5,7 @@ import (
 
 	"log"
 
+	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
@@ -12,10 +13,10 @@ import (
 // region Types/Variables
 
 type Manga struct {
-	Id          *int   `json:"id,omitempty" bson:"_id,omitempty"`
-	Ref         string `json:"ref" bson:"ref"`
-	UploadDate  int64  `json:"upload_date" bson:"upload_date"`
-	AnilistId   int    `json:"anilist_id" bson:"anilist_id"`
+	Id          *bson.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	Ref         string         `json:"ref" bson:"ref"`
+	UploadDate  int64          `json:"upload_date" bson:"upload_date"`
+	AnilistId   int            `json:"anilist_id" bson:"anilist_id"`
 	Title       `json:"title" bson:"title"`
 	Year        int      `json:"year" bson:"year"`
 	Genres      []string `json:"genres" bson:"genres"`
@@ -39,9 +40,9 @@ type Volume struct {
 }
 
 type User struct {
-	Id       *int   `json:"id,omitempty" bson:"_id,omitempty"`
-	Username string `json:"username" bson:"username"`
-	Password string `json:"password" bson:"password"`
+	Id       *bson.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	Username string         `json:"username" bson:"username"`
+	Password string         `json:"password" bson:"password"`
 }
 
 type Mokuro struct {
@@ -96,14 +97,16 @@ func MongoInit(uri string) {
 		log.Println("MongoDB successfully connected")
 	}
 
-	defer func() {
-		if err := client.Disconnect(context.TODO()); err != nil {
-			panic(err)
-		}
-	}()
+	// defer disconnect maybe
 
 	Database = client.Database("furiyomi")
 	MangaCollection = Database.Collection("manga")
 	UsersCollection = Database.Collection("users")
 	MangaBucket = Database.GridFSBucket()
+}
+
+func Disconnect(client *mongo.Client) {
+	if err := client.Disconnect(context.TODO()); err != nil {
+		panic(err)
+	}
 }
