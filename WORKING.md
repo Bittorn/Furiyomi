@@ -3,6 +3,7 @@
 - [ ] Navbar subpath matches (/titles/blah should still match /titles)
 - [ ] templ components starting with lowercase letters are not private, they are scoped to the entire module
 - [ ] switch to env package for loading config
+- [ ] fix GODEBUG=multipartmaxparts=50000,multipartmaxheaders=100000 since this is really bad
 
 ## Misc
 
