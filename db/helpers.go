@@ -20,23 +20,18 @@ var filesToIgnore = []string{
 }
 
 func ShouldIgnoreFile(name string) bool {
-	isMatch := false
-
 	for _, file := range filesToIgnore {
-		if isMatch {
-			break
+		if strings.Contains(name, file) {
+			log.Printf("File '%s' matches ignore rule '%s'\n", name, file)
+			return true
 		}
-
-		isMatch = strings.Contains(name, file)
-		log.Printf("File '%s' matches ignore rule '%s'", name, file)
 	}
-
-	return isMatch
+	return false
 }
 
 func IsMokuro(name string) bool {
 	if strings.HasSuffix(name, ".mokuro") {
-		log.Printf("File '%s' is mokuro file", name)
+		log.Printf("File '%s' is mokuro file\n", name)
 		return true
 	} else {
 		return false
@@ -45,12 +40,13 @@ func IsMokuro(name string) bool {
 
 func GenerateRef(name string) string {
 	// TODO does this even work?
+	name = strings.ToLower(name)
 	rs := make([]rune, 0, len(name))
 	for _, r := range name {
-		if r <= 127 && !unicode.IsPunct(r) {
-			rs = append(rs, r)
-		} else if unicode.IsSpace(r) {
+		if unicode.IsSpace(r) {
 			rs = append(rs, '-')
+		} else if r <= 127 && !unicode.IsPunct(r) {
+			rs = append(rs, r)
 		}
 	}
 	return string(rs)

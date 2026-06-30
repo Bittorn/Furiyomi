@@ -32,75 +32,65 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 		return
 	}
+
 	manga := db.Manga{
 		UploadDate: time.Now().Unix(),
 	}
 
 	log.Println("Received API upload request")
 
-	reader, err := r.MultipartReader()
+	err := r.ParseMultipartForm(256 << 20) // 256 MiB
+
 	if err != nil {
-		http.Error(w, "Invalid request type", http.StatusUnsupportedMediaType)
-		log.Panicf("Error creating reader: %v", err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		log.Panicf("Error parsing form: %v", err)
 		return
 	}
 
-	for {
-		// To protect against malicious inputs,
-		// Reader.NextPart and Reader.NextRawPart limit the number of
-		// headers in a part to 10000 and Reader.ReadForm limits the total
-		// number of headers in all FileHeaders to 10000.
+	files := r.MultipartForm.File["files"]
+	paths := r.MultipartForm.Value["paths"]
 
-		// These limits may be adjusted with
-		// GODEBUG=multipartmaxheaders=<values>.
+	for idx, fileHeader := range files {
+		path := paths[idx]
 
-		// Reader.ReadForm further limits the number of parts
-		// in a form to 1000. This limit may be adjusted with
-		// GODEBUG=multipartmaxparts=<value>.
-
-		part, err := reader.NextPart()
-		if err == io.EOF {
-			break
-		}
-		data, err := io.ReadAll(part)
+		file, err := fileHeader.Open()
 		if err != nil {
-			log.Panicf("Error when reading part: %s", err)
+			log.Panicln("Error when reading file:", err)
 		}
 
-		fileName := part.FileName()
+		data, _ := io.ReadAll(file)
 
-		fileNameArray := strings.Split(fileName, "/")
+		pathArray := strings.Split(path, "/")
 
 		if manga.Romaji == "" {
-			manga.Romaji = fileNameArray[0]
+			manga.Romaji = pathArray[0]
 		}
 
-		fileNameArray[0] = db.GenerateRef(fileName)
+		pathArray[0] = db.GenerateRef(pathArray[0])
 
 		if manga.Ref == "" {
-			manga.Ref = fileNameArray[0]
+			manga.Ref = pathArray[0]
 		}
 
-		fileName = strings.Join(fileNameArray, "/")
+		path = strings.Join(pathArray, "/")
 
-		if db.ShouldIgnoreFile(fileName) {
-			return
-		}
-
-		// If base volume file (.mokuro), add it to entry
-		if db.IsMokuro(fileName) {
-			volume := db.Volume{
-				Title: strings.ReplaceAll(fileName, ".mokuro", ""),
+		if !db.ShouldIgnoreFile(path) {
+			// If base volume file (.mokuro), add it to entry
+			if db.IsMokuro(path) {
+				volume := db.Volume{
+					Title: strings.ReplaceAll(pathArray[len(pathArray)-1], ".mokuro", ""),
+				}
+				manga.Volumes = append(manga.Volumes, volume)
 			}
-			manga.Volumes = append(manga.Volumes, volume)
+
+			db.UploadFile(path, data, manga)
 		}
 
-		db.UploadFile(fileName, data, manga)
-
-		part.Close()
+		file.Close()
 	}
 
-	log.Printf("File upload complete\nUpdating manga collection...\n")
+	log.Println("File upload complete")
+	log.Println("Updating manga collection...")
 
 	db.WriteManga(manga)
 

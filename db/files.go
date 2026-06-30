@@ -39,7 +39,7 @@ func GetFile(path string) []byte {
 
 	file, err := io.ReadAll(fileBuffer)
 	if err != nil {
-		log.Panicf("Error reading file data:", err)
+		log.Panicln("Error reading file data:", err)
 	}
 
 	log.Println("Successfully fetched file from", path)
@@ -58,7 +58,7 @@ func UploadFile(fileName string, fileData []byte, manga Manga) {
 
 	bytes, err := uploadStream.Write(fileData)
 	if err != nil {
-		log.Panicln("Failed to write file data: ", err)
+		log.Panicln("Failed to write file data:", err)
 	}
 
 	if err := uploadStream.Close(); err != nil {

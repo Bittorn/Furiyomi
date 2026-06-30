@@ -64,11 +64,11 @@ type Page struct {
 
 type Block struct {
 	// TODO see if int should be replaced with float/float64
-	Box         []int     `json:"box" bson:"box"`
-	Vertical    bool      `json:"vertical" bson:"vertical"`
-	FontSize    int       `json:"font_size" bson:"font_size"`
-	LinesCoords [][][]int `json:"lines_coords" bson:"lines_coords"`
-	Lines       []string  `json:"lines" bson:"lines"`
+	Box         []float32     `json:"box" bson:"box"`
+	Vertical    bool          `json:"vertical" bson:"vertical"`
+	FontSize    float32       `json:"font_size" bson:"font_size"`
+	LinesCoords [][][]float32 `json:"lines_coords" bson:"lines_coords"`
+	Lines       []string      `json:"lines" bson:"lines"`
 }
 
 var Database *mongo.Database
@@ -96,8 +96,6 @@ func MongoInit(uri string) {
 	} else {
 		log.Println("MongoDB successfully connected")
 	}
-
-	// defer disconnect maybe
 
 	Database = client.Database("furiyomi")
 	MangaCollection = Database.Collection("manga")

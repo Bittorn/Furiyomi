@@ -131,17 +131,24 @@ templ upload_js() {
 
         request.open("POST", "/api/upload")
 
-        const formData = new FormData(dataForm)
+        const formData = new FormData()
+
+        for (const file of fileInput.files) {
+            formData.append("files", file);
+            formData.append("paths", file.webkitRelativePath);
+        }
+
+        // TODO fix this
 
         request.upload.onprogress = pe => {
             if (pe.lengthComputable) {
-            loadingText.textContent = `Uploading (${Math.ceil(
-                (pe.loaded / pe.total) * 100
-            )}% complete)`
+                loadingText.textContent = `Uploading (${Math.ceil(
+                    (pe.loaded / pe.total) * 100
+                )}% complete)`
 
-            if (Math.floor((pe.loaded / pe.total) * 100) == 100) {
-                loadingText.textContent = "Processing upload..."
-            }
+                if (Math.floor((pe.loaded / pe.total) * 100) == 100) {
+                    loadingText.textContent = "Processing upload..."
+                }
             }
         }
 
@@ -182,7 +189,7 @@ templ Upload(dark bool) {
         @upload_css()
         <h1>Upload</h1>
 
-        <form id="dataform" enctype="multipart/form-data">
+        <form onsubmit={templ.JSFuncCall("doUploads", templ.JSExpression("event"))} id="dataform" enctype="multipart/form-data">
             <div class="upload">
                 // TODO check if label allows drag-and-drop properly
                 <label

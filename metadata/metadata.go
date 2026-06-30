@@ -97,20 +97,31 @@ func UpdateMetadata(manga db.Manga) {
 		coverPath := fmt.Sprintf("%s/%s", volumePath, mokuro.Pages[0].ImgPath)
 		manga.Volumes[idx].Cover = &coverPath
 
+		if manga.Cover == "" {
+			manga.Cover = coverPath
+		}
 	}
 
 	// TODO allow manual selection of results
 
-	anilist := queryAnilist(manga.Romaji).Data.Page.Media[0]
+	anilist := queryAnilist(manga.Romaji).Data.Page.Media
 
-	manga.AnilistId = anilist.ID
-	manga.Title = anilist.Title
-	manga.Year = anilist.StartDate.Year
-	manga.Link = anilist.SiteURL
-	manga.Genres = anilist.Genres
-	manga.Tags = processTags(anilist.Tags)
-	manga.Description = formatDescription(anilist.Description)
-	manga.CoverRemote = &anilist.CoverImage.ExtraLarge
+	if len(anilist) == 0 {
+		log.Println("Found no results for ", manga.Romaji)
+	}
+
+	manga.AnilistId = anilist[0].ID
+	manga.Title = anilist[0].Title
+	manga.Year = anilist[0].StartDate.Year
+	manga.Link = anilist[0].SiteURL
+	manga.Genres = anilist[0].Genres
+	manga.Tags = processTags(anilist[0].Tags)
+	manga.Description = formatDescription(anilist[0].Description)
+	manga.CoverRemote = &anilist[0].CoverImage.ExtraLarge
+
+	if manga.Cover == "" {
+		manga.Cover = *manga.CoverRemote
+	}
 
 	db.WriteManga(manga)
 
