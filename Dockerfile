@@ -1,5 +1,5 @@
 # Step 1: Use the official Golang image for building
-FROM golang:1.21 AS builder
+FROM golang:1.26 AS builder
 # Set working directory
 WORKDIR /app
 # Copy Go modules and dependencies
@@ -23,7 +23,7 @@ EXPOSE 3000
 # Set environment variables
 ENV MONGODB_URI=mongodb://127.0.0.1:27017/
 ENV PORT=3000
-# This part here is extremely bad, need an actual fix
+# Fix to allow large file uploads
 ENV GODEBUG=multipartmaxparts=50000,multipartmaxheaders=100000
 # Run the application
 CMD ["./main"]
