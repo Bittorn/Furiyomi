@@ -51,7 +51,7 @@ func handleEnv() {
 
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal(err)
+		log.Println("Error loading environment file:", err.Error())
 	}
 
 	globals.Port, present = os.LookupEnv("PORT")
