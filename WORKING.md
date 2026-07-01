@@ -5,6 +5,7 @@
 - [ ] switch to env package for loading config
 - [ ] fix GODEBUG=multipartmaxparts=50000,multipartmaxheaders=100000 since this is really bad
 - [ ] db/files.go: what happens when no file is found
+- [ ] reader: cuts off sides for some reason, might be @Base in place of @BaseNoNav
 
 ## Misc
 
