@@ -14,8 +14,7 @@ templ BaseNoNav(title string, dark bool) {
 	}
 }
 
-templ base(nav bool, dark bool, title string) {
-	<!DOCTYPE html>
+templ base_js() {
 	<script defer>
 		function setCookie(cname, cvalue, exdays) {
 			const d = new Date();
@@ -31,10 +30,10 @@ templ base(nav bool, dark bool, title string) {
 			for(let i = 0; i <ca.length; i++) {
 				let c = ca[i];
 				while (c.charAt(0) == ' ') {
-				c = c.substring(1);
+					c = c.substring(1);
 				}
 				if (c.indexOf(name) == 0) {
-				return c.substring(name.length, c.length);
+					return c.substring(name.length, c.length);
 				}
 			}
 			return "";
@@ -53,6 +52,10 @@ templ base(nav bool, dark bool, title string) {
 			setCookie("theme", "dark", 365)
 		}
 	</script>
+}
+
+templ base(nav bool, dark bool, title string) {
+	<!DOCTYPE html>
 	<html lang="en" class={ templ.KV("dark", dark) }>
 		<head>
 			<meta charset="utf-8"/>
@@ -61,6 +64,8 @@ templ base(nav bool, dark bool, title string) {
 			<meta name="google" content="notranslate"/>
 			<link rel="icon" href="/static/favicon.ico"/>
 			<link rel="stylesheet" href="/static/app.css"/>
+			<script src="/static/htmx.min.js"></script>
+			@base_js()
 			<title>{ title } | Furiyomi</title>
 		</head>
 		if nav {

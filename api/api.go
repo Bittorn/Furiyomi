@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Bittorn/Furiyomi/components"
 	"github.com/Bittorn/Furiyomi/db"
 	"github.com/Bittorn/Furiyomi/metadata"
 )
@@ -25,6 +26,22 @@ func Image(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Invalid API request")
 		http.Error(w, "Invalid API request", http.StatusBadRequest)
 	}
+}
+
+func SearchManga(w http.ResponseWriter, r *http.Request) {
+	query := strings.ToLower(r.URL.Query().Get("search"))
+
+	var mangaList []db.Manga
+
+	// bit of a hack
+	if query == "" {
+		mangaList = db.GetAllManga()
+	} else {
+		mangaList = db.SearchManga(query)
+	}
+
+	component := components.MangaList(mangaList)
+	component.Render(r.Context(), w)
 }
 
 func Upload(w http.ResponseWriter, r *http.Request) {

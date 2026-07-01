@@ -45,6 +45,21 @@ func Dashboard(w http.ResponseWriter, r *http.Request) {
 	component.Render(r.Context(), w)
 }
 
+func Reader(w http.ResponseWriter, r *http.Request) {
+	ref := r.PathValue("ref")
+	vol := r.PathValue("vol")
+
+	manga, found := db.GetManga(ref)
+	if !found {
+		NotFound(w, r)
+	}
+
+	mokuro, found := db.GetMokuro(fmt.Sprintf("%s/%s.mokuro", ref, vol))
+
+	component := pages.Reader(prefersDarkMode(r), manga, mokuro, vol)
+	component.Render(r.Context(), w)
+}
+
 func MangaDetail(w http.ResponseWriter, r *http.Request) {
 	ref := r.PathValue("ref")
 

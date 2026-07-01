@@ -24,6 +24,7 @@ func main() {
 	mux.HandleFunc("/", handlers.Home)
 	mux.HandleFunc("/titles", handlers.Titles)
 	mux.HandleFunc("/titles/{ref}", handlers.MangaDetail)
+	mux.HandleFunc("/reader/{ref}/{vol}", handlers.Reader)
 	mux.HandleFunc("/upload", handlers.Upload)
 	mux.HandleFunc("/about", handlers.About)
 	mux.HandleFunc("/login", handlers.Login)
@@ -32,6 +33,7 @@ func main() {
 	mux.HandleFunc("/api/image/{image}", api.Image)
 	mux.HandleFunc("/api/upload", api.Upload)
 	mux.HandleFunc("/api/health", api.Health)
+	mux.HandleFunc("/api/search", api.SearchManga)
 
 	// Protected routes
 	mux.Handle("/dashboard", checkAuthMiddleware(http.HandlerFunc(handlers.Dashboard)))

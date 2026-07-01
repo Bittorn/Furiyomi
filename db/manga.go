@@ -36,15 +36,7 @@ func GetAllManga() []Manga {
 		return mockAllManga()
 	}
 
-	count, err := MangaCollection.CountDocuments(context.TODO(), bson.D{})
-
-	if err != nil {
-		log.Panicln("Error counting documents:", err)
-	}
-
-	if count == 0 {
-		log.Println("Manga collection is empty")
-	}
+	CountDocuments(bson.D{})
 
 	cursor, err := MangaCollection.Find(context.TODO(), bson.D{})
 
@@ -56,8 +48,40 @@ func GetAllManga() []Manga {
 	return results
 }
 
-func GetManga(ref string) (Manga, bool) {
+func SearchManga(search string) []Manga {
+	if globals.DisableDb {
+		return mockAllManga()
+	}
 
+	filter := bson.D{{Key: "title.romaji", Value: search}}
+
+	CountDocuments(filter)
+
+	cursor, err := MangaCollection.Find(context.TODO(), filter)
+
+	var results []Manga
+	if err = cursor.All(context.TODO(), &results); err != nil {
+		log.Panicln("Error parsing results:", err)
+	}
+
+	return results
+}
+
+func CountDocuments(filter bson.D) int64 {
+	count, err := MangaCollection.CountDocuments(context.TODO(), filter)
+
+	if err != nil {
+		log.Panicln("Error counting documents:", err)
+	}
+
+	if count == 0 {
+		log.Println("Manga collection is empty")
+	}
+
+	return count
+}
+
+func GetManga(ref string) (Manga, bool) {
 	if globals.DisableDb {
 		return mockManga(ref), true
 	}

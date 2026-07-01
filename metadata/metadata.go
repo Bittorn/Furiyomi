@@ -92,7 +92,11 @@ func UpdateMetadata(manga db.Manga) {
 	for idx, volume := range manga.Volumes {
 		volumePath := fmt.Sprintf("%s/%s", manga.Ref, volume.Title)
 		mokuroPath := volumePath + ".mokuro"
-		mokuro := db.GetMokuro(mokuroPath)
+		mokuro, found := db.GetMokuro(mokuroPath)
+
+		if !found {
+			log.Panicln("Error parsing mokuro:", mokuroPath)
+		}
 
 		coverPath := fmt.Sprintf("%s/%s", volumePath, mokuro.Pages[0].ImgPath)
 		manga.Volumes[idx].Cover = &coverPath

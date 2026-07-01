@@ -13,24 +13,10 @@ templ titles_css() {
         margin-top: -1rem;
     }
 
-    .searchbar .searchicon {
-		background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSJjdXJyZW50Q29sb3IiIGQ9Ik0xMSAyYzQuOTY4IDAgOSA0LjAzMiA5IDlzLTQuMDMyIDktOSA5cy05LTQuMDMyLTktOXM0LjAzMi05IDktOW0wIDE2YzMuODY3IDAgNy0zLjEzMyA3LTdzLTMuMTMzLTctNy03cy03IDMuMTMzLTcgN3MzLjEzMyA3IDcgN204LjQ4NS4wNzFsMi44MjkgMi44MjhsLTEuNDE1IDEuNDE1bC0yLjgyOC0yLjgyOXoiLz48L3N2Zz4=');
-		filter: invert(96%) sepia(20%) saturate(43%) hue-rotate(228deg) brightness(65%) contrast(80%);
-		background-size: cover;
-		width: 24px;
-		height: 24px;
-		transition: filter 0.1s ease;
-    }
-
-    .searchbar .searchicon:hover {
-        filter: invert(96%) sepia(20%) saturate(43%) hue-rotate(228deg) brightness(95%) contrast(80%);
-    }
-
     .searchbar input {
 		color: var(--font-color);
 		background-color: var(--header-bg-color);
 		width: 8rem;
-		margin-left: 8px;
 		padding: 6px;
 		border-radius: 6px;
 		border-style: solid;
@@ -46,7 +32,7 @@ templ titles_css() {
         border-color: var(--button-color);
     }
 
-    .mangalist {
+    #manga-list {
         display: grid;
         grid-template-columns: auto auto auto auto;
         gap: 1rem;
@@ -54,19 +40,19 @@ templ titles_css() {
     }
 
     @media only screen and (max-width: 2000px) {
-        .mangalist {
+        #manga-list {
             grid-template-columns: auto auto auto;
         }
     }
 
     @media only screen and (max-width: 1500px) {
-        .mangalist {
+        #manga-list {
             grid-template-columns: auto auto;
         }
     }
 
     @media only screen and (max-width: 1100px) {
-        .mangalist {
+        #manga-list {
             grid-template-columns: auto;
         }
     }
@@ -78,20 +64,17 @@ templ Titles(dark bool, mangaList []db.Manga) {
         @titles_css()
 		<h1>Titles</h1>
 		<div class="searchbar">
-			<div class="searchicon"></div>
-			<input type="text" id="searchBar" placeholder="Search manga..."/>
+			<input
+                type="search"
+                name="search"
+                hx-get="/api/search"
+                hx-trigger="keyup changed delay:1s"
+                hx-target="#manga-list"
+                id="searchBar"
+                placeholder="Search manga..."
+            />
 		</div>
 
-        <div class="mangalist">
-            for _, manga := range mangaList {
-                @components.MangaEntry(manga)
-            }
-        </div>
-
-        if len(mangaList) == 0 {
-            // TODO replace with better image
-            <img src="/static/notfound.png" style="height: 350px"/>
-            <h2>No manga found</h2>
-        }
+        @components.MangaList(mangaList)
 	}
 }

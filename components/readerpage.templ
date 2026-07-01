@@ -1,0 +1,117 @@
+package components
+
+import "github.com/Bittorn/Furiyomi/db"
+import "strconv"
+import "fmt"
+
+var readerPageOnceHandle = templ.NewOnceHandle()
+
+templ readerPage_css() {
+    <style>
+    .page {
+        display: none;
+        float: left;
+        margin: 0 -1px 0 0;
+    }
+
+    .page-container {
+        position: relative;
+        margin: 0 auto;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+
+    .page-container * {
+        font-family: 'LINE Seed JP', 'Noto Sans JP', 'Meiryo', 'MS Gothic', sans-serif;
+        font-weight: 400;
+        font-style: normal;
+    }
+
+    .text-box {
+        display: initial;
+        position: absolute;
+        padding: 0;
+        line-height: 1.1em;
+        font-size: 16pt;
+        white-space: nowrap;
+        border: none;
+        background-color: transparent;
+    }
+
+    .text-box p {
+        display: none;
+        color: transparent;
+        letter-spacing: 0.1em;
+        margin: 0;
+    }
+
+    .text-box:hover {
+        background-color: white;
+        border: 1px solid black;
+        z-index: 999 !important;
+    }
+
+    .text-box:hover p {
+        display: table;
+        color: black;
+    }
+    </style>
+}
+
+const (
+	minFontSize float32 = 12
+	maxFontSize float32 = 32
+)
+
+func clamp(num, lower, upper float32) float32 {
+	if num < lower {
+		return lower
+	}
+	if num > upper {
+		return upper
+	}
+	return num
+}
+
+func calcFontSize(num float32) float32 {
+	return clamp(num, minFontSize, maxFontSize)
+}
+
+func isVertical(vertical bool) string {
+    if (vertical) {
+        return "writing-mode: vertical-rl"
+    } else {
+        return ""
+    }
+}
+
+templ ReaderPage(page db.Page, idx int) {
+    @readerPageOnceHandle.Once() {
+        @readerPage_css()
+    }
+    <div class="page" id={"page-" + strconv.Itoa(idx)}>
+        <div
+            class="page-container"
+            style={fmt.Sprintf("width: %dpx; height: %dpx;", page.ImgWidth, page.ImgHeight)}
+        >
+            for _, block := range page.Blocks {
+                <div
+                    class="text-box"
+                    style={fmt.Sprintf("left: %fpx; top: %fpx; width: %fpx; height: %fpx; font-size: %fpx; z-index: 12; %s",
+                        block.Box[0],
+                        block.Box[1],
+                        block.Box[2] - block.Box[0],
+                        block.Box[3] - block.Box[1],
+                        calcFontSize(block.FontSize),
+                        isVertical(block.Vertical),
+                        )}
+                >
+                    for _, line := range block.Lines {
+                        <p>{line}</p>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}

@@ -2,6 +2,7 @@ package pages
 
 import "github.com/Bittorn/Furiyomi/db"
 import "github.com/Bittorn/Furiyomi/components"
+import "fmt"
 
 templ mangaDetail_css() {
     <style>
@@ -133,7 +134,7 @@ templ MangaDetail(dark bool, manga db.Manga) {
 
             <div class="detailvolumes">
                 for _, volume := range manga.Volumes {
-                    <a>{volume.Title}</a> // replace with @MangaVolumeLink(manga, volume)
+                    <a href={templ.SafeURL(fmt.Sprintf("/reader/%s/%s", manga.Ref, volume.Title))}>{volume.Title}</a> // replace with @MangaVolumeLink(manga, volume)
                 }
                 if len(manga.Volumes) == 0 {
                     <p>No volumes found</p>

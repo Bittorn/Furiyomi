@@ -9,6 +9,7 @@ import (
 	"io"
 	"log"
 
+	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
@@ -20,18 +21,28 @@ func GetImageData(imagePath string) string {
 	return fmt.Sprintf("data:image;base64,%s", image)
 }
 
-func GetMokuro(mokuroPath string) Mokuro {
+func GetMokuro(mokuroPath string) (Mokuro, bool) {
+	filter := bson.D{{Key: "filename", Value: mokuroPath}}
+	found := MangaBucket.GetFilesCollection().FindOne(context.TODO(), filter)
+
+	if err := found.Err(); err != nil {
+		log.Println("Could not find mokuro", mokuroPath)
+		return Mokuro{}, false
+	}
+
 	file := GetFile(mokuroPath)
 	var mokuro Mokuro
 	if err := json.Unmarshal(file, &mokuro); err != nil {
 		log.Panicln("Error unmarshalling Mokuro file:", err)
 	}
-	return mokuro
+	return mokuro, true
 }
 
 func GetFile(path string) []byte {
 	log.Println("Fetching file:", path)
 	fileBuffer := bytes.NewBuffer(nil)
+
+	// What happens when no file is found?
 
 	if _, err := MangaBucket.DownloadToStreamByName(context.TODO(), path, fileBuffer); err != nil {
 		log.Panicln("Error creating download stream:", err)

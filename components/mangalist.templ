@@ -1,0 +1,14 @@
+package components
+
+import "github.com/Bittorn/Furiyomi/db"
+
+templ MangaList(mangaList []db.Manga) {
+    <div id="manga-list">
+        for _, manga := range mangaList {
+            @MangaEntry(manga)
+        }
+        if len(mangaList) == 0 {
+            <h2>No manga found</h2>
+        }
+    </div>
+}
