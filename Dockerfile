@@ -18,6 +18,8 @@ FROM alpine:latest
 WORKDIR /root/
 # Copy the built binary from the builder stage
 COPY --from=builder /app/main .
+# Copy static files
+COPY static ./static
 # Expose the application port
 EXPOSE 3000
 # Set environment variables
