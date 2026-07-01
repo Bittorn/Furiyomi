@@ -1,5 +1,5 @@
 # Step 1: Use the official Golang image for building
-FROM golang:1.26 AS builder
+FROM golang:1.26.4-alpine AS builder
 # Set working directory
 WORKDIR /app
 # Copy Go modules and dependencies
@@ -10,7 +10,7 @@ COPY . .
 # Generate templ code
 RUN go tool templ generate
 # Build the application
-RUN go build -o main .
+RUN CGO_ENABLED=0 GOOS=linux go build -o main .
 
 # Step 2: Use a minimal base image for final deployment
 FROM alpine:latest
