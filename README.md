@@ -18,15 +18,10 @@ Hatsuseno Alpha _(Yokohama Kaidashi Kikou)_
 
 Art by <a href="https://www.youtube.com/@ksrvgn">ksrvgn</a>
 
-We are currently transitioning from Svelte to Golang, and some features are not yet available.
-Namely, actually reading manga is unavailable. The old Svelte version is currently available
-via Docker, so you can read it properly there
+Currently, you can read uploaded manga with support for popup
+dictionaries like Yomitan/Yomichan, or copy/paste to Google Translate/DeepL/etc.
 
-On the Svelte version (prod), you can read uploaded manga with support for looking up furigana via a popup
-dictionary like Yomitan/Yomichan, or copy/paste to Google Translate/DeepL/etc.
-
-The reader doesn't properly center your manga, due to my not understanding how to use CSS matrix().
-It is on the list!
+The reader doesn't properly display left/right mouse hover bars, but navigation still works with arrow keys.
 
 ## Developing
 
@@ -54,3 +49,31 @@ The DISABLE_DB flag stops the app from attempting to connect to a MongoDB instan
 If you have a MongoDB instance running with default settings, then turn this flag off.
 
 The app can now be accessed by navigating to http://localhost:3000 in your web browser.
+
+### Example Compose file
+
+```yaml
+services:
+  furiyomi:
+    container_name: furiyomi
+    image: ghcr.io/bittorn/furiyomi:release
+    environment:
+      MONGODB_URI: mongodb://${ROOT_USERNAME}:${ROOT_PASSWORD}@furiyomi-db:27017/
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    depends_on:
+      - furiyomi-db
+  furiyomi-db:
+    container_name: furiyomi-db
+    image: mongo:8.3
+    restart: unless-stopped
+    volumes:
+      - /path/to/database:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${ROOT_PASSWORD}
+    env_file:
+      - .env
+networks: {}
+```
